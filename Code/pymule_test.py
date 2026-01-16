@@ -1,57 +1,116 @@
 from pymule import *
+from matplotlib.ticker import ScalarFormatter
+import matplotlib.pyplot as plt
 
-def OnePlot(xlabel,ylabel,xscale,yscale,nxaxis,xlabel_secondary,xscale_secondary,Savename):
-    ax1.grid(True,alpha=0.7,ls='dotted')
-    ax1.legend(fontsize = 9)
-    ax1.set_xlabel(xlabel, fontsize=9)
-    ax1.set_ylabel(ylabel,fontsize=9)
-    if xscale == "log":
-        ax1.set_xscale("log")
-    if yscale == "log":
-        ax1.set_yscale("log")
-    if nxaxis == 2:
-        ax1_secondary = ax1.twiny()
-        ax1_secondary.set_xlabel(xlabel_secondary, fontsize=9)
-        xlim1_secondary = secondary_xaxis_transform(np.array(ax1.get_xlim()))
-        ax1_secondary.set_xlim(xlim1_secondary)
-    if xscale_secondary == "log":
-        ax1_secondary.set_xscale("log")
-    plt.rcParams.update({'font.size': 7, 'font.family' : 'serif'})
-    plt.tight_layout()
-    fig.savefig("/home/marialei/AMBER_RadCor/Figures/" + Savename + ".pdf", bbox_inches = "tight")
-    fig.savefig("/home/marialei/AMBER_RadCor/Figures/" + Savename + ".png", dpi=700, bbox_inches = "tight")
-    plt.show()
+lo_outs = ["mcmule-release",
+           "mp2mp_NLO_22_12",
+           "mp2mp_NLO_12_01",
+           "mp2mp_NLO_13_01"]
+
+nlo_outs = ["mp2mp_testNLO",
+            "mp2mp_NLO_22_12",
+           "mp2mp_NLO_12_01",
+           "mp2mp_NLO_13_01"]
+
+savenames = ["combined"]
+
+#Specify paths
+lo_i = 3
+nlo_i = 3
+savename = savenames[0]+"_"+nlo_outs[nlo_i]
 
 
-plt.rcParams['text.usetex'] = False
 
 
-setup(folder="/home/marialei/mcmule-release/out") 
-#correct out folder mp2mp
-
+# Setup
+setup(folder="/home/marialei/"+lo_outs[lo_i]+"/out") #LO
 lo = mergefks(sigma('mp2mp0'))*alpha**2*conv 
-#nlo = mergefks(sigma('mp2mpR'),sigma('mp2mpF'),sigma('mp2mpA'))*alpha**3*conv
+setup(folder="/home/marialei/"+nlo_outs[nlo_i]+"/out") #NLO 
+nlo = mergefks(sigma('mp2mpR'),sigma('mp2mpF'),anyxi=sigma('mp2mpA'))*alpha**3*conv
 
-print(lo.value)
-#print(lo["Emu"],lo["th3"])
+full = lo + nlo
+
+#print(lo.value)
+#print(lo["Emu"])
+#print(nlo.value)
+#print(nlo["Emu"])
 
 
 
-#plotting
-fig, axs = plt.subplots(1,2,1,col=blue)
-plt.sca(axs)
-obs = 'th3'
 
-errorband(lo[obs])
 
-axs.legend(['something'], loc='lower center',framealpha=0)
-axs.set_title('title')
-plt.xlim(0., 0.)
-plt.ylim(0., 0.)
-#mulify(fig, delx=0., dely=0.)
+# Plotting
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))  # 2 Subplots untereinander
 
-plt.draw()
+# Observable 1: th3
+obs1 = 'th3'
+obs1_name = r'Scattering Angle'
+plt.sca(axes[0]) 
+th3_lo_func = errorband(lo[obs1])
+th3_lo = lo[obs1]
+th3_nlo_func = errorband(nlo[obs1])
+th3_nlo = nlo[obs1]
+print("th3_nlo: ",th3_nlo)
+
+th3_added = addplots(th3_lo, th3_nlo)
+th3_added_func = errorband(th3_added)
+#print("\n th3_added: ",th3_added)
+
+#th3_devided = dividenumbers(th3_nlo,th3_lo) #gives back error like divideplots
+#print("\n th3_devided: ",th3_devided)
+
+
+thK = mergebins(divideplots(th3_nlo, th3_added), 5) #K factor nlo/(nlo+lo)  #common K definition
+#thK_func = errorband(thK)
+print("\n thK: ",thK)
+
+#thK2 = mergebins(divideplots(th3_nlo,th3_lo, offset=+0), 5) #nlo/lo +offset = K-1 +offset #different K definition!!
+#thK2_func = errorband(thK2)
+#print("\n thK2: ",thK2)
+
+
+axes[0].grid(True, alpha=0.7, ls='dotted')
+axes[0].set_xlabel(r'$\theta_3 (rad)$', fontsize=12)
+axes[0].set_ylabel('Counts',fontsize=12)
+axes[0].set_title(obs1_name)
+axes[0].set_yscale('log')
+#axes[0].legend(["ThetaK", "ThetaK offset"], framealpha=0, fontsize=12)
+axes[0].legend(['LO','NLO',"LO with NLO correction"], framealpha=0, fontsize=12)
+axes[0].set_xlim(1.3e-3,1.7e-3)
+axes[0].xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+axes[0].ticklabel_format(style='sci', axis='x', scilimits=(-3,3))
+
+
+# Observable 2: Emu
+obs2 = 'Emu'
+obs2_name = 'Energy of the Scattered Muon'
+plt.sca(axes[1])
+
+Emu_lo = lo[obs2]
+Emu_lo_func = errorband(Emu_lo)
+Emu_nlo = nlo[obs2]
+Emu_nlo_func = errorband(Emu_nlo)
+
+Emu_full = full[obs2]
+#Emu_added = Emu_lo + Emu_nlo #!that does not work like that ->use addplots
+Emu_full_func = errorband(Emu_full)
+
+Emu_devided = dividenumbers(Emu_nlo,Emu_lo)
+print("\n Emu_devided: ",Emu_devided)
+
+axes[1].grid(True, alpha=0.7, ls='dotted')
+axes[1].set_xlabel(r'$E_{\mu} (MeV)$', fontsize=12)
+axes[1].set_ylabel('Counts',fontsize=12)
+axes[1].set_title(obs2_name)
+axes[1].set_yscale('log')
+axes[1].legend(['LO','NLO correction', "LO corrected with NLO"], framealpha=0, fontsize=12)
+#axes[1].set_xlim(0.98e5,1.03e5)
+axes[1].xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+axes[1].ticklabel_format(style='sci', axis='x', scilimits=(-3,3))
+
+
+mulify(fig, delx=0., dely=0.)
 
 fig.tight_layout()
-
-fig.savefig('example.pdf')
+fig.savefig('/home/marialei/AMBER_RadCor/Figures/'+savename+'.pdf')
+plt.draw()
