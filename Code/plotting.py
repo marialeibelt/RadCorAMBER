@@ -1,15 +1,65 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+from matplotlib.ticker import ScalarFormatter
+from pymule import errorband
+
+
+# =========================
+# Errorband helpers
+# =========================
+def plot_errorband(ax, hist, color):
+    plt.sca(ax)
+    for line in errorband(hist):
+        line.set_color(color)
+
+
+def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
+    plot_errorband(ax, lo, colors["lo"])
+    plot_errorband(ax, nlo, colors["nlo"])
+    plot_errorband(ax, full, colors["full"])
+
+    if labels is not None:
+        for key, label in labels.items():
+            ax.plot([], [], color=colors[key], label=label)
+        ax.legend(framealpha=0)
+
+
+# =========================
+# Axis styling
+# =========================
+def style_sci_x(
+    ax,
+    xlabel,
+    ylabel,
+    title,
+    yscale="log",
+    sharex=False,
+):
+    style_axis(
+        ax,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        title=title,
+        yscale=yscale,
+        legend=False,
+    )
+
+    ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+    ax.ticklabel_format(style="sci", axis="x", scilimits=(-3, 3))
+
+    if sharex:
+        ax.tick_params(labelbottom=False)
+
 
 def style_axis(
     ax,
     xlabel=None,
     ylabel=None,
-    title=None,       # <-- neu hinzufügen
+    title=None,
     xscale="linear",
     yscale="linear",
-    legend=True
+    legend=False,
 ):
     if xlabel:
         ax.set_xlabel(xlabel)
@@ -26,22 +76,24 @@ def style_axis(
         ax.legend(framealpha=0)
 
 
-
+# =========================
+# Figure helpers
+# =========================
 def create_figure(
     nrows=1,
     ncols=1,
     figsize=(8, 5),
-    font_size=7
+    font_size=7,
 ):
     plt.rcParams.update({
         "font.size": font_size,
-        "font.family": "serif"
+        "font.family": "serif",
     })
 
     fig, axes = plt.subplots(nrows, ncols, figsize=figsize)
 
-    # Wichtig: axes immer als Array behandeln
-    axes = np.atleast_1d(axes)
+    if nrows == 1 and ncols == 1:
+        axes = np.array([[axes]])
 
     return fig, axes
 
