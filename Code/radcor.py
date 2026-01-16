@@ -1,28 +1,33 @@
-# =========================
-# Imports
-# =========================
 from pymule import *
 from matplotlib.ticker import ScalarFormatter
 import matplotlib.pyplot as plt
 
-from plotting import (
-    create_figure,
-    style_axis,
-    save_figure
-)
+import matplotlib as mpl
+mpl.rcParams["text.usetex"] = False
+
+from plotting import *
+
+
+
+
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+# CHANGE according to where you are (Office/Home)
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+# homedir = "/home/marialei/"
+# outdir = homedir + "AMBER_RadCor/Figures/"
+homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"
+outdir = homedir + "Figures/"
 
 # =========================
 # Input definitions
 # =========================
 lo_outs = [
-    "mcmule-release",
     "mp2mp_NLO_22_12",
     "mp2mp_NLO_12_01",
     "mp2mp_NLO_13_01"
 ]
 
 nlo_outs = [
-    "mp2mp_testNLO",
     "mp2mp_NLO_22_12",
     "mp2mp_NLO_12_01",
     "mp2mp_NLO_13_01"
@@ -30,19 +35,27 @@ nlo_outs = [
 
 savenames = ["combined"]
 
-lo_i = 3
-nlo_i = 3
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+# CHANGE according to what you want to analyze
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+lo_i = 2
+nlo_i = 2
 savename = savenames[0] + "_" + nlo_outs[nlo_i]
+
+
+
+
+
 
 # =========================
 # Physics setup
 # =========================
 # LO setup
-setup(folder="/home/marialei/" + lo_outs[lo_i] + "/out")
+setup(folder= homedir + lo_outs[lo_i] + "/out")
 lo = mergefks(sigma("mp2mp0")) * alpha**2 * conv
 
 # NLO setup
-setup(folder="/home/marialei/" + nlo_outs[nlo_i] + "/out")
+setup(folder=homedir + nlo_outs[nlo_i] + "/out")
 nlo = (
     mergefks(
         sigma("mp2mpR"),
@@ -181,18 +194,20 @@ style_axis(
 ax_Emu.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
 ax_Emu.ticklabel_format(style="sci", axis="x", scilimits=(-3, 3))
 
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+# CHANGE according to where you are (Office/Home)
+# !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
+
+#mulify(fig, delx=0.0, dely=0.0)
+
 # =========================
 # Layout & Save
 # =========================
-mulify(fig, delx=0.0, dely=0.0)
-
 # increase vertical spacing to avoid overlap
 fig.subplots_adjust(hspace=0.4, wspace=0.3)
 
 save_figure(
     fig,
     savename,
-    outdir="/home/marialei/AMBER_RadCor/Figures/"
+    outdir=outdir
 )
-
-#lalala
