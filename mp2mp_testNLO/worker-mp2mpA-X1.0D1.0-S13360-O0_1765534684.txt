@@ -1,0 +1,49 @@
+Starting job mp2mpA-X1.0D1.0-S13360-O0_1765534684 at 1765534685.0512354
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ This is Mary testing the McMule userfile <3
+  * E_mu = 150 GeV
+  * 0.3 < th_mu < 2 mrad
+  * E_mu > 90 GeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    6.2613478066504075E-003   6.2613478066504075E-003
+ internal avgi, sd:    4.7023893770791730E-003   1.2891156573017579E-003
+ internal avgi, sd:    6.5513620355719410E-003   1.2128693879579829E-003
+ internal avgi, sd:    2.0923194433373652E-002   2.1247140331504899E-004
+ internal avgi, sd:    2.0989590524811422E-002   2.8446494770245077E-005
+ internal avgi, sd:    2.0999058244338863E-002   3.2788317654365313E-004
+ internal avgi, sd:    2.1193803351276141E-002   1.1856758847778545E-004
+ internal avgi, sd:    2.1343753028177551E-002   2.7734195025780226E-005
+ internal avgi, sd:    2.1380217568582972E-002   4.0727548975269743E-006
+ internal avgi, sd:    2.1376928473374066E-002   1.3983766959612465E-006
+ points:     5* 10K +   5*100K         random seed:      13360
+ part: mp2mpA                       xicut: 1.00000    delcut: 1.00000
+ points on phase space     314416 thereof fucked up          0
+         
+         
+         
+ result, error:  {  2.13769E-02,  1.39838E-06 };   chisq:  1.15
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 10.01227855682373s

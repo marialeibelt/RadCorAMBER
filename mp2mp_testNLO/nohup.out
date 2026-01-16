@@ -1,0 +1,22 @@
+usage: pymule [-h] [--version]
+              {create,cp,rm,preproc,ffilter,meson,validate,batch,update-refs}
+              ...
+pymule: error: argument {create,cp,rm,preproc,ffilter,meson,validate,batch,update-refs}: invalid choice: 'sbatch' (choose from 'create', 'cp', 'rm', 'preproc', 'ffilter', 'meson', 'validate', 'batch', 'update-refs')
+Starting job mp2mp0-X1.0D1.0-S76996-O0_1765476117 at 1765476117.290576
+Starting job mp2mp0-X1.0D1.0-S44305-O0_1765476117 at 1765476118.2913032
+Starting job mp2mpF-X0.1D0.1-S51921-O0_1765491702 at 1765491702.1552696
+Starting job mp2mpF-X0.1D0.1-S28156-O0_1765491702 at 1765491703.1560457
+Starting job mp2mpR-X0.1D0.1-S90833-O0_1765491702 at 1765491704.1567144
+Starting job mp2mpR-X0.1D0.1-S46530-O0_1765491702 at 1765491705.1579244
+Starting job mp2mpF-X0.1D0.1-S51921-O0_1765491878 at 1765491878.5946238
+Starting job mp2mpF-X0.1D0.1-S28156-O0_1765491878 at 1765491879.595405
+Starting job mp2mpR-X0.1D0.1-S90833-O0_1765491878 at 1765491880.5960734
+Starting job mp2mpR-X0.1D0.1-S46530-O0_1765491878 at 1765491881.5969172
+Starting job mp2mpA-X1.0D1.0-S13360-O0_1765492106 at 1765492106.211072
+Starting job mp2mpA-X1.0D1.0-S77690-O0_1765492106 at 1765492107.211789
+Starting job mp2mpF-X0.1D0.1-S51921-O0_1765534526 at 1765534526.9740064
+Starting job mp2mpF-X0.1D0.1-S28156-O0_1765534526 at 1765534527.9748132
+Starting job mp2mpR-X0.1D0.1-S90833-O0_1765534526 at 1765534528.9756458
+Starting job mp2mpR-X0.1D0.1-S46530-O0_1765534684 at 1765534684.0502765
+Starting job mp2mpA-X1.0D1.0-S13360-O0_1765534684 at 1765534685.0512354
+Starting job mp2mpA-X1.0D1.0-S77690-O0_1765534684 at 1765534686.0562596
