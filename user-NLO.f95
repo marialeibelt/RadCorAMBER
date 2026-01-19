@@ -58,7 +58,7 @@
   print*, " * E_mu = 150 GeV"
   print*, " * 1.35 < th_mu < 1.65 mrad"
   print*, " * E_mu > 70 GeV"
-  print*, " * E_ph > 1 GeV"
+  print*, " * E_ph > 200MeV"
   
   call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   END SUBROUTINE
@@ -69,7 +69,7 @@
   real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
   real (kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)  ! in lab frame
   real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real (kind=prec) :: quant(nr_q)
+  real (kind=prec) :: quant(nrq)
   
   !! ==== keep the line below in any case ==== !!
   call fix_mu
@@ -85,22 +85,28 @@
   q3perp=sqrt(ql3(1)**2+ql3(2)**2)
   th3 = atan2(q3perp,ql3(3))   ! scattering angle in rad
   Emu = ql3(4)
-  
   Eph_cut = 1.e3
-  Eph = ql5(4)
-  if(Eph.gt.Eph_cut) then
-     q5perp=sqrt(ql5(1)**2+ql5(2)**2)
-     th5 = atan2(q5perp,ql5(3))
-  endif
   
   pass_cut = .true.
 
-  ! scattering angle cut
+  ! Muon cuts
   if(th3.lt.1.35e-3) pass_cut = .false.
   if(th3.gt.1.65e-3) pass_cut = .false.
   !write(*,*) 'Emu ', ql3(4)
   if(Emu.lt.70.e3) pass_cut =.false.
-  if(Eph.lt.Eph_cut) pass_cut =.false.        !Double??
+  
+  ! initialize photon variables
+  Eph = 0._prec
+  th5 = 0._prec
+
+  ! apply photon cuts only if real photon exists
+  if (ql5(4) > 0._prec) then
+    Eph = ql5(4)
+    if (Eph < Eph_cut) pass_cut = .false.
+    q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
+    th5 = atan2(q5perp, ql5(3))
+  endif
+
 
   names(1) = 'th3'
   quant(1) = th3

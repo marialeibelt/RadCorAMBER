@@ -2,19 +2,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 from matplotlib.ticker import ScalarFormatter
-from pymule import errorband
+from pymule import *
 
-
-# =========================
-# Errorband helpers
-# =========================
 def plot_errorband(ax, hist, color):
     plt.sca(ax)
     for line in errorband(hist):
         line.set_color(color)
 
-
-def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
+def plot_lo_nlo_full(ax, lo, nlo, full,binwidths, colors, labels=None):
     plot_errorband(ax, lo, colors["lo"])
     plot_errorband(ax, nlo, colors["nlo"])
     plot_errorband(ax, full, colors["full"])
