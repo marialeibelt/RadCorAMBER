@@ -8,12 +8,12 @@
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
 
-  integer, parameter :: nrq = 4
+  integer, parameter :: nrq = 4					!th3,Emu,th5,Eph
   integer, parameter :: nrbins = 500
   real(kind=prec), parameter :: &
-       min_val(nrq) = (/ .3e-3,  95.e3, 15.e-3, 1.e3/) !rad, MeV
+       min_val(nrq) = (/ .3e-3,  95.e3, -12.e-3, 1.e3/)      	!rad, MeV, rad, MeV
   real(kind=prec), parameter :: &
-       max_val(nrq) = (/ 2.e-3, 101.e3, 30.e-3, 100.e3/) !rad, MeV
+       max_val(nrq) = (/ 2.e-3, 101.e3, 12.e-3, 100.e3/) 	!rad, MeV, rad, MeV
   integer :: userdim = 0
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
@@ -96,10 +96,11 @@
   pass_cut = .true.
 
   ! scattering angle cut
-  if(th3 < 1.35e-3) pass_cut = .false.
-  if(th3 > 1.65e-3) pass_cut = .false.
+  if(th3.lt.1.35e-3) pass_cut = .false.
+  if(th3.gt.1.65e-3) pass_cut = .false.
   !write(*,*) 'Emu ', ql3(4)
-  if(Emu < 70.e3) pass_cut =.false.
+  if(Emu.lt.70.e3) pass_cut =.false.
+  if(Eph.lt.Eph_cut) pass_cut =.false.        !Double??
 
   names(1) = 'th3'
   quant(1) = th3

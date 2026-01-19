@@ -97,34 +97,34 @@ colors = dict(
 # =========================
 # th3 
 # =========================
-th3_lo = lo["th3"]
-th3_nlo = nlo["th3"]
-th3_full = addplots(th3_lo, th3_nlo)
+th3_lo_mrad   = lo["th3"] * 1e3
+th3_nlo_mrad  = nlo["th3"] * 1e3
+th3_full_mrad = full["th3"] * 1e3
 
 plot_lo_nlo_full(
     ax_th3,
-    th3_lo,
-    th3_nlo,
-    th3_full,
+    th3_lo_mrad,
+    th3_nlo_mrad,
+    th3_full_mrad,
     colors,
     labels=dict(lo="LO", nlo="NLO", full="LO + NLO"),
 )
 
 style_sci_x(
     ax_th3,
-    xlabel=r"$\theta_3\ (\mathrm{rad})$",
+    xlabel=r"$\theta_3\ (\mathrm{mrad})$",
     ylabel="Counts",
     title="Scattering Angle",
-    sharex=True,
 )
 
-ax_th3.set_xlim(1.3e-3, 1.7e-3)
+ax_th3.set_xlim(1.3, 1.7)
+
 
 
 # =========================
 # K-Factor
 # =========================
-thK = mergebins(divideplots(th3_nlo, th3_full), 5)
+thK = mergebins(divideplots(th3_nlo_mrad, th3_full_mrad), 5)
 
 plot_errorband(ax_K, thK, colors["K"])
 ax_K.plot([], [], color=colors["K"], label="K-factor")
@@ -132,7 +132,7 @@ ax_K.legend()
 
 style_sci_x(
     ax_K,
-    xlabel=r"$\theta_3\ (\mathrm{rad})$",
+    xlabel=r"$\theta_3\ (\mathrm{mrad})$",
     ylabel=r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$",
     title="K Factor",
     yscale="linear",
@@ -144,11 +144,15 @@ ax_K.set_xlim(ax_th3.get_xlim())
 # =========================
 # Emu
 # =========================
+lo_Emu_MeV   = lo["Emu"] / 1e3
+nlo_Emu_MeV  = nlo["Emu"] / 1e3
+full_Emu_MeV = full["Emu"] / 1e3
+
 plot_lo_nlo_full(
     ax_Emu,
-    lo["Emu"],
-    nlo["Emu"],
-    full["Emu"],
+    lo_Emu_MeV,
+    nlo_Emu_MeV,
+    full_Emu_MeV,
     colors,
     labels=dict(lo="LO", nlo="NLO correction", full="LO + NLO"),
 )
@@ -163,18 +167,22 @@ style_sci_x(
 # =========================
 # th5
 # =========================
+th5_lo_mrad   = lo["th5"] * 1e3
+th5_nlo_mrad  = nlo["th5"] * 1e3
+th5_full_mrad = full["th5"] * 1e3
+
 plot_lo_nlo_full(
     ax_th5,
-    lo["th5"],
-    nlo["th5"],
-    full["th5"],
+    th5_lo_mrad,
+    th5_nlo_mrad,
+    th5_full_mrad,
     colors,
     labels=dict(lo="LO", nlo="NLO correction", full="LO + NLO"),
 )
 
 style_sci_x(
     ax_th5,
-    xlabel=r"$\theta_5\ (\mathrm{rad})$",
+    xlabel=r"$\theta_5\ (\mathrm{mrad})$",
     ylabel="Counts",
     title="Scattering Angle of the Photon",
 )
@@ -182,11 +190,15 @@ style_sci_x(
 # =========================
 # Eph
 # =========================
+lo_Eph_MeV   = lo["Eph"] / 1e3
+nlo_Eph_MeV  = nlo["Eph"] / 1e3
+full_Eph_MeV = full["Eph"] / 1e3
+
 plot_lo_nlo_full(
     ax_Eph,
-    lo["Eph"],
-    nlo["Eph"],
-    full["Eph"],
+    lo_Eph_MeV,
+    nlo_Eph_MeV,
+    full_Eph_MeV,
     colors,
     labels=dict(lo="LO", nlo="NLO correction", full="LO + NLO"),
 )
@@ -197,7 +209,7 @@ style_sci_x(
     ylabel="Counts",
     title="Energy of the Photon",
 )
-
+ax_Eph.set_xlim(0.,35.)
 
 # !/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!/!
 # CHANGE according to where you are (Office/Home)
