@@ -102,9 +102,9 @@
   ! apply photon cuts only if real photon exists
   if (ql5(4) > 0._prec) then
     Eph = ql5(4)
-    if (Eph < Eph_cut) pass_cut = .false.
     q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
     th5 = atan2(q5perp, ql5(3))
+    if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
   endif
 
 

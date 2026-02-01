@@ -110,3 +110,13 @@ def save_figure(fig, name, outdir, dpi=700):
 
     fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
+
+def plot_K(ax, K, bw, colors_K, xlabel, title):
+    plot_lo_nlo_full(
+        ax,
+        lo=K, nlo=K, full=K,
+        binwidths=bw,
+        colors=dict(lo=colors_K, nlo=colors_K, full=colors_K),
+        labels=dict(full="K-factor"),
+    )
+    style_sci_x(ax, xlabel, r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$", title)
