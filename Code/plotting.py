@@ -9,7 +9,7 @@ def plot_errorband(ax, hist, color):
     for line in errorband(hist):
         line.set_color(color)
 
-def plot_lo_nlo_full(ax, lo, nlo, full,binwidths, colors, labels=None):
+def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
     plot_errorband(ax, lo, colors["lo"])
     plot_errorband(ax, nlo, colors["nlo"])
     plot_errorband(ax, full, colors["full"])
@@ -111,12 +111,27 @@ def save_figure(fig, name, outdir, dpi=700):
     fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
 
-def plot_K(ax, K, bw, colors_K, xlabel, title):
+def plot_K(ax, K, colors_K, xlabel, title):
     plot_lo_nlo_full(
         ax,
         lo=K, nlo=K, full=K,
-        binwidths=bw,
         colors=dict(lo=colors_K, nlo=colors_K, full=colors_K),
         labels=dict(full="K-factor"),
     )
     style_sci_x(ax, xlabel, r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$", title)
+
+
+# =========================
+# Write values in file
+# =========================
+def write_file_with_values(filename, parameter_array, xlabel, parameter_label):
+    with open(filename, "w") as f:
+        f.write(f"{xlabel}    {parameter_label}    Error \n")
+
+        for i, row in enumerate(parameter_array):
+            bin_center = row[0]
+            value      = row[1]
+            error      = row[2]
+            f.write(f"{bin_center: .6e}  {value: .6e}  {error: .6e}\n")
+
+

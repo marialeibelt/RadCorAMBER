@@ -1,0 +1,35 @@
+## Generated at 17:50 on February 24 2026 by marialei
+# git version: b'master' (b'3a36a30')
+# To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
+#      --seeds 37264 78242 61580 50636 65388 36990 52674 92338 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir mp2mp_NLO_24_02 \
+#      --mcmule mcmule \
+#      --stat 0,100,10,1000,10,2 \
+#      --stat F,100,10,1000,10,2 \
+#      --stat R,1000,10,10000,10,2 \
+#      --stat A,100,10,1000,10,2
+
+conf mp2mp.toml
+mode vegas
+
+
+#run 92338 1.0 mp2mp0 0
+#run 52674 1.0 mp2mp0 0
+
+
+
+#run 36990 0.1 mp2mpF 0
+#run 65388 0.1 mp2mpF 0
+
+
+
+run 50636 0.1 mp2mpR 0
+run 61580 0.1 mp2mpR 0
+
+
+
+run 78242 1.0 mp2mpA 0
+run 37264 1.0 mp2mpA 0
+
