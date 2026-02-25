@@ -26,7 +26,7 @@
     !! DO NOT EVEN THINK ABOUT CHANGING ANYTHING HERE !!
     !! ============================================== !!
 
-  integer :: namesLen=6
+  integer :: namesLen=12
   integer :: filenamesuffixLen=10
   integer :: nq=nrq
   integer :: nbins=nrbins
@@ -70,9 +70,9 @@
 
   real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
   real (kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)  ! in lab frame
-  real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real (kind=prec) :: th5_x, th5_y  ! in lab frame
-  real (kind=prec) :: q3perp_cms, th3_cms, Emu_cms, Eph_cms, th5_cms, q5perp_cms, th5_x_cms, th5_y_cms
+  real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph
+  real (kind=prec) :: phi5_x, phi5_y  ! in lab frame
+  real (kind=prec) :: q3perp_cms, th3_cms, Emu_cms, Eph_cms, th5_cms, q5perp_cms, phi5_x_cms, phi5_y_cms
   real (kind=prec) :: quant(nrq)
   
   !! ==== keep the line below in any case ==== !!
@@ -95,7 +95,6 @@
   q3perp_cms = sqrt(q3(1)**2+q3(2)**2)
   th3_cms = atan2(q3perp_cms,q3(3))   ! scattering angle in rad
   Emu_cms = q3(4)
-  ! Eph_cut_cms = 1.e3 !??????
   
   pass_cut = .true.
 
@@ -116,18 +115,14 @@
     Eph = ql5(4)
     q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
     th5 = atan2(q5perp, ql5(3))
-    th5_x = atan2(ql5(2),ql5(1))
-    th5_y = atan2(ql5(1),ql5(2))
-    if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
-  endif
-  
-   if (q5(4) > 0._prec) then
-    Eph_cms = ql5(4)
+    phi5_x = atan2(ql5(2),ql5(1))
+    phi5_y = atan2(ql5(1),ql5(2))
+    Eph_cms = q5(4)
     q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
     th5_cms = atan2(q5perp_cms, q5(3))
-    th5_x_cms = atan2(q5(2),q5(1))
-    th5_y_cms = atan2(q5(1),q5(2))
-    ! if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false. !KEINE AHNUNG
+    phi5_x_cms = atan2(q5(2),q5(1))
+    phi5_y_cms = atan2(q5(1),q5(2))
+    if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
   endif
 
 
@@ -139,10 +134,10 @@
   quant(3) = th5
   names(4) = 'Eph'
   quant(4) = Eph
-  names(5) = 'th5_x'
-  quant(5) = th5_x
-  names(6) = 'th5_y'
-  quant(6) = th5_y
+  names(5) = 'phi5_x'
+  quant(5) = phi5_x
+  names(6) = 'phi5_y'
+  quant(6) = phi5_y
   
   names(7) = 'th3_cms'
   quant(7) = th3_cms
@@ -152,10 +147,14 @@
   quant(9) = th5_cms
   names(10) = 'Eph_cms'
   quant(10) = Eph_cms
-  names(11) = 'th5_x_cms'
-  quant(11) = th5_x_cms
-  names(12) = 'th5_y_cms'
-  quant(12) = th5_y_cms
+  names(11) = 'phi5_x_cmEph_cms = q5(4)
+    q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
+    th5_cms = atan2(q5perp_cms, q5(3))
+    phi5_x_cms = atan2(q5(2),q5(1))
+    phi5_y_cms = atan2(q5(1),q5(2))s'
+  quant(11) = phi5_x_cms
+  names(12) = 'phi5_y_cms'
+  quant(12) = phi5_y_cms
  
 
   END FUNCTION QUANT
