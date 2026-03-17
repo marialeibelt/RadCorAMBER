@@ -7,7 +7,8 @@ from plotting import *
 # =========================
 # Paths
 # =========================
-homedir = "/home/marialei/AMBER_RadCor/"
+#homedir = "/home/marialei/AMBER_RadCor/"                                           #Laptop
+homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"    #Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
@@ -15,23 +16,20 @@ outdir_vals = homedir + "Vals/"
 # Input definitions
 # =========================
 lo_outs = [
-    "mp2mp_NLO_22_12",
-    "mp2mp_NLO_12_01",
-    "mp2mp_NLO_13_01",
     "mp2mp_NLO_19_01",
     "mp2mp_NLO_01_02",
     "mp2mp_NLO_24_02",
     "mp2mp_NLO_15_03"
 ]
 nlo_outs = lo_outs
-savenames = ["combined", "15_03"]
+savenames = ["combined", "15_03", "17_03"]
 
 # =========================
 # Dataset choice
 # =========================
-lo_i = 6
-nlo_i = 6
-savename_base = savenames[1] + "_" + nlo_outs[nlo_i]
+lo_i = 3
+nlo_i = 3
+savename_base = savenames[2] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup

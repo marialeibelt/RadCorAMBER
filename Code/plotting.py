@@ -85,6 +85,7 @@ def create_figure(
     plt.rcParams.update({
         "font.size": font_size,
         "font.family": "serif",
+        "text.usetex": False,
     })
 
     fig, axes = plt.subplots(
