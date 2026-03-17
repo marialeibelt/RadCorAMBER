@@ -79,19 +79,32 @@ def create_figure(
     ncols=1,
     figsize=(8, 5),
     font_size=7,
+    sharex=False,
+    gridspec_kw=None,
 ):
     plt.rcParams.update({
         "font.size": font_size,
         "font.family": "serif",
     })
 
-    fig, axes = plt.subplots(nrows, ncols, figsize=figsize)
+    fig, axes = plt.subplots(
+        nrows,
+        ncols,
+        figsize=figsize,
+        sharex=sharex,
+        gridspec_kw=gridspec_kw,
+    )
 
     if nrows == 1 and ncols == 1:
         axes = np.array([[axes]])
 
-    return fig, axes
+    elif nrows == 1:
+        axes = np.array([axes])
 
+    elif ncols == 1:
+        axes = np.array([[ax] for ax in axes])
+
+    return fig, axes
 
 def add_secondary_xaxis(ax, transform_func, xlabel=None, scale="linear"):
     ax_sec = ax.twiny()
@@ -111,16 +124,20 @@ def save_figure(fig, name, outdir, dpi=700):
     fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
 
-def plot_K(ax, K, colors_K, xlabel, title):
+def plot_K(ax, K, colors_K, xlabel):
     plot_lo_nlo_full(
         ax,
         lo=K, nlo=K, full=K,
         colors=dict(lo=colors_K, nlo=colors_K, full=colors_K),
         labels=dict(full="K-factor"),
     )
-    style_sci_x(ax, xlabel, r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$", title)
-
-
+    style_sci_x(
+        ax,
+        xlabel,
+        r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$",
+        None,
+        yscale="linear",
+    )
 # =========================
 # Write values in file
 # =========================

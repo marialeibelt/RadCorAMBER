@@ -8,7 +8,7 @@
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
 
-  integer, parameter :: nrq = 12			!th3,Emu,th5,Eph, th5x, th5y, +same in cms
+  integer, parameter :: nrq = 12			!th3,Emu,th5,Eph, phi5x, phi5y, +same in cms
   integer, parameter :: nrbins = 500
   real(kind=prec), parameter :: &
        min_val(nrq) = (/ .3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3, -12.e-3, &
@@ -70,7 +70,7 @@
 
   real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
   real (kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)  ! in lab frame
-  real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph
+  real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
   real (kind=prec) :: phi5_x, phi5_y  ! in lab frame
   real (kind=prec) :: q3perp_cms, th3_cms, Emu_cms, Eph_cms, th5_cms, q5perp_cms, phi5_x_cms, phi5_y_cms
   real (kind=prec) :: quant(nrq)
@@ -125,7 +125,6 @@
     if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
   endif
 
-
   names(1) = 'th3'
   quant(1) = th3
   names(2) = 'Emu'
@@ -147,11 +146,7 @@
   quant(9) = th5_cms
   names(10) = 'Eph_cms'
   quant(10) = Eph_cms
-  names(11) = 'phi5_x_cmEph_cms = q5(4)
-    q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
-    th5_cms = atan2(q5perp_cms, q5(3))
-    phi5_x_cms = atan2(q5(2),q5(1))
-    phi5_y_cms = atan2(q5(1),q5(2))s'
+  names(11) = 'phi5_x_cms'
   quant(11) = phi5_x_cms
   names(12) = 'phi5_y_cms'
   quant(12) = phi5_y_cms
