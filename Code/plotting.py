@@ -43,9 +43,6 @@ def style_sci_x(
     ax.xaxis.set_major_formatter(ScalarFormatter(useMathText=True))
     ax.ticklabel_format(style="sci", axis="x", scilimits=(-3, 3))
 
-    if sharex:
-        ax.tick_params(labelbottom=False)
-
 
 def style_axis(
     ax,

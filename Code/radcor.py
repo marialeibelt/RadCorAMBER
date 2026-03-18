@@ -149,6 +149,7 @@ def draw_observable_and_k(
         ax_main.tick_params(axis="x", labelbottom=False)
         ax_main.set_xlabel(None)
 
+    ax_k.tick_params(axis="x", labelbottom=True)
     return lo_s, nlo_s, full_s, K
 
 
@@ -176,7 +177,7 @@ def save_single_pair_plot(
         sharex=True,
         gridspec_kw={
             "height_ratios": [3, 1],
-            "hspace": 0,
+            "hspace": 0.,
         },
     )
 
@@ -249,12 +250,12 @@ def make_plots_and_kfactors(
     fig, axes = create_figure(
         nrows=6,
         ncols=2,
-        figsize=(16, 16),
+        figsize=(16, 22),
         font_size=12,
-        sharex='col',
+        sharex=False,
         gridspec_kw={
             "height_ratios": [3, 1, 3, 1, 3, 1],
-            "hspace": 0.5,
+            "hspace": 0.6,
         },
     )
 
@@ -266,6 +267,15 @@ def make_plots_and_kfactors(
 
     ax_phi5_x, ax_phi5_y     = axes[4]
     ax_K_phi5_x, ax_K_phi5_y = axes[5]
+
+    ax_K_th3.sharex(ax_th3)
+    ax_K_Emu.sharex(ax_Emu)
+
+    ax_K_th5.sharex(ax_th5)
+    ax_K_Eph.sharex(ax_Eph)
+
+    ax_K_phi5_x.sharex(ax_phi5_x)
+    ax_K_phi5_y.sharex(ax_phi5_y)
 
     _, _, _, K_th3 = draw_observable_and_k(
         ax_th3, ax_K_th3,
