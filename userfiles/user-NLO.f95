@@ -8,16 +8,17 @@
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
 
-  integer, parameter :: nrq = 14			!th3,Emu,th5,Eph, phi5, +same in cms, x5,y5,xB1,xB2
+  integer, parameter :: nrq = 16			!th3,Emu,th5,Eph, phi5, +same in cms, 
+							!x5,y5,xB1,xB2,yB1,yB2
   integer, parameter :: nrbins = 500
   real(kind=prec), parameter :: &
        min_val(nrq) = (/ .3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&
        			.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&
-       			-0.2, -0.2,-0.2,-0.2/) !rad,MeV,rad,MeV,..., m,m,m,m
+       			-0.5, -0.5,-0.5,-0.5,.3e-3,.3e-3 /) !rad,MeV,rad,MeV,..., m,m,m,m,rad,rad
   real(kind=prec), parameter :: &
        max_val(nrq) = (/ 2.e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&
        			 2.e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&
-       			  0.2, 0.2, 0.2, 0.2/) 	!rad,MeV,rad,MeV,..., m,m,m,m
+       			  0.5, 0.5, 0.5, 0.5,2.e-3,2.e-3 /) 	!rad,MeV,rad,MeV,..., m,m,m,m,rad,rad
   integer :: userdim = 0
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
@@ -74,14 +75,13 @@
   real (kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)  ! in lab frame
   real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
   real (kind=prec) :: phi5 ! in lab frame
-  real (kind=prec) :: q3perp_cms, th3_cms, Emu_cms, Eph_cms, th5_cms, q5perp_cms, phi5_cms
-  real (kind=prec) :: d_detec, x_5, y_5,x_5_B1,x_5_B2
+  real (kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
+  real (kind=prec) :: d_detec,x5,y5
   real (kind=prec) :: quant(nrq)
   
   !! ==== keep the line below in any case ==== !!
   call fix_mu
   
-  d_detec = 10 !m, dummy value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dummy value
   ! proton frame
   ql1 = boost_rf(q2,q1)
   ql2 = boost_rf(q2,q2)
@@ -95,6 +95,7 @@
   th3 = atan2(q3perp,ql3(3))   ! scattering angle in rad
   Emu = ql3(4)
   Eph_cut = 1.e3
+  d_detec = 10 !m, dummy value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dummy value
   
   ! cms frame
   q3perp_cms = sqrt(q3(1)**2+q3(2)**2)
@@ -126,8 +127,8 @@
     th5_cms = atan2(q5perp_cms, q5(3))
     phi5_cms = atan2(q5(2),q5(1))
     
-    x_5 = d_detec*tan(th5)*cos(phi5)
-    y_5 = d_detec*tan(th5)*sin(phi5)
+    x5 = d_detec*tan(th5)*cos(phi5)
+    y5 = d_detec*tan(th5)*sin(phi5)
     if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
   endif
 
@@ -153,17 +154,34 @@
   names(10) = 'phi5_cms'
   quant(10) = phi5_cms
   
-  names(11) = 'x_5'
-  quant(11) = x_5
-  names(12) = 'y_5'
-  quant(12) = y_5
+  names(11) = 'x5'
+  quant(11) = x5
+  names(12) = 'y5'
+  quant(12) = y5
   
-  names(13) = 'x_5_B1'
-  pass_cut(13) = (0.1 < y_5).and.(y_5 < 0.2)
-  quant(13) = x_5_B1
-  names(14) = 'x_5_B2'
-  pass_cut(14) = (0. < y_5).and.(y_5 < 0.1)
-  quant(14) = x_5_B2
+  !names(13) = 'x5_B1'
+  !pass_cut(13) = (0.1 < y_5).and.(y_5 < 0.2)
+  !quant(13) = x5
+  !names(14) = 'x5_B2'
+  !pass_cut(14) = (0. < y_5).and.(y_5 < 0.1)
+  !quant(14) = x5
+  
+  names(13) = 'x5_B1'
+  pass_cut(13) = (70.e3 < Emu).and.(Emu < 90.e3)
+  quant(13) = x5
+  names(14) = 'x5_B2'
+  pass_cut(14) = (90.e3 < Emu).and.(Emu < 110.e3)
+  quant(14) = x5
+  
+  names(15) = 'y5_B1'
+  pass_cut(15) = (70.e3 < Emu).and.(Emu < 90.e3)
+  quant(15) = y5
+  names(16) = 'y5_B2'
+  pass_cut(16) = (90.e3 < Emu).and.(Emu < 110.e3)
+  quant(16) = y5
+  
+
+  
 
   END FUNCTION QUANT
 

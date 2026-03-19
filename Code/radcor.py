@@ -47,10 +47,12 @@ lo_Emu, nlo_Emu, full_Emu = lo["Emu"], nlo["Emu"], full["Emu"]
 lo_th5, nlo_th5, full_th5 = lo["th5"], nlo["th5"], full["th5"]
 lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
 lo_phi5, nlo_phi5, full_phi5 = lo["phi5"], nlo["phi5"], full["phi5"]
-lo_x5, nlo_x5, full_x5 = lo["x_5"], nlo["x_5"], full["x_5"]
-lo_y5, nlo_y5, full_y5 = lo["y_5"], nlo["y_5"], full["y_5"]
-lo_x5_B1, nlo_x5_B1, full_x5_B1 = lo["x_5_B1"], nlo["x_5_B1"], full["x_5_B1"]
-lo_x5_B2, nlo_x5_B2, full_x5_B2 = lo["x_5_B2"], nlo["x_5_B2"], full["x_5_B2"]
+lo_x5, nlo_x5, full_x5 = lo["x5"], nlo["x5"], full["x5"]
+lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
+lo_x5_B1, nlo_x5_B1, full_x5_B1 = lo["x5_B1"], nlo["x5_B1"], full["x5_B1"]
+lo_x5_B2, nlo_x5_B2, full_x5_B2 = lo["x5_B2"], nlo["x5_B2"], full["x5_B2"]
+lo_y5_B1, nlo_y5_B1, full_y5_B1 = lo["y5_B1"], nlo["y5_B1"], full["y5_B1"]
+lo_y5_B2, nlo_y5_B2, full_y5_B2 = lo["y5_B2"], nlo["y5_B2"], full["y5_B2"]
 
 # =========================
 # Extract observables (CMS)
@@ -243,31 +245,57 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
 
-    # ---------- Plot B1/B2 bands (nur LAB sinnvoll) ----------
+    # ---------- Plot x5 bands (LAB) ----------
     if full_x5 is not None and full_x5_B1 is not None and full_x5_B2 is not None:
 
         fig, ax = plt.subplots(figsize=(6,5))
 
         # Full range
         #ax.plot(full_x5[:,0], full_x5[:,1],
-        #        color=colors["full"], label="Full y-Range")
+        #        color=colors["full"], label="Full $E_\mu$-Range")
 
         # Bands
-        ax.plot(full_x5_B1[:,0], full_x5_B1[:,1],
-                color="blue", label=r"$y_\gamma \in [0.1,0.2]\ \mathrm{m}$")
+        #ax.plot(full_x5_B1[:,0], full_x5_B1[:,1],
+        #        color="blue", label=r"$y_\gamma \in [90,110]\ \mathrm{GeV}$")
 
         ax.plot(full_x5_B2[:,0], full_x5_B2[:,1],
-                color="red", label=r"$y_\gamma \in [0,0.1]\ \mathrm{m}$")
+               color="red", label=r"$E_\mu \in [70,90]\ \mathrm{GeV}$")
 
         ax.set_xlabel(r"$x_\gamma\ (\mathrm{m})$")
-        ax.set_ylabel(r"$\frac{d\sigma}{dx_5}$")
-        ax.set_title(f"Photon impact $x$ in $y$-bands ({tag})")
+        ax.set_ylabel(r"$\frac{d\sigma}{dx_\gamma}$")
+        ax.set_title(f"Amount of Photons at $x$ in $y$-bands ({tag})")
+        ax.set_xlim(-0.05,0.05)
 
         ax.legend()
 
         save_figure(fig, f"{savename}_x5_bands", outdir=outdir)
         plt.close(fig)
 
+    # ---------- Plot y5 bands (LAB) ----------
+    if full_y5 is not None and full_y5_B1 is not None and full_y5_B2 is not None:
+
+        fig, ax = plt.subplots(figsize=(6,5))
+
+        # Full range
+        #ax.plot(full_y5[:,0], full_y5[:,1],
+        #        color=colors["full"], label="Full $E_\mu$-Range")
+
+        # Bands
+        #ax.plot(full_y5_B1[:,0], full_y5_B1[:,1],
+        #        color="blue", label=r"$y_\gamma \in [90,110]\ \mathrm{GeV}$")
+
+        ax.plot(full_y5_B2[:,0], full_y5_B2[:,1],
+               color="red", label=r"$E_\mu \in [70,90]\ \mathrm{GeV}$")
+
+        ax.set_xlabel(r"$y_\gamma\ (\mathrm{m})$")
+        ax.set_ylabel(r"$\frac{d\sigma}{dy_\gamma}$")
+        ax.set_title(f"Amount of Photons at $y$ in $E_\mu$-bands ({tag})")
+        ax.set_xlim(-0.05,0.05)
+
+        ax.legend()
+
+        save_figure(fig, f"{savename}_y5_bands", outdir=outdir)
+        plt.close(fig)
 
     #theta5 = nlo_th5[:,0]       # extract the theta_5 values
     #tan_theta5 = np.tan(theta5)  # numpy tan; make sure theta5 is in radians!

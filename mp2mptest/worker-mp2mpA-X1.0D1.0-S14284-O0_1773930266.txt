@@ -1,0 +1,44 @@
+Starting job mp2mpA-X1.0D1.0-S14284-O0_1773930266 at 1773930269.3745837
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ This is Mary testing the McMule userfile <3
+  * E_mu = 150 GeV
+  * 1.35 < th_mu < 1.65 mrad
+  * E_mu > 70 GeV
+  * E_ph > 200MeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    5.7841314139186915E-003   4.0101401496269069E-003
+ internal avgi, sd:    7.7139512420976502E-003   3.9474895048256147E-003
+ internal avgi, sd:    7.7375285208890034E-003   3.9474727638373584E-003
+ internal avgi, sd:    7.7400521143552083E-003   3.9474724427828005E-003
+ internal avgi, sd:    7.7910845035069187E-003   3.9474658200811721E-003
+ internal avgi, sd:    7.7921366156758539E-003   3.9474657749749235E-003
+ internal avgi, sd:    7.8023460677770825E-003   3.9474652615241954E-003
+ internal avgi, sd:    7.8028007326049059E-003   3.9474652508333019E-003
+ internal avgi, sd:    7.8028007326049059E-003   3.9474652508333019E-003
+ internal avgi, sd:    7.8028007326049059E-003   3.9474652508333019E-003
+Note: The following floating-point exceptions are signalling: IEEE_DENORMAL
+STOP 8
+ Program crashes because of a call to the function load vegas
+
+
+Job finished, running took 6.012024402618408s
