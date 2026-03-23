@@ -1,0 +1,24 @@
+## Generated at 09:28 on March 23 2026 by marialei
+# git version: b'main' (b'5f39f13')
+# To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
+#      --seeds 18597 74301 20752 72662 55455 57551 53380 88491 13530 94145 89078 82056 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir mp2mp_23_03 \
+#      --mcmule mcmule \
+#      --stat 0,100,10,1000,10,3 \
+#      --stat F,100,10,1000,10,3 \
+#      --stat R,1000,10,10000,10,3 \
+#      --stat A,100,10,1000,10,3
+[McMule]
+
+# specify the program to run relative to `pwd`
+mcmule = "/home/marialei/mcmule-release/mcmule"
+# Specify the variables nenter_ad, itmx_ad, nenter and itmx
+# for each piece you want to run.
+
+[McMule.statistics.vegas]
+mp2mp0 = { ncall_pre = 100, itmx_pre = 10, ncall = 1000, itmx = 10 }
+mp2mpF = { ncall_pre = 100, itmx_pre = 10, ncall = 1000, itmx = 10 }
+mp2mpR = { ncall_pre = 1000, itmx_pre = 10, ncall = 10000, itmx = 10 }
+mp2mpA = { ncall_pre = 100, itmx_pre = 10, ncall = 1000, itmx = 10 }
