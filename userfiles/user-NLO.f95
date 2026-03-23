@@ -8,17 +8,21 @@
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
 
-  integer, parameter :: nrq = 14			!th3,Emu,th5,Eph, phi5, +same in cms, 
-							!x5,y5,xB1,xB2
+  integer, parameter :: nrq = 34			!th3,Emu,th5,Eph, phi5, +same in cms, 
+							!x5,y5,ySlices(11x),xSlices(11x)
   integer, parameter :: nrbins = 500
   real(kind=prec), parameter :: &
-       min_val(nrq) = (/ .3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&
-       			.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&
-       			-0.5, -0.5,-0.5,-0.5/) !rad,MeV,rad,MeV,..., m,m,m,m
+       min_val(nrq) = (/1.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&		!rad,MeV,rad,MeV,rad
+       			1.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&  		!rad,MeV,rad,MeV,rad
+       			-0.5, -0.5,&						!m,m				
+       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,&!m
+       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5/)!m
   real(kind=prec), parameter :: &
-       max_val(nrq) = (/ 2.e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&
-       			 2.e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&
-       			  0.5, 0.5, 0.5, 0.5/) 	!rad,MeV,rad,MeV,..., m,m,m,m
+       max_val(nrq) = (/ 1.7e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
+       			 1.7e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
+       			  0.5, 0.5,&						!m,m
+       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5,&	!m
+       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5/) 	!m
   integer :: userdim = 0
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
@@ -132,6 +136,7 @@
     if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
   endif
 
+
   names(1) = 'th3'
   quant(1) = th3
   names(2) = 'Emu'
@@ -159,26 +164,77 @@
   names(12) = 'y5'
   quant(12) = y5
   
+  
+  !y Slices
   names(13) = 'x5_B1'
-  pass_cut(13) = (0.1 < y5).and.(y5 < 0.2)
+  pass_cut(13) = (-0.2 < y5).and.(y5 < -0.16)
   quant(13) = x5
   names(14) = 'x5_B2'
-  pass_cut(14) = (0. < y5).and.(y5 < 0.1)
+  pass_cut(14) = (-0.16 < y5).and.(y5 < -0.12)
   quant(14) = x5
+  names(15) = 'x5_B3'
+  pass_cut(15) = (-0.12 < y5).and.(y5 < -0.08)
+  quant(15) = x5
+  names(16) = 'x5_B4'
+  pass_cut(16) = (-0.08 < y5).and.(y5 < -0.04)
+  quant(16) = x5
+  names(17) = 'x5_B5'
+  pass_cut(17) = (-0.04 < y5).and.(y5 < 0.)
+  quant(17) = x5
+  names(18) = 'x5_B6'
+  pass_cut(18) = (0. < y5).and.(y5 < 0.04)
+  quant(18) = x5
+  names(19) = 'x5_B7'
+  pass_cut(19) = (0.04 < y5).and.(y5 < 0.08)
+  quant(19) = x5
+  names(20) = 'x5_B8'
+  pass_cut(20) = (0.08 < y5).and.(y5 < 0.12)
+  quant(20) = x5
+  names(21) = 'x5_B9'
+  pass_cut(21) = (0.12 < y5).and.(y5 < 0.14)
+  quant(21) = x5
+  names(22) = 'x5_B10'
+  pass_cut(22) = (0.14 < y5).and.(y5 < 0.16)
+  quant(22) = x5  
+  names(23) = 'x5_B11'
+  pass_cut(23) = (0.16 < y5).and.(y5 < 0.2)
+  quant(23) = x5
   
-  !names(13) = 'x5_B1'
-  !pass_cut(13) = (70.e3 < Emu).and.(Emu < 90.e3)
-  !quant(13) = x5
-  !names(14) = 'x5_B2'
-  !pass_cut(14) = (90.e3 < Emu).and.(Emu < 110.e3)
-  !quant(14) = x5
+  !x Slices
+  names(24) = 'y5_B1'
+  pass_cut(24) = (-0.2 < x5).and.(x5 < -0.16)
+  quant(24) = y5
+  names(25) = 'y5_B2'
+  pass_cut(25) = (-0.16 < x5).and.(x5 < -0.12)
+  quant(25) = y5
+  names(26) = 'y5_B3'
+  pass_cut(26) = (-0.12 < x5).and.(x5 < -0.08)
+  quant(26) = y5
+  names(27) = 'y5_B4'
+  pass_cut(27) = (-0.08 < x5).and.(x5 < -0.04)
+  quant(27) = y5
+  names(28) = 'y5_B5'
+  pass_cut(28) = (-0.04 < x5).and.(x5 < 0.)
+  quant(28) = y5
+  names(29) = 'y5_B6'
+  pass_cut(29) = (0. < x5).and.(x5 < 0.04)
+  quant(29) = y5
+  names(30) = 'y5_B7'
+  pass_cut(30) = (0.04 < x5).and.(x5 < 0.08)
+  quant(30) = y5
+  names(31) = 'y5_B8'
+  pass_cut(31) = (0.08 < x5).and.(x5 < 0.12)
+  quant(31) = y5
+  names(32) = 'y5_B9'
+  pass_cut(32) = (0.12 < x5).and.(x5 < 0.14)
+  quant(32) = y5
+  names(33) = 'y5_B10'
+  pass_cut(33) = (0.14 < x5).and.(x5 < 0.16)
+  quant(33) = y5  
+  names(34) = 'y5_B11'
+  pass_cut(34) = (0.16 < x5).and.(x5 < 0.2)
+  quant(34) = y5
   
-  !names(15) = 'y5_B1'
-  !pass_cut(15) = (70.e3 < Emu).and.(Emu < 90.e3)
-  !quant(15) = y5
-  !names(16) = 'y5_B2'
-  !pass_cut(16) = (90.e3 < Emu).and.(Emu < 110.e3)
-  !quant(16) = y5
   
 
   

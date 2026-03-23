@@ -19,6 +19,57 @@ def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
             ax.plot([], [], color=colors[key], label=label)
         ax.legend(framealpha=0)
 
+def plot_bands(full_base, bands_dict, *,
+               xlabel, ylabel, title, savename, outdir, colors,
+               slice_name="y5",
+               slice_range=None):   # optional: (min, max)
+
+    if full_base is None or len(bands_dict) == 0:
+        return
+
+    fig, ax = plt.subplots(figsize=(6,5))
+
+    # Full distribution
+    ax.plot(full_base[:,0], full_base[:,1],
+            color=colors["full"], label="Full range")
+
+    # Anzahl Bänder automatisch
+    band_indices = sorted(bands_dict.keys())
+    n_bands = len(band_indices)
+
+    # Range bestimmen
+    if slice_range is not None:
+        min_val, max_val = slice_range
+    else:
+        # automatisch aus Daten (robust)
+        all_vals = np.concatenate([b[:,0] for b in bands_dict.values()])
+        min_val, max_val = np.min(all_vals), np.max(all_vals)
+
+    # Kanten berechnen
+    edges = np.linspace(min_val, max_val, n_bands + 1)
+
+    # Farben
+    cmap = plt.cm.viridis
+
+    for idx, i in enumerate(band_indices):
+        band = bands_dict[i]
+        color = cmap(idx / max(n_bands - 1, 1))
+
+        label = f"{edges[i-1]:.3f} < {slice_name} < {edges[i]:.3f}"
+
+        ax.plot(band[:,0], band[:,1],
+                color=color,
+                label=label)
+
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    ax.set_xlim(min_val, max_val)
+
+    ax.legend(fontsize=8, ncol=2)
+
+    save_figure(fig, savename, outdir=outdir)
+    plt.close(fig)
 
 # =========================
 # Axis styling

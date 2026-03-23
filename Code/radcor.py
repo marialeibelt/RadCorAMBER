@@ -6,8 +6,8 @@ from plotting import *
 # =========================
 # Paths
 # =========================
-homedir = "/home/marialei/AMBER_RadCor/"  # Laptop
-#homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+#homedir = "/home/marialei/AMBER_RadCor/"  # Laptop
+homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
@@ -40,6 +40,9 @@ setup(folder=homedir + nlo_outs[nlo_i] + "/out")
 nlo = (mergefks(sigma("mp2mpR"), sigma("mp2mpF"), anyxi=sigma("mp2mpA")) * alpha**3 * conv)
 full = lo + nlo
 
+Y5_RANGE = (-0.2, 0.2)
+X5_RANGE = (-0.2, 0.2)
+
 # =========================
 # Extract observables (LAB)
 # =========================
@@ -50,10 +53,23 @@ lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
 lo_phi5, nlo_phi5, full_phi5 = lo["phi5"], nlo["phi5"], full["phi5"]
 lo_x5, nlo_x5, full_x5 = lo["x5"], nlo["x5"], full["x5"]
 lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
-lo_x5_B1, nlo_x5_B1, full_x5_B1 = lo["x5_B1"], nlo["x5_B1"], full["x5_B1"]
-lo_x5_B2, nlo_x5_B2, full_x5_B2 = lo["x5_B2"], nlo["x5_B2"], full["x5_B2"]
-#lo_y5_B1, nlo_y5_B1, full_y5_B1 = lo["y5_B1"], nlo["y5_B1"], full["y5_B1"]
-#lo_y5_B2, nlo_y5_B2, full_y5_B2 = lo["y5_B2"], nlo["y5_B2"], full["y5_B2"]
+
+x5_bands_lo, x5_bands_nlo, x5_bands_full = {}, {}, {}
+y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
+
+for i in range(n_bands_min, n_bands+1):
+    key_x = f"x5_B{i}"
+    key_y = f"y5_B{i}"
+
+    if key_x in lo:
+        x5_bands_lo[i]   = lo[key_x]
+        x5_bands_nlo[i]  = nlo[key_x]
+        x5_bands_full[i] = full[key_x]
+
+    if key_y in lo:
+        y5_bands_lo[i]   = lo[key_y]
+        y5_bands_nlo[i]  = nlo[key_y]
+        y5_bands_full[i] = full[key_y]
 
 # =========================
 # Extract observables (CMS)
@@ -246,57 +262,28 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
 
-    # ---------- Plot x5 bands (LAB) ----------
-    if full_x5 is not None and full_x5_B1 is not None and full_x5_B2 is not None:
+    
+    # ---------- x5 bands (in y5 slices) ----------
+    plot_bands(full_x5, x5_bands_full,
+            xlabel=r"$x_5\ (\mathrm{m})$",
+            ylabel=r"$\frac{d\sigma}{dx_5}$",
+            title=f"x5 distribution in y5-slices ({tag})",
+            savename=f"{savename}_x5_allbands",
+            outdir=outdir,
+            colors=colors,
+            slice_name="y5",
+            slice_range=Y5_RANGE)
 
-        fig, ax = plt.subplots(figsize=(6,5))
-
-        # Full range
-        #ax.plot(full_x5[:,0], full_x5[:,1],
-        #        color=colors["full"], label="Full $E_\mu$-Range")
-
-        # Bands
-        #ax.plot(full_x5_B1[:,0], full_x5_B1[:,1],
-        #        color="blue", label=r"$y_\gamma \in [90,110]\ \mathrm{GeV}$")
-
-        ax.plot(full_x5_B2[:,0], full_x5_B2[:,1],
-               color="red", label=r"$E_\mu \in [70,90]\ \mathrm{GeV}$")
-
-        ax.set_xlabel(r"$x_\gamma\ (\mathrm{m})$")
-        ax.set_ylabel(r"$\frac{d\sigma}{dx_\gamma}$")
-        ax.set_title(f"Amount of Photons at $x$ in $y$-bands ({tag})")
-        ax.set_xlim(-0.05,0.05)
-
-        ax.legend()
-
-        save_figure(fig, f"{savename}_x5_bands", outdir=outdir)
-        plt.close(fig)
-
-    # ---------- Plot y5 bands (LAB) ----------
-    #if full_y5 is not None and full_y5_B1 is not None and full_y5_B2 is not None:
-
-    #    fig, ax = plt.subplots(figsize=(6,5))
-
-        # Full range
-        #ax.plot(full_y5[:,0], full_y5[:,1],
-        #        color=colors["full"], label="Full $E_\mu$-Range")
-
-        # Bands
-        #ax.plot(full_y5_B1[:,0], full_y5_B1[:,1],
-        #        color="blue", label=r"$y_\gamma \in [90,110]\ \mathrm{GeV}$")
-
-    #    ax.plot(full_y5_B2[:,0], full_y5_B2[:,1],
-    #           color="red", label=r"$E_\mu \in [70,90]\ \mathrm{GeV}$")
-
-    #    ax.set_xlabel(r"$y_\gamma\ (\mathrm{m})$")
-    #    ax.set_ylabel(r"$\frac{d\sigma}{dy_\gamma}$")
-    #    ax.set_title(f"Amount of Photons at $y$ in $E_\mu$-bands ({tag})")
-    #    ax.set_xlim(-0.05,0.05)
-
-    #    ax.legend()
-
-    #    save_figure(fig, f"{savename}_y5_bands", outdir=outdir)
-    #    plt.close(fig)
+    # ---------- y5 bands (in x5 slices) ----------
+    plot_bands(full_y5, y5_bands_full,
+            xlabel=r"$y_5\ (\mathrm{m})$",
+            ylabel=r"$\frac{d\sigma}{dy_5}$",
+            title=f"y5 distribution in x5-slices ({tag})",
+            savename=f"{savename}_y5_allbands",
+            outdir=outdir,
+            colors=colors,
+            slice_name="x5",
+            slice_range=X5_RANGE)
 
     #theta5 = nlo_th5[:,0]       # extract the theta_5 values
     #tan_theta5 = np.tan(theta5)  # numpy tan; make sure theta5 is in radians!
@@ -312,8 +299,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
         write_file_with_values(outdir_vals + f"K_phi5_{savename}.txt", K_phi5, f"phi5_{tag} bin center", "K_phi5")
     if K_x5 is not None:
         write_file_with_values(outdir_vals + f"K_x5_{savename}.txt", K_x5, f"x5_{tag} bin center", "K_x5")
-    #if K_y5 is not None:
-    #    write_file_with_values(outdir_vals + f"K_y5_{savename}.txt", K_y5, f"y5_{tag} bin center", "K_y5")
+    if K_y5 is not None:
+        write_file_with_values(outdir_vals + f"K_y5_{savename}.txt", K_y5, f"y5_{tag} bin center", "K_y5")
 
     print(f"[INFO] K-factor files written for {tag}.")
 
@@ -343,10 +330,10 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
                           scale_factor=1.e-3, x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
                           main_title=f"Photon X Hit ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, )
-    #save_single_pair_plot( savename=f"{savename}_y5_pair", 
-    #                      lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
-    #                      scale_factor=1.e-3, x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
-    #                      main_title=f"Photon Y Hit ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, )
+    save_single_pair_plot( savename=f"{savename}_y5_pair", 
+                          lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
+                          scale_factor=1.e-3, x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
+                          main_title=f"Photon Y Hit ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, )
 
 # =========================
 # Run for LAB and CMS
