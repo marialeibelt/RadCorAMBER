@@ -6,7 +6,7 @@ from plotting import *
 # =========================
 # Paths
 # =========================
-#homedir = "/home/marialei/AMBER_RadCor/"  # Laptop
+#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
 homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
@@ -14,21 +14,23 @@ outdir_vals = homedir + "Vals/"
 # =========================
 # Input definitions
 # =========================
-lo_outs = ["mp2mp_NLO_19_01",
-           "mp2mp_NLO_01_02",
-           "mp2mp_NLO_24_02",
-           "mp2mp_NLO_15_03",
-           "mp2mptest",
-           "mp2mp_23_03"]
+lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02",
+           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03"]
+
 nlo_outs = lo_outs
-savenames = ["combined","15_03","17_03","18_03","23_03"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03"]
 
 # =========================
-# Dataset choice
+# Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 5
-nlo_i = 5
-savename_base = savenames[4] + "_" + nlo_outs[nlo_i]
+lo_i = 6
+nlo_i = 6
+Y5_RANGE = (-0.2, 0.2)
+X5_RANGE = (-0.2, 0.2)
+n_bands_min = 1
+n_bands = 10
+
+savename_base = savenames[5] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -39,9 +41,6 @@ lo = mergefks(sigma("mp2mp0")) * alpha**2 * conv
 setup(folder=homedir + nlo_outs[nlo_i] + "/out")
 nlo = (mergefks(sigma("mp2mpR"), sigma("mp2mpF"), anyxi=sigma("mp2mpA")) * alpha**3 * conv)
 full = lo + nlo
-
-Y5_RANGE = (-0.2, 0.2)
-X5_RANGE = (-0.2, 0.2)
 
 # =========================
 # Extract observables (LAB)
@@ -57,19 +56,26 @@ lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
 x5_bands_lo, x5_bands_nlo, x5_bands_full = {}, {}, {}
 y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
 
+# =========================
+# Fill bands robustly with try/except to avoid KeyError
+# =========================
 for i in range(n_bands_min, n_bands+1):
     key_x = f"x5_B{i}"
     key_y = f"y5_B{i}"
 
-    if key_x in lo:
+    try:
         x5_bands_lo[i]   = lo[key_x]
         x5_bands_nlo[i]  = nlo[key_x]
         x5_bands_full[i] = full[key_x]
+    except KeyError:
+        pass
 
-    if key_y in lo:
+    try:
         y5_bands_lo[i]   = lo[key_y]
         y5_bands_nlo[i]  = nlo[key_y]
         y5_bands_full[i] = full[key_y]
+    except KeyError:
+        pass
 
 # =========================
 # Extract observables (CMS)
@@ -79,7 +85,6 @@ lo_Emu_cms, nlo_Emu_cms, full_Emu_cms = lo["Emu_cms"], nlo["Emu_cms"], full["Emu
 lo_th5_cms, nlo_th5_cms, full_th5_cms = lo["th5_cms"], nlo["th5_cms"], full["th5_cms"]
 lo_Eph_cms, nlo_Eph_cms, full_Eph_cms = lo["Eph_cms"], nlo["Eph_cms"], full["Eph_cms"]
 lo_phi5_cms, nlo_phi5_cms, full_phi5_cms = lo["phi5_cms"], nlo["phi5_cms"], full["phi5_cms"]
-
 
 # =========================
 # Colors
@@ -163,35 +168,41 @@ def make_plots_and_kfactors( *, tag, savename_base,
                             lo_y5, nlo_y5, full_y5,
                             outdir, outdir_vals, colors, ): 
     savename = f"{savename_base}_{tag}" 
-    # ---------- write value files ---------- 
-    write_file_with_values(outdir_vals + f"lo_th3_{savename}.txt", lo_th3, f"th3_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"nlo_th3_{savename}.txt", nlo_th3, f"th3_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"full_th3_{savename}.txt", full_th3, f"th3_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"lo_Emu_{savename}.txt", lo_Emu, f"Emu_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"nlo_Emu_{savename}.txt", nlo_Emu, f"Emu_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"full_Emu_{savename}.txt", full_Emu, f"Emu_{tag} bin centers", "value") 
+    
+    # ----------------- write value files for all variables -----------------
+    # Define the variables and optional CMS counterparts
+    variables = [
+        ("th3", True),
+        ("Emu", True),
+        ("th5", True),
+        ("Eph", True),
+        ("phi5", False),
+        ("x5", False),
+        ("y5", False)
+    ]
 
-    write_file_with_values(outdir_vals + f"lo_th5_{savename}.txt", lo_th5, f"th5_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"nlo_th5_{savename}.txt", nlo_th5, f"th5_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"full_th5_{savename}.txt", full_th5, f"th5_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"lo_Eph_{savename}.txt", lo_Eph, f"Eph_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"nlo_Eph_{savename}.txt", nlo_Eph, f"Eph_{tag} bin centers", "value") 
-    write_file_with_values(outdir_vals + f"full_Eph_{savename}.txt", full_Eph, f"Eph_{tag} bin centers", "value") 
-    if lo_phi5 is not None:
-        write_file_with_values(outdir_vals + f"lo_phi5_{savename}.txt", lo_phi5, f"phi5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"nlo_phi5_{savename}.txt", nlo_phi5, f"phi5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"full_phi5_{savename}.txt", full_phi5, f"phi5{tag} bin centers", "value")
-
-    if lo_x5 is not None:
-        write_file_with_values(outdir_vals + f"lo_x5_{savename}.txt", lo_x5, f"x5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"nlo_x5_{savename}.txt", nlo_x5, f"x5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"full_x5_{savename}.txt", full_x5, f"x5{tag} bin centers", "value")
-
-    if lo_y5 is not None:
-        write_file_with_values(outdir_vals + f"lo_y5_{savename}.txt", lo_y5, f"y5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"nlo_y5_{savename}.txt", nlo_y5, f"y5{tag} bin centers", "value") 
-        write_file_with_values(outdir_vals + f"full_y5_{savename}.txt", full_y5, f"y5{tag} bin centers", "value")
-
+    for var, has_cms in variables:
+        # lab frame
+        for order in ["lo", "nlo", "full"]:
+            arr = globals()[f"{order}_{var}"]  # get array dynamically
+            if arr is not None:
+                write_file_with_values(
+                    outdir_vals + f"{order}_{var}_{savename}.txt",
+                    arr,
+                    f"{var}_{tag} bin centers",
+                    "value"
+                )
+        # cms frame
+        if has_cms:
+            for order in ["lo", "nlo", "full"]:
+                arr_cms = globals().get(f"{order}_{var}_cms", None)
+                if arr_cms is not None:
+                    write_file_with_values(
+                        outdir_vals + f"{order}_{var}_cms_{savename}.txt",
+                        arr_cms,
+                        f"{var}_cms_{tag} bin centers",
+                        "value"
+                    )
     # --------------------
     # Create combined figure
     # --------------------

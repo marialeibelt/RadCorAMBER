@@ -8,21 +8,21 @@
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
 
-  integer, parameter :: nrq = 34			!th3,Emu,th5,Eph, phi5, +same in cms, 
-							!x5,y5,ySlices(11x),xSlices(11x)
+  integer, parameter :: nrq = 32			!th3,Emu,th5,Eph, phi5, +same in cms, 
+							!x5,y5,ySlices(10x),xSlices(10x)
   integer, parameter :: nrbins = 500
   real(kind=prec), parameter :: &
-       min_val(nrq) = (/1.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&		!rad,MeV,rad,MeV,rad
-       			1.3e-3,  95.e3, -12.e-3, 1.e3, -12.e-3,&  		!rad,MeV,rad,MeV,rad
+       min_val(nrq) = (/1.345e-3,  95.e3, -12.e-3, 200, -12.e-3,&		!rad,MeV,rad,MeV,rad
+       			1.345e-3,  95.e3, -12.e-3, 200, -12.e-3,&  		!rad,MeV,rad,MeV,rad
        			-0.5, -0.5,&						!m,m				
        			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,&!m
-       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5/)!m
+       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5/)		!m
   real(kind=prec), parameter :: &
-       max_val(nrq) = (/ 1.7e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
-       			 1.7e-3, 101.e3, 12.e-3, 100.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
+       max_val(nrq) = (/ 1.655e-3, 101.e3, 12.e-3, 50.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
+       			 1.655e-3, 101.e3, 12.e-3, 50.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
        			  0.5, 0.5,&						!m,m
        			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5,&	!m
-       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5/) 	!m
+       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5/) 		!m
   integer :: userdim = 0
 
 !==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
@@ -64,10 +64,12 @@
 
   SUBROUTINE INITUSER
   print*, "This is Mary testing the McMule userfile <3"
-  print*, " * E_mu = 150 GeV"
+  print*, " * Emu = 150 GeV"
   print*, " * 1.35 < th_mu < 1.65 mrad"
-  print*, " * E_mu > 70 GeV"
-  print*, " * E_ph > 200MeV"
+  print*, " * Emu > 70 GeV"
+  print*, " * Eph > 200MeV"
+  print*, " * -12. < th_ph < 12. mrad"
+  print*, " * d_detec = 10 m"
   
   call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   END SUBROUTINE
@@ -82,6 +84,9 @@
   real (kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real (kind=prec) :: d_detec,x5,y5
   real (kind=prec) :: quant(nrq)
+  integer :: n_bands
+  real(kind=prec) :: min_val, max_val, bin_width
+  integer :: i
   
   !! ==== keep the line below in any case ==== !!
   call fix_mu
@@ -98,7 +103,7 @@
   q3perp=sqrt(ql3(1)**2+ql3(2)**2)
   th3 = atan2(q3perp,ql3(3))   ! scattering angle in rad
   Emu = ql3(4)
-  Eph_cut = 1.e3
+  Eph_cut = 200
   d_detec = 10 !m, dummy value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dummy value
   
   ! cms frame
@@ -109,19 +114,22 @@
   pass_cut = .true.
 
   ! Muon cuts
-  if(th3.lt.1.35e-3) pass_cut = .false.
-  if(th3.gt.1.65e-3) pass_cut = .false.
-  !write(*,*) 'Emu ', ql3(4)
-  if(Emu.lt.70.e3) pass_cut =.false.
+  if(th3 .lt. 1.35e-3) pass_cut = .false.
+  if(th3 .gt. 1.65e-3) pass_cut = .false.
+  if(Emu .lt. 70.e3) pass_cut =.false.
   
   ! initialize photon variables
   Eph = 0._prec
   th5 = 0._prec
+  phi5 = 0._prec
   Eph_cms = 0._prec
   th5_cms = 0._prec
+  phi5_cms = 0._prec
+  x5 = 0._prec
+  y5 = 0._prec
 
   ! apply photon cuts only if real photon exists
-  if (ql5(4) > 0._prec) then
+  if (ql5(4) .gt. 0._prec) then
     Eph = ql5(4)
     q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
     th5 = atan2(q5perp, ql5(3))
@@ -133,9 +141,15 @@
     
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5)
-    if ((Eph < Eph_cut) .or. (abs(th5).gt.12.e-3))pass_cut = .false.
+    if ((Eph .lt. Eph_cut) .or. (abs(th5) .gt. 12.e-3)) pass_cut = .false.
   endif
 
+  if (ql5(4) .le. 0._prec) then
+    pass_cut(5) = .false.
+    pass_cut(10) = .false.
+    pass_cut(11) = .false.
+    pass_cut(12) = .false.
+  endif
 
   names(1) = 'th3'
   quant(1) = th3
@@ -164,79 +178,27 @@
   names(12) = 'y5'
   quant(12) = y5
   
-  
-  !y Slices
-  names(13) = 'x5_B1'
-  pass_cut(13) = (-0.2 < y5).and.(y5 < -0.16)
-  quant(13) = x5
-  names(14) = 'x5_B2'
-  pass_cut(14) = (-0.16 < y5).and.(y5 < -0.12)
-  quant(14) = x5
-  names(15) = 'x5_B3'
-  pass_cut(15) = (-0.12 < y5).and.(y5 < -0.08)
-  quant(15) = x5
-  names(16) = 'x5_B4'
-  pass_cut(16) = (-0.08 < y5).and.(y5 < -0.04)
-  quant(16) = x5
-  names(17) = 'x5_B5'
-  pass_cut(17) = (-0.04 < y5).and.(y5 < 0.)
-  quant(17) = x5
-  names(18) = 'x5_B6'
-  pass_cut(18) = (0. < y5).and.(y5 < 0.04)
-  quant(18) = x5
-  names(19) = 'x5_B7'
-  pass_cut(19) = (0.04 < y5).and.(y5 < 0.08)
-  quant(19) = x5
-  names(20) = 'x5_B8'
-  pass_cut(20) = (0.08 < y5).and.(y5 < 0.12)
-  quant(20) = x5
-  names(21) = 'x5_B9'
-  pass_cut(21) = (0.12 < y5).and.(y5 < 0.14)
-  quant(21) = x5
-  names(22) = 'x5_B10'
-  pass_cut(22) = (0.14 < y5).and.(y5 < 0.16)
-  quant(22) = x5  
-  names(23) = 'x5_B11'
-  pass_cut(23) = (0.16 < y5).and.(y5 < 0.2)
-  quant(23) = x5
-  
-  !x Slices
-  names(24) = 'y5_B1'
-  pass_cut(24) = (-0.2 < x5).and.(x5 < -0.16)
-  quant(24) = y5
-  names(25) = 'y5_B2'
-  pass_cut(25) = (-0.16 < x5).and.(x5 < -0.12)
-  quant(25) = y5
-  names(26) = 'y5_B3'
-  pass_cut(26) = (-0.12 < x5).and.(x5 < -0.08)
-  quant(26) = y5
-  names(27) = 'y5_B4'
-  pass_cut(27) = (-0.08 < x5).and.(x5 < -0.04)
-  quant(27) = y5
-  names(28) = 'y5_B5'
-  pass_cut(28) = (-0.04 < x5).and.(x5 < 0.)
-  quant(28) = y5
-  names(29) = 'y5_B6'
-  pass_cut(29) = (0. < x5).and.(x5 < 0.04)
-  quant(29) = y5
-  names(30) = 'y5_B7'
-  pass_cut(30) = (0.04 < x5).and.(x5 < 0.08)
-  quant(30) = y5
-  names(31) = 'y5_B8'
-  pass_cut(31) = (0.08 < x5).and.(x5 < 0.12)
-  quant(31) = y5
-  names(32) = 'y5_B9'
-  pass_cut(32) = (0.12 < x5).and.(x5 < 0.14)
-  quant(32) = y5
-  names(33) = 'y5_B10'
-  pass_cut(33) = (0.14 < x5).and.(x5 < 0.16)
-  quant(33) = y5  
-  names(34) = 'y5_B11'
-  pass_cut(34) = (0.16 < x5).and.(x5 < 0.2)
-  quant(34) = y5
-  
-  
 
+
+  n_bands = 10
+  min_val = -0.09
+  max_val = 0.09
+
+  bin_width = (max_val - min_val)/n_bands
+
+  ! Y slices (x5)
+  do i=1,n_bands
+     names(12+i) = 'x5_B'//trim(adjustl(itoa(i)))
+     pass_cut(12+i) = (min_val + (i-1)*bin_width .lt. y5) .and. (y5 .lt. min_val + i*bin_width)
+     quant(12+i) = x5
+  end do
+
+  ! X slices (y5)
+  do i=1,n_bands
+     names(22+i) = 'y5_B'//trim(adjustl(itoa(i)))
+     pass_cut(22+i) = (min_val + (i-1)*bin_width .lt. x5) .and. (x5 .lt. min_val + i*bin_width)
+     quant(22+i) = y5
+  end do
   
 
   END FUNCTION QUANT
