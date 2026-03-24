@@ -3,64 +3,37 @@
                  !!!!!!!!!!!!!!!!!!!!!
 
   use mcmule
-
   implicit none
 
-!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
-
-  integer, parameter :: nrq = 32			!th3,Emu,th5,Eph, phi5, +same in cms, 
-							!x5,y5,ySlices(10x),xSlices(10x)
+  integer, parameter :: nrq = 32
   integer, parameter :: nrbins = 500
-  real(kind=prec), parameter :: &
-       min_val(nrq) = (/1.345e-3,  95.e3, -12.e-3, 200, -12.e-3,&		!rad,MeV,rad,MeV,rad
-       			1.345e-3,  95.e3, -12.e-3, 200, -12.e-3,&  		!rad,MeV,rad,MeV,rad
-       			-0.5, -0.5,&						!m,m				
-       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,&!m
-       			-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5/)		!m
-  real(kind=prec), parameter :: &
-       max_val(nrq) = (/ 1.655e-3, 101.e3, 12.e-3, 50.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
-       			 1.655e-3, 101.e3, 12.e-3, 50.e3, 12.e-3,&		!rad,MeV,rad,MeV,rad
-       			  0.5, 0.5,&						!m,m
-       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5,&	!m
-       			  0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5, 0.5,0.5/) 		!m
+  
+  real(kind=prec), parameter :: min_val(nrq) = (/ &
+    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 200._prec, -12.e-3_prec, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 200._prec, -12.e-3_prec, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    -0.09_prec,-0.09_prec, &                                               ! x5[m], y5[m]
+    -0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec, & ! x5_B1..x5_B10[m]
+    -0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec /) ! y5_B1..y5_B10[m]
+
+  real(kind=prec), parameter :: max_val(nrq) = (/ &
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 50.e3_prec,  12.e-3_prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 50.e3_prec,  12.e-3_prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    0.09_prec,0.09_prec, &                                                 ! x5[m], y5[m]
+    0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec, &  ! x5_B1..x5_B10[m]
+    0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec /)  ! y5_B1..y5_B10[m]
+  						   
   integer :: userdim = 0
-
-!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
-
-!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
-
-    !! ============================================== !!
-    !! DO NOT EVEN THINK ABOUT CHANGING ANYTHING HERE !!
-    !! ============================================== !!
-
   integer :: namesLen=12
   integer :: filenamesuffixLen=10
   integer :: nq=nrq
   integer :: nbins=nrbins
-
-
-
-!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!==!
-
-            !! ----------------------------------------- !!
-            !!     There are two versions of binning     !!
-            !!     One for computing   d \sigma/ d Q     !!
-            !!     One for computing  Q d \sigma/ d Q    !!
-            !!  choose by setting the variable bin_kind  !!
-            !! ----------------------------------------- !!
-  integer :: bin_kind = 0       !!  0 for d \sig/dQ; +1 for Q d \sig/dQ;
-
+  integer :: bin_kind = 0       !! 0 for d\sigma/dQ; +1 for Q d\sigma/dQ;
 
   contains
 
-
   SUBROUTINE FIX_MU
-
   musq = mM**2
-
   END SUBROUTINE FIX_MU
-
-
 
   SUBROUTINE INITUSER
   print*, "This is Mary testing the McMule userfile <3"
@@ -74,23 +47,20 @@
   call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   END SUBROUTINE
 
-
   FUNCTION QUANT(q1,q2,q3,q4,q5,q6,q7)
+  real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
+  real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)
+  real(kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
+  real(kind=prec) :: phi5
+  real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
+  real(kind=prec) :: d_detec,x5,y5
+  real(kind=prec) :: quant(nrq)
+  integer :: n_bands, i
+  real(kind=prec) :: band_min, band_max, bin_width
+  character(len=3) :: str_i
 
-  real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
-  real (kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)  ! in lab frame
-  real (kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real (kind=prec) :: phi5 ! in lab frame
-  real (kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
-  real (kind=prec) :: d_detec,x5,y5
-  real (kind=prec) :: quant(nrq)
-  integer :: n_bands
-  real(kind=prec) :: min_val, max_val, bin_width
-  integer :: i
-  
-  !! ==== keep the line below in any case ==== !!
   call fix_mu
-  
+
   ! proton frame
   ql1 = boost_rf(q2,q1)
   ql2 = boost_rf(q2,q2)
@@ -99,25 +69,25 @@
   ql5 = boost_rf(q2,q5)
   ql6 = boost_rf(q2,q6)
   ql7 = boost_rf(q2,q7)
-  
-  q3perp=sqrt(ql3(1)**2+ql3(2)**2)
-  th3 = atan2(q3perp,ql3(3))   ! scattering angle in rad
+
+  q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
+  th3 = atan2(q3perp, ql3(3))
   Emu = ql3(4)
-  Eph_cut = 200
-  d_detec = 10 !m, dummy value!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dummy value
-  
+  Eph_cut = 200._prec
+  d_detec = 10._prec
+
   ! cms frame
-  q3perp_cms = sqrt(q3(1)**2+q3(2)**2)
-  th3_cms = atan2(q3perp_cms,q3(3))   ! scattering angle in rad
+  q3perp_cms = sqrt(q3(1)**2 + q3(2)**2)
+  th3_cms = atan2(q3perp_cms,q3(3))
   Emu_cms = q3(4)
-  
+
   pass_cut = .true.
 
   ! Muon cuts
   if(th3 .lt. 1.35e-3) pass_cut = .false.
   if(th3 .gt. 1.65e-3) pass_cut = .false.
-  if(Emu .lt. 70.e3) pass_cut =.false.
-  
+  if(Emu .lt. 70.e3) pass_cut = .false.
+
   ! initialize photon variables
   Eph = 0._prec
   th5 = 0._prec
@@ -128,7 +98,6 @@
   x5 = 0._prec
   y5 = 0._prec
 
-  ! apply photon cuts only if real photon exists
   if (ql5(4) .gt. 0._prec) then
     Eph = ql5(4)
     q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
@@ -138,78 +107,68 @@
     q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
     th5_cms = atan2(q5perp_cms, q5(3))
     phi5_cms = atan2(q5(2),q5(1))
-    
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5)
     if ((Eph .lt. Eph_cut) .or. (abs(th5) .gt. 12.e-3)) pass_cut = .false.
   endif
 
   if (ql5(4) .le. 0._prec) then
+    pass_cut(3) = .false.   ! th5
+    pass_cut(4) = .false.   ! Eph  
     pass_cut(5) = .false.
     pass_cut(10) = .false.
     pass_cut(11) = .false.
     pass_cut(12) = .false.
   endif
 
-  names(1) = 'th3'
-  quant(1) = th3
-  names(2) = 'Emu'
-  quant(2) = Emu
-  names(3) = 'th5'
-  quant(3) = th5
-  names(4) = 'Eph'
-  quant(4) = Eph
-  names(5) = 'phi5'
-  quant(5) = phi5
-  
-  names(6) = 'th3_cms'
-  quant(6) = th3_cms
-  names(7) = 'Emu_cms'
-  quant(7) = Emu_cms
-  names(8) = 'th5_cms'
-  quant(8) = th5_cms
-  names(9) = 'Eph_cms'
-  quant(9) = Eph_cms
-  names(10) = 'phi5_cms'
-  quant(10) = phi5_cms
-  
-  names(11) = 'x5'
-  quant(11) = x5
-  names(12) = 'y5'
-  quant(12) = y5
-  
+  ! Lab values
+  names(1) = 'th3'; quant(1) = th3
+  names(2) = 'Emu'; quant(2) = Emu
+  names(3) = 'th5'; quant(3) = th5
+  names(4) = 'Eph'; quant(4) = Eph
+  names(5) = 'phi5'; quant(5) = phi5
 
+  ! CMS values
+  names(6) = 'th3_cms'; quant(6) = th3_cms
+  names(7) = 'Emu_cms'; quant(7) = Emu_cms
+  names(8) = 'th5_cms'; quant(8) = th5_cms
+  names(9) = 'Eph_cms'; quant(9) = Eph_cms
+  names(10) = 'phi5_cms'; quant(10) = phi5_cms
 
+  names(11) = 'x5'; quant(11) = x5
+  names(12) = 'y5'; quant(12) = y5
+
+  ! Banded slices (-0.09 to 0.09)
   n_bands = 10
-  min_val = -0.09
-  max_val = 0.09
-
-  bin_width = (max_val - min_val)/n_bands
+  band_min = -0.09_prec
+  band_max =  0.09_prec
+  bin_width = (band_max - band_min)/n_bands
 
   ! Y slices (x5)
   do i=1,n_bands
-     names(12+i) = 'x5_B'//trim(adjustl(itoa(i)))
-     pass_cut(12+i) = (min_val + (i-1)*bin_width .lt. y5) .and. (y5 .lt. min_val + i*bin_width)
-     quant(12+i) = x5
+    write(str_i,'(I0)') i
+    names(12+i) = 'x5_B'//trim(str_i)
+    pass_cut(12+i) = (ql5(4) .gt. 0._prec) .and. &
+           	     (band_min + (i-1)*bin_width .le. y5) .and. &
+                     (y5 .lt. band_min + i*bin_width)
   end do
 
   ! X slices (y5)
   do i=1,n_bands
-     names(22+i) = 'y5_B'//trim(adjustl(itoa(i)))
-     pass_cut(22+i) = (min_val + (i-1)*bin_width .lt. x5) .and. (x5 .lt. min_val + i*bin_width)
-     quant(22+i) = y5
+    write(str_i,'(I0)') i
+    names(22+i) = 'y5_B'//trim(str_i)
+    pass_cut(22+i) = (ql5(4) .gt. 0._prec) .and. &
+                     (band_min + (i-1)*bin_width .le. x5) .and. &
+                     (x5 .lt. band_min + i*bin_width)
   end do
-  
 
   END FUNCTION QUANT
-
 
   SUBROUTINE USEREVENT(X, NDIM)
   integer :: ndim
   real(kind=prec) :: x(ndim)
-  userweight = 1.
+  userweight = 1._prec
   END SUBROUTINE USEREVENT
-
 
                  !!!!!!!!!!!!!!!!!!!!!!!
                      END MODULE  USER

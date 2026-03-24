@@ -15,21 +15,21 @@ conf mp2mp.toml
 mode vegas
 
 
-run 75973 1.0 mp2mp0 0
-run 65358 1.0 mp2mp0 0
+#run 75973 1.0 mp2mp0 0
+#run 65358 1.0 mp2mp0 0
 
 
 
-run 88492 0.1 mp2mpF 0
+#run 88492 0.1 mp2mpF 0
 #run 70953 0.1 mp2mpF 0
 
 
 
 #run 46962 0.1 mp2mpR 0
-#run 67887 0.1 mp2mpR 0
+run 67887 0.1 mp2mpR 0
 
 
 
-#run 82701 1.0 mp2mpA 0
-#run 67495 1.0 mp2mpA 0
+run 82701 1.0 mp2mpA 0
+run 67495 1.0 mp2mpA 0
 

@@ -16,11 +16,13 @@ def plot_errorband(ax, hist, color):
 # Plot LO, NLO, and full distributions with error bands
 # =========================
 def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
-    plot_errorband(ax, lo, colors["lo"])
-    plot_errorband(ax, nlo, colors["nlo"])
-    plot_errorband(ax, full, colors["full"])
+    if lo is not None:
+        plot_errorband(ax, lo, colors["lo"])
+    if nlo is not None:
+        plot_errorband(ax, nlo, colors["nlo"])
+    if full is not None:
+        plot_errorband(ax, full, colors["full"])
 
-    # Add labels for legend
     if labels is not None:
         for key, label in labels.items():
             ax.plot([], [], color=colors[key], label=label)
@@ -29,63 +31,49 @@ def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
 # =========================
 # Plot x5/y5 bands in slices
 # =========================
-def plot_bands(full_base, bands_dict, *,
+def plot_bands(bands_dict, *,
                xlabel, ylabel, title, savename, outdir, colors,
-               slice_name="y5",
-               slice_range=None):   # optional: (min, max)
+               slice_name="y5", slice_range=(-0.09, 0.09)):
+    """
+    Plottet Bänder einer Verteilung in Slices.
+    Keine Hauptverteilung mehr — die Bänder sind die Story.
+    """
+    fig, ax = plt.subplots(figsize=(6, 5))
 
-    if full_base is None or len(bands_dict) == 0:
+    if not bands_dict:
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_title(title)
+        save_figure(fig, savename, outdir=outdir)
+        plt.close(fig)
         return
 
-    fig, ax = plt.subplots(figsize=(6,5))
-
-    # Plot full distribution
-    ax.plot(full_base[:,0], full_base[:,1],
-            color=colors["full"], label="Full range")
-
-    # Determine bands
     band_indices = sorted(bands_dict.keys())
     n_bands = len(band_indices)
-
-    # Determine slice range
-    if slice_range is not None:
-        min_val, max_val = slice_range
-    else:
-        # automatic from data (robust)
-        all_vals = np.concatenate([b[:,0] for b in bands_dict.values()])
-        min_val, max_val = np.min(all_vals), np.max(all_vals)
-
-    # Compute edges for labeling
+    min_val, max_val = slice_range
     edges = np.linspace(min_val, max_val, n_bands + 1)
-
-    # Color map
     cmap = plt.cm.viridis
 
-    # Plot bands
     for idx, i in enumerate(band_indices):
         band = bands_dict[i]
+        if band is None or len(band) == 0:
+            continue
+        # Nur finite Werte
+        mask = np.isfinite(band[:, 0]) & np.isfinite(band[:, 1])
+        band = band[mask]
+        if len(band) == 0:
+            continue
+
         color = cmap(idx / max(n_bands - 1, 1))
-
-        # Use robust indexing for edges
-        low  = edges[idx]
-        high = edges[idx+1]
-
+        low, high = edges[idx], edges[idx + 1]
         label = f"{low:.3f} < {slice_name} < {high:.3f}"
+        ax.plot(band[:, 0], band[:, 1], color=color, label=label)
 
-        ax.plot(band[:,0], band[:,1],
-                color=color,
-                label=label)
-
-    # Labels, title, and axis limits
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    ax.set_xlim(full_base[:,0].min(), full_base[:,0].max())
+    ax.legend(fontsize=8, ncol=2, framealpha=0)
 
-    # Legend
-    ax.legend(fontsize=8, ncol=2)
-
-    # Save figure
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
 
@@ -151,17 +139,19 @@ def add_secondary_xaxis(ax, transform_func, xlabel=None, scale="linear"):
 def save_figure(fig, name, outdir, dpi=700):
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
+    #fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
 
 # =========================
 # Plot K-factor
 # =========================
 def plot_K(ax, K, colors_K, xlabel):
-    plot_lo_nlo_full(ax, lo=K, nlo=K, full=K,
-                     colors=dict(lo=colors_K, nlo=colors_K, full=colors_K),
-                     labels=dict(full="K-factor"))
+    plt.sca(ax)
+    for line in errorband(K):
+        line.set_color(colors_K)
+    ax.plot([], [], color=colors_K, label="K-factor")
     style_sci_x(ax, xlabel, r"$K = \mathrm{NLO}/(\mathrm{LO+NLO})$", None, yscale="linear")
+    ax.legend(framealpha=0)
 
 # =========================
 # Write values to file

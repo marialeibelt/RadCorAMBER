@@ -15,7 +15,7 @@ outdir_vals = homedir + "Vals/"
 # Input definitions
 # =========================
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02",
-           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03"]
+           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new"]
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03"]
@@ -23,10 +23,10 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03"]
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 6
-nlo_i = 6
-Y5_RANGE = (-0.2, 0.2)
-X5_RANGE = (-0.2, 0.2)
+lo_i = 7
+nlo_i = 7
+Y5_RANGE = (-0.09, 0.09)
+X5_RANGE = (-0.09, 0.09)
 n_bands_min = 1
 n_bands = 10
 
@@ -100,34 +100,41 @@ def draw_observable_and_k(ax_main, ax_k, *, lo_hist, nlo_hist, full_hist,
                           colors=None, hide_main_xticks=True):
 
     # Wenn keine Daten übergeben wurden, alles ausblenden und zurückgeben
-    if lo_hist is None or nlo_hist is None or full_hist is None:
+    if nlo_hist is None:
         ax_main.set_visible(False)
         ax_k.set_visible(False)
         return None, None, None, None
 
-    lo_s   = scaleplot(lo_hist, scale_factor)
+    lo_s   = scaleplot(lo_hist, scale_factor) if lo_hist is not None else None
     nlo_s  = scaleplot(nlo_hist, scale_factor)
-    full_s = scaleplot(full_hist, scale_factor)
+    full_s = scaleplot(full_hist, scale_factor) if full_hist is not None else None
 
     # Plotten
     plot_lo_nlo_full(ax_main, lo_s, nlo_s, full_s, colors,
-                     labels=dict(lo="LO", nlo="NLO", full="LO + NLO"))
+                    labels=dict(
+                        **({"lo": "LO"} if lo_s is not None else {}),
+                        nlo="NLO",
+                        **({"full": "LO + NLO"} if full_s is not None else {})
+                    ))
 
     yscale_to_use = main_yscale
     if force_main_linear:
         yscale_to_use = "linear"
     else:
-        if np.all(full_s[:, 1] <= 0):
+        if full_s is not None and np.all(full_s[:, 1] <= 0):
             yscale_to_use = "linear"
 
     style_sci_x(ax_main, x_label_main, y_label_main, main_title, yscale=yscale_to_use, sharex=False)
-
     if xlim is not None:
         ax_main.set_xlim(*xlim)
 
-    K = mergebins(divideplots(nlo_s, full_s), 5)
-    plot_K(ax_k, K, colors["K"], x_label_k)
-
+    if full_s is not None:
+        K = mergebins(divideplots(nlo_s, full_s), 5)
+        plot_K(ax_k, K, colors["K"], x_label_k)
+    else:
+        K = None
+        ax_k.set_visible(False)
+        
     if xlim is not None:
         ax_k.set_xlim(*xlim)
     else:
@@ -168,23 +175,27 @@ def make_plots_and_kfactors( *, tag, savename_base,
                             lo_y5, nlo_y5, full_y5,
                             outdir, outdir_vals, colors, ): 
     savename = f"{savename_base}_{tag}" 
-    
+
     # ----------------- write value files for all variables -----------------
-    # Define the variables and optional CMS counterparts
+    # (var, has_cms, photon_only)
+    # photon_only=True  -> nur NLO schreiben (LO=0, full≈NLO, kein Photon in LO)
+    # photon_only=False -> lo, nlo, full schreiben
     variables = [
-        ("th3", True),
-        ("Emu", True),
-        ("th5", True),
-        ("Eph", True),
-        ("phi5", False),
-        ("x5", False),
-        ("y5", False)
+        ("th3",  True,  False),
+        ("Emu",  True,  False),
+        ("th5",  True,  True),
+        ("Eph",  True,  True),
+        ("phi5", False, True),
+        ("x5",   False, True),
+        ("y5",   False, True),
     ]
 
-    for var, has_cms in variables:
+    for var, has_cms, photon_only in variables:
+        orders = ["nlo"] if photon_only else ["lo", "nlo", "full"]
+
         # lab frame
-        for order in ["lo", "nlo", "full"]:
-            arr = globals()[f"{order}_{var}"]  # get array dynamically
+        for order in orders:
+            arr = globals()[f"{order}_{var}"]
             if arr is not None:
                 write_file_with_values(
                     outdir_vals + f"{order}_{var}_{savename}.txt",
@@ -192,9 +203,10 @@ def make_plots_and_kfactors( *, tag, savename_base,
                     f"{var}_{tag} bin centers",
                     "value"
                 )
+
         # cms frame
         if has_cms:
-            for order in ["lo", "nlo", "full"]:
+            for order in orders:
                 arr_cms = globals().get(f"{order}_{var}_cms", None)
                 if arr_cms is not None:
                     write_file_with_values(
@@ -203,6 +215,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                         f"{var}_cms_{tag} bin centers",
                         "value"
                     )
+
     # --------------------
     # Create combined figure
     # --------------------
@@ -274,8 +287,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
     plt.close(fig)
 
     
-    # ---------- x5 bands (in y5 slices) ----------
-    plot_bands(full_x5, x5_bands_full,
+    # x5 in y5-slices
+    plot_bands(x5_bands_nlo,
             xlabel=r"$x_5\ (\mathrm{m})$",
             ylabel=r"$\frac{d\sigma}{dx_5}$",
             title=f"x5 distribution in y5-slices ({tag})",
@@ -285,8 +298,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             slice_name="y5",
             slice_range=Y5_RANGE)
 
-    # ---------- y5 bands (in x5 slices) ----------
-    plot_bands(full_y5, y5_bands_full,
+    # y5 in x5-slices
+    plot_bands(y5_bands_nlo,
             xlabel=r"$y_5\ (\mathrm{m})$",
             ylabel=r"$\frac{d\sigma}{dy_5}$",
             title=f"y5 distribution in x5-slices ({tag})",
@@ -368,3 +381,6 @@ make_plots_and_kfactors(tag="cms", savename_base=savename_base,
                         lo_x5=None, nlo_x5=None, full_x5=None,
                         lo_y5=None, nlo_y5=None, full_y5=None,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
+
+
+#print(nlo.histograms)
