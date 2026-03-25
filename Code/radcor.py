@@ -15,22 +15,22 @@ outdir_vals = homedir + "Vals/"
 # Input definitions
 # =========================
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02",
-           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new"]
+           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 7
-nlo_i = 7
+lo_i = 8
+nlo_i = 8
 Y5_RANGE = (-0.09, 0.09)
 X5_RANGE = (-0.09, 0.09)
 n_bands_min = 1
 n_bands = 10
 
-savename_base = savenames[5] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[6] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -134,7 +134,7 @@ def draw_observable_and_k(ax_main, ax_k, *, lo_hist, nlo_hist, full_hist,
     else:
         K = None
         ax_k.set_visible(False)
-        
+
     if xlim is not None:
         ax_k.set_xlim(*xlim)
     else:
@@ -382,5 +382,5 @@ make_plots_and_kfactors(tag="cms", savename_base=savename_base,
                         lo_y5=None, nlo_y5=None, full_y5=None,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
-
+print(nlo_Emu[:10])
 #print(nlo.histograms)

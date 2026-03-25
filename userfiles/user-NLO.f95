@@ -16,8 +16,8 @@
     -0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 50.e3_prec,  12.e-3_prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 50.e3_prec,  12.e-3_prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  12.e-3_prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  12.e-3_prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.09_prec,0.09_prec, &                                                 ! x5[m], y5[m]
     0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec, &  ! x5_B1..x5_B10[m]
     0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec /)  ! y5_B1..y5_B10[m]
@@ -61,7 +61,7 @@
 
   call fix_mu
 
-  ! proton frame
+  ! proton rest frame
   ql1 = boost_rf(q2,q1)
   ql2 = boost_rf(q2,q2)
   ql3 = boost_rf(q2,q3)
@@ -74,7 +74,7 @@
   th3 = atan2(q3perp, ql3(3))
   Emu = ql3(4)
   Eph_cut = 200._prec
-  d_detec = 10._prec
+  d_detec = 30._prec
 
   ! cms frame
   q3perp_cms = sqrt(q3(1)**2 + q3(2)**2)
@@ -112,54 +112,81 @@
     if ((Eph .lt. Eph_cut) .or. (abs(th5) .gt. 12.e-3)) pass_cut = .false.
   endif
 
-  if (ql5(4) .le. 0._prec) then
-    pass_cut(3) = .false.   ! th5
-    pass_cut(4) = .false.   ! Eph  
-    pass_cut(5) = .false.
-    pass_cut(10) = .false.
-    pass_cut(11) = .false.
-    pass_cut(12) = .false.
+
+  !Information for x,y bands
+  last_hist_nr = 14
+  n_bands = 10 !must be an even number	
+  nr_bandhists = 2*nbands
+  
+  if (ql5(4) .le. 0._prec) then !if no photon exists don't fill photon histograms
+    pass_cut(3) = .false.  !th5
+    pass_cut(4) = .false.  !Eph  
+    pass_cut(5) = .false.  !phi5
+    pass_cut(8) = .false.  !th5_cms
+    pass_cut(9) = .false.  !Eph_cms	
+    pass_cut(10) = .false. !phi5_cms
+    pass_cut(11) = .false. !x5
+    pass_cut(12) = .false. !y5
+    pass_cut(13) = .false. !ql5(2)
+    pass_cut(14) = .false. !ql5(1)
+    do i=1, nr_bandhists
+      pass_cut(last_hist_nr+i) = .false.
+    end do
   endif
 
   ! Lab values
-  names(1) = 'th3'; quant(1) = th3
-  names(2) = 'Emu'; quant(2) = Emu
-  names(3) = 'th5'; quant(3) = th5
-  names(4) = 'Eph'; quant(4) = Eph
-  names(5) = 'phi5'; quant(5) = phi5
+  names(1) = 'th3'
+  quant(1) = th3
+  names(2) = 'Emu'
+  quant(2) = Emu
+  names(3) = 'th5'
+  quant(3) = th5
+  names(4) = 'Eph'
+  quant(4) = Eph
+  names(5) = 'phi5'
+  quant(5) = phi5
 
   ! CMS values
-  names(6) = 'th3_cms'; quant(6) = th3_cms
-  names(7) = 'Emu_cms'; quant(7) = Emu_cms
-  names(8) = 'th5_cms'; quant(8) = th5_cms
-  names(9) = 'Eph_cms'; quant(9) = Eph_cms
-  names(10) = 'phi5_cms'; quant(10) = phi5_cms
+  names(6) = 'th3_cms'
+  quant(6) = th3_cms
+  names(7) = 'Emu_cms'
+  quant(7) = Emu_cms
+  names(8) = 'th5_cms'
+  quant(8) = th5_cms
+  names(9) = 'Eph_cms'
+  quant(9) = Eph_cms
+  names(10) = 'phi5_cms'
+  quant(10) = phi5_cms
 
-  names(11) = 'x5'; quant(11) = x5
-  names(12) = 'y5'; quant(12) = y5
+  names(11) = 'x5'
+  quant(11) = x5
+  names(12) = 'y5'
+  quant(12) = y5
+  
+  names(13) = "ql5(2)"
+  quant(13) = ql5(2)
+  names(14) = "ql5(1)"
+  quant(14) = ql5(1)
 
-  ! Banded slices (-0.09 to 0.09)
-  n_bands = 10
-  band_min = -0.09_prec
-  band_max =  0.09_prec
-  bin_width = (band_max - band_min)/n_bands
-
+  ! Banded slices
+  bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
+  band_min = -(n_bands/2 * bin_width)
+  band_max = n_bands/2 * bin_width
   ! Y slices (x5)
   do i=1,n_bands
+    offset_y = last_hist_nr
     write(str_i,'(I0)') i
-    names(12+i) = 'x5_B'//trim(str_i)
-    pass_cut(12+i) = (ql5(4) .gt. 0._prec) .and. &
-           	     (band_min + (i-1)*bin_width .le. y5) .and. &
-                     (y5 .lt. band_min + i*bin_width)
+    names(offset_y+i) = 'x5_B'//trim(str_i)
+    pass_cut(offset_y+i) = (band_min + (i-1)*bin_width .le. y5) .and. &
+                            (y5 .lt. band_min + i*bin_width)
   end do
-
   ! X slices (y5)
+  offset_x = offset_y + n_bands
   do i=1,n_bands
     write(str_i,'(I0)') i
-    names(22+i) = 'y5_B'//trim(str_i)
-    pass_cut(22+i) = (ql5(4) .gt. 0._prec) .and. &
-                     (band_min + (i-1)*bin_width .le. x5) .and. &
-                     (x5 .lt. band_min + i*bin_width)
+    names(offset_x+i) = 'y5_B'//trim(str_i)
+    pass_cut(offset_x+i) = (band_min + (i-1)*bin_width .le. x5) .and. &
+                            (x5 .lt. band_min + i*bin_width)
   end do
 
   END FUNCTION QUANT
