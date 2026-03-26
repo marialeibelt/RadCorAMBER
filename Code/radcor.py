@@ -15,22 +15,25 @@ outdir_vals = homedir + "Vals/"
 # Input definitions
 # =========================
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02",
-           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening"]
+           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03","mp2mp_NLO_26_03_new",
+           "mp2mp_26_03_timetest","lesspoints3","smallth3","folder","folder2", "folder3"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 8
-nlo_i = 8
-Y5_RANGE = (-0.09, 0.09)
-X5_RANGE = (-0.09, 0.09)
-n_bands_min = 1
+lo_i = 16
+nlo_i = 16
+bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
+band_min = -(n_bands/2 * bin_width)
+band_max = n_bands/2 * bin_width
+Y5_RANGE = (band_min, band_max)
+X5_RANGE = (band_min, band_max)
 
-savename_base = savenames[6] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[7] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -52,6 +55,8 @@ lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
 lo_phi5, nlo_phi5, full_phi5 = lo["phi5"], nlo["phi5"], full["phi5"]
 lo_x5, nlo_x5, full_x5 = lo["x5"], nlo["x5"], full["x5"]
 lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
+lo_ql51, nlo_ql51, full_ql51 = lo["ql5(1)"], nlo["ql5(1)"], full["ql5(1)"]
+lo_ql52, nlo_ql52, full_ql52 = lo["ql5(2)"], nlo["ql5(2)"], full["ql5(2)"]
 
 x5_bands_lo, x5_bands_nlo, x5_bands_full = {}, {}, {}
 y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
@@ -59,7 +64,7 @@ y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
 # =========================
 # Fill bands robustly with try/except to avoid KeyError
 # =========================
-for i in range(n_bands_min, n_bands+1):
+for i in range(1, n_bands+1):
     key_x = f"x5_B{i}"
     key_y = f"y5_B{i}"
 
@@ -171,31 +176,54 @@ def make_plots_and_kfactors( *, tag, savename_base,
                             lo_th5, nlo_th5, full_th5, 
                             lo_Eph, nlo_Eph, full_Eph, 
                             lo_phi5, nlo_phi5, full_phi5,
+                            nlo_ql51=None, nlo_ql52=None,
                             lo_x5, nlo_x5, full_x5,
                             lo_y5, nlo_y5, full_y5,
                             outdir, outdir_vals, colors, ): 
     savename = f"{savename_base}_{tag}" 
 
     # ----------------- write value files for all variables -----------------
-    # (var, has_cms, photon_only)
+    # (var, has_cms, photon_only, lab_only)
     # photon_only=True  -> nur NLO schreiben (LO=0, full≈NLO, kein Photon in LO)
     # photon_only=False -> lo, nlo, full schreiben
     variables = [
-        ("th3",  True,  False),
-        ("Emu",  True,  False),
-        ("th5",  True,  True),
-        ("Eph",  True,  True),
-        ("phi5", False, True),
-        ("x5",   False, True),
-        ("y5",   False, True),
+        ("th3",  True,  False, False),
+        ("Emu",  True,  False, False),
+        ("th5",  True,  True,  False),
+        ("Eph",  True,  True,  False),
+        ("phi5", False, True,  False),
+        ("x5",   False, True,  False),
+        ("y5",   False, True,  False),
+        ("ql51", False, True,  True),
+        ("ql52", False, True,  True),
     ]
 
-    for var, has_cms, photon_only in variables:
+    # ----------- NEW: explicit mapping instead of globals() -----------
+    data_map = {
+        "th3":  {"lo": lo_th3,  "nlo": nlo_th3,  "full": full_th3,
+                 "lo_cms": lo_th3_cms, "nlo_cms": nlo_th3_cms, "full_cms": full_th3_cms},
+        "Emu":  {"lo": lo_Emu,  "nlo": nlo_Emu,  "full": full_Emu,
+                 "lo_cms": lo_Emu_cms, "nlo_cms": nlo_Emu_cms, "full_cms": full_Emu_cms},
+        "th5":  {"lo": lo_th5,  "nlo": nlo_th5,  "full": full_th5,
+                 "lo_cms": lo_th5_cms, "nlo_cms": nlo_th5_cms, "full_cms": full_th5_cms},
+        "Eph":  {"lo": lo_Eph,  "nlo": nlo_Eph,  "full": full_Eph,
+                 "lo_cms": lo_Eph_cms, "nlo_cms": nlo_Eph_cms, "full_cms": full_Eph_cms},
+        "phi5": {"lo": lo_phi5, "nlo": nlo_phi5, "full": full_phi5},
+        "x5":   {"lo": lo_x5,   "nlo": nlo_x5,   "full": full_x5},
+        "y5":   {"lo": lo_y5,   "nlo": nlo_y5,   "full": full_y5},
+        "ql51": {"nlo": nlo_ql51},
+        "ql52": {"nlo": nlo_ql52},
+    }
+
+    for var, has_cms, photon_only, lab_only in variables:
+        if lab_only and tag != "lab":
+            continue
+
         orders = ["nlo"] if photon_only else ["lo", "nlo", "full"]
 
         # lab frame
         for order in orders:
-            arr = globals()[f"{order}_{var}"]
+            arr = data_map.get(var, {}).get(order, None)
             if arr is not None:
                 write_file_with_values(
                     outdir_vals + f"{order}_{var}_{savename}.txt",
@@ -207,7 +235,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
         # cms frame
         if has_cms:
             for order in orders:
-                arr_cms = globals().get(f"{order}_{var}_cms", None)
+                arr_cms = data_map.get(var, {}).get(f"{order}_cms", None)
                 if arr_cms is not None:
                     write_file_with_values(
                         outdir_vals + f"{order}_{var}_cms_{savename}.txt",
@@ -256,7 +284,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                            lo_hist=lo_th5, nlo_hist=nlo_th5, full_hist=full_th5,
                                            scale_factor=1e-3, x_label_main=r"$\theta_5$ (mrad)",
                                            x_label_k=r"$\theta_5$ (mrad)", y_label_main=r"$d\sigma/d\theta_5$",
-                                           main_title=f"Photon Scattering Angle ({tag})", xlim=(-2,2), colors=colors)
+                                           main_title=f"Photon Scattering Angle ({tag})", xlim=(-0.5,13.), colors=colors)
 
     _, _, _, K_Eph = draw_observable_and_k(ax_Eph, ax_K_Eph,
                                            lo_hist=lo_Eph, nlo_hist=nlo_Eph, full_hist=full_Eph,
@@ -368,6 +396,7 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
                         lo_th5=lo_th5, nlo_th5=nlo_th5, full_th5=full_th5,
                         lo_Eph=lo_Eph, nlo_Eph=nlo_Eph, full_Eph=full_Eph,
                         lo_phi5=lo_phi5, nlo_phi5=nlo_phi5, full_phi5=full_phi5,
+                        nlo_ql51=nlo_ql51, nlo_ql52=nlo_ql52,
                         lo_x5=lo_x5, nlo_x5=nlo_x5, full_x5=full_x5,
                         lo_y5=lo_y5, nlo_y5=nlo_y5, full_y5=full_y5,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
@@ -377,10 +406,12 @@ make_plots_and_kfactors(tag="cms", savename_base=savename_base,
                         lo_Emu=lo_Emu_cms, nlo_Emu=nlo_Emu_cms, full_Emu=full_Emu_cms,
                         lo_th5=lo_th5_cms, nlo_th5=nlo_th5_cms, full_th5=full_th5_cms,
                         lo_Eph=lo_Eph_cms, nlo_Eph=nlo_Eph_cms, full_Eph=full_Eph_cms,
+                        nlo_ql51=None, nlo_ql52=None,
                         lo_phi5=None, nlo_phi5=None, full_phi5=None,
                         lo_x5=None, nlo_x5=None, full_x5=None,
                         lo_y5=None, nlo_y5=None, full_y5=None,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
-print(nlo_Emu[:10])
-#print(nlo.histograms)
+#print(nlo_Emu[:10])
+print(nlo_ql52[:10])
+print(nlo.histograms)

@@ -5,23 +5,25 @@
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 32
+  integer, parameter :: nrq = 34
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 200._prec, -12.e-3_prec, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 200._prec, -12.e-3_prec, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    -0.09_prec,-0.09_prec, &                                               ! x5[m], y5[m]
-    -0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec, & ! x5_B1..x5_B10[m]
-    -0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec,-0.09_prec /) ! y5_B1..y5_B10[m]
+    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 50._prec, -pi*1000._prec, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 50._prec, -pi*1000._prec, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    -0.191_prec,-0.191_prec, &                                              ! x5[m], y5[m]
+    0._prec,0._prec, &	! ql5(2),ql5(1)
+    -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
+    -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  12.e-3_prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  12.e-3_prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    0.09_prec,0.09_prec, &                                                 ! x5[m], y5[m]
-    0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec, &  ! x5_B1..x5_B10[m]
-    0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec,0.09_prec /)  ! y5_B1..y5_B10[m]
-  						   
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi*1000._prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi*1000._prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    0.191_prec,0.191_prec, &                                                ! x5[m], y5[m]
+    650._prec,650._prec, &	! ql5(2),ql5(1)
+    0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
+    0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
+    
   integer :: userdim = 0
   integer :: namesLen=12
   integer :: filenamesuffixLen=10
@@ -36,13 +38,13 @@
   END SUBROUTINE FIX_MU
 
   SUBROUTINE INITUSER
-  print*, "This is Mary testing the McMule userfile <3"
+  print*, "Welcome to Mary's McMule userfile <3"
   print*, " * Emu = 150 GeV"
   print*, " * 1.35 < th_mu < 1.65 mrad"
   print*, " * Emu > 70 GeV"
-  print*, " * Eph > 200MeV"
+  print*, " * Eph > 50MeV"
   print*, " * -12. < th_ph < 12. mrad"
-  print*, " * d_detec = 10 m"
+  print*, " * d_detec = 30 m"
   
   call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   END SUBROUTINE
@@ -55,7 +57,7 @@
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
   real(kind=prec) :: quant(nrq)
-  integer :: n_bands, i
+  integer :: n_bands,i,offset_x,offset_y,last_hist_nr,nr_bandhists
   real(kind=prec) :: band_min, band_max, bin_width
   character(len=3) :: str_i
 
@@ -98,25 +100,25 @@
   x5 = 0._prec
   y5 = 0._prec
 
-  if (ql5(4) .gt. 0._prec) then
-    Eph = ql5(4)
-    q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
-    th5 = atan2(q5perp, ql5(3))
-    phi5 = atan2(ql5(2),ql5(1))
-    Eph_cms = q5(4)
-    q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
-    th5_cms = atan2(q5perp_cms, q5(3))
-    phi5_cms = atan2(q5(2),q5(1))
-    x5 = d_detec*tan(th5)*cos(phi5)
-    y5 = d_detec*tan(th5)*sin(phi5)
-    if ((Eph .lt. Eph_cut) .or. (abs(th5) .gt. 12.e-3)) pass_cut = .false.
+  Eph = ql5(4)
+  q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
+  th5 = atan2(q5perp, ql5(3))
+  phi5 = atan2(ql5(2),ql5(1))
+  Eph_cms = q5(4)
+  q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
+  th5_cms = atan2(q5perp_cms, q5(3))
+  phi5_cms = atan2(q5(2),q5(1))
+  x5 = d_detec*tan(th5)*cos(phi5)
+  y5 = d_detec*tan(th5)*sin(phi5)
+  if (Eph .gt. Eph_cut) then
+    if (abs(th5) .gt. 12.e-3) pass_cut = .false.
   endif
 
 
   !Information for x,y bands
   last_hist_nr = 14
   n_bands = 10 !must be an even number	
-  nr_bandhists = 2*nbands
+  nr_bandhists = 2*n_bands
   
   if (ql5(4) .le. 0._prec) then !if no photon exists don't fill photon histograms
     pass_cut(3) = .false.  !th5
@@ -170,23 +172,27 @@
 
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
-  band_min = -(n_bands/2 * bin_width)
-  band_max = n_bands/2 * bin_width
+  band_min = -(n_bands/2.0_prec * bin_width)
+  band_max = n_bands/2.0_prec * bin_width
   ! Y slices (x5)
+  offset_y = last_hist_nr
   do i=1,n_bands
-    offset_y = last_hist_nr
     write(str_i,'(I0)') i
     names(offset_y+i) = 'x5_B'//trim(str_i)
-    pass_cut(offset_y+i) = (band_min + (i-1)*bin_width .le. y5) .and. &
-                            (y5 .lt. band_min + i*bin_width)
+    pass_cut(offset_y+i) = (ql5(4) .gt. 0._prec) .and. &
+                          (band_min + (i-1)*bin_width .le. y5) .and. &
+                          (y5 .lt. band_min + i*bin_width)
+    quant(offset_y+i) = x5
   end do
   ! X slices (y5)
   offset_x = offset_y + n_bands
   do i=1,n_bands
     write(str_i,'(I0)') i
     names(offset_x+i) = 'y5_B'//trim(str_i)
-    pass_cut(offset_x+i) = (band_min + (i-1)*bin_width .le. x5) .and. &
+    pass_cut(offset_x+i) = (ql5(4) .gt. 0._prec) .and. &
+                            (band_min + (i-1)*bin_width .le. x5) .and. &
                             (x5 .lt. band_min + i*bin_width)
+    quant(offset_x+i) = y5
   end do
 
   END FUNCTION QUANT

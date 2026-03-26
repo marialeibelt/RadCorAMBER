@@ -1,0 +1,18 @@
+## Generated at 17:28 on March 26 2026 by ge93juy
+# git version: b'main' (b'3160b98')
+# To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
+#      --seeds 63465 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir mp2mp_Emu90 \
+#      --mcmule mcmule \
+#      --stat R,1000,10,10000,10,1
+[McMule]
+
+# specify the program to run relative to `pwd`
+mcmule = "/nfs/mnemosyne/user/ge93juy/private/mcmule-release/mcmule"
+# Specify the variables nenter_ad, itmx_ad, nenter and itmx
+# for each piece you want to run.
+
+[McMule.statistics.vegas]
+mp2mpR = { ncall_pre = 1000, itmx_pre = 10, ncall = 10000, itmx = 10 }

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule", line 7, in <module>
+    sys.exit(main())
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/cmd/__main__.py", line 37, in main
+    parsed.func(parsed)
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/__init__.py", line 31, in main
+    for job in DSL(fp.read()).jobs
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 342, in __init__
+    root.process_root()
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 270, in process_root
+    self.jobs = [i for i in super().process(self.variables) if i]
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 270, in <listcomp>
+    self.jobs = [i for i in super().process(self.variables) if i]
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 261, in process
+    yield from child.process(variables)
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 123, in process
+    self.lock_exe()
+  File "/nfs/mnemosyne/user/ge93juy/private/.local/lib/python3.9/site-packages/pymule/batch/dsl.py", line 108, in lock_exe
+    assert exe.exists()
+AssertionError
+Starting job mp2mpR-X0.1D0.1-S59511-O0_1774540890 at 1774540890.4817152
