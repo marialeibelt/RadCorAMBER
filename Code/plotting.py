@@ -33,17 +33,17 @@ def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
 # =========================
 def plot_bands(bands_dict, *,
                xlabel, ylabel, title, savename, outdir, colors,
-               slice_name="y5", slice_range=(-0.09, 0.09)):
-    """
-    Plottet Bänder einer Verteilung in Slices.
-    Keine Hauptverteilung mehr — die Bänder sind die Story.
-    """
+               slice_name="y5", slice_range=(-0.09, 0.09),
+               yscale="linear", xscale="linear"):
+
     fig, ax = plt.subplots(figsize=(6, 5))
 
     if not bands_dict:
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         ax.set_title(title)
+        ax.set_xscale(xscale)
+        ax.set_yscale(yscale)
         save_figure(fig, savename, outdir=outdir)
         plt.close(fig)
         return
@@ -58,9 +58,13 @@ def plot_bands(bands_dict, *,
         band = bands_dict[i]
         if band is None or len(band) == 0:
             continue
+
         # Nur finite Werte
         mask = np.isfinite(band[:, 0]) & np.isfinite(band[:, 1])
         band = band[mask]
+        if len(band) == 0:
+            continue
+
         if len(band) == 0:
             continue
 
@@ -72,6 +76,10 @@ def plot_bands(bands_dict, *,
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(title)
+
+    ax.set_xscale(xscale)
+    ax.set_yscale(yscale)
+
     ax.legend(fontsize=8, ncol=2, framealpha=0)
 
     save_figure(fig, savename, outdir=outdir)

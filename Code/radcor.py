@@ -14,18 +14,19 @@ outdir_vals = homedir + "Vals/"
 # =========================
 # Input definitions
 # =========================
-lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02",
-           "mp2mp_NLO_15_03", "mp2mptest", "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03","mp2mp_NLO_26_03_new",
-           "mp2mp_26_03_timetest","lesspoints3","smallth3","folder","folder2", "folder3"]
+lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest", 
+           "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",
+           "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",
+           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 16
-nlo_i = 16
+lo_i = 18
+nlo_i = 18
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
@@ -33,7 +34,7 @@ band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
 
-savename_base = savenames[7] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[8] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -270,44 +271,44 @@ def make_plots_and_kfactors( *, tag, savename_base,
     _, _, _, K_th3 = draw_observable_and_k(ax_th3, ax_K_th3,
                                            lo_hist=lo_th3, nlo_hist=nlo_th3, full_hist=full_th3,
                                            scale_factor=1e-3, x_label_main=r"$\theta_3$ (mrad)",
-                                           x_label_k=r"$\theta_3$ (mrad)", y_label_main=r"$d\sigma/d\theta_3$",
+                                           x_label_k=r"$\theta_3$ (mrad)", y_label_main=r"$\frac{d\sigma}{d\theta_3}\ (\mu\mathrm{barn}/\mathrm{mrad})$",
                                            main_title=f"Muon Scattering Angle ({tag})",
                                            xlim=(1.3,1.7), force_main_linear=True, colors=colors)
 
     _, _, _, K_Emu = draw_observable_and_k(ax_Emu, ax_K_Emu,
                                            lo_hist=lo_Emu, nlo_hist=nlo_Emu, full_hist=full_Emu,
                                            scale_factor=1e3, x_label_main=r"$E_\mu$ (GeV)",
-                                           x_label_k=r"$E_\mu$ (GeV)", y_label_main=r"$d\sigma/dE_\mu$",
+                                           x_label_k=r"$E_\mu$ (GeV)", y_label_main=r"$\frac{d\sigma}{dE_\mu}\ (\mu\mathrm{barn}/\mathrm{GeV})$",
                                            main_title=f"Muon Energy ({tag})", colors=colors)
 
     _, _, _, K_th5 = draw_observable_and_k(ax_th5, ax_K_th5,
                                            lo_hist=lo_th5, nlo_hist=nlo_th5, full_hist=full_th5,
                                            scale_factor=1e-3, x_label_main=r"$\theta_5$ (mrad)",
-                                           x_label_k=r"$\theta_5$ (mrad)", y_label_main=r"$d\sigma/d\theta_5$",
-                                           main_title=f"Photon Scattering Angle ({tag})", xlim=(-0.5,13.), colors=colors)
+                                           x_label_k=r"$\theta_5$ (mrad)", y_label_main=r"$\frac{d\sigma}{d\theta_5}\ (\mu\mathrm{barn}/\mathrm{mrad})$",
+                                           main_title=f"Photon Scattering Angle ({tag})", xlim=(-1.,13.), colors=colors) #, force_main_linear=True,
 
     _, _, _, K_Eph = draw_observable_and_k(ax_Eph, ax_K_Eph,
                                            lo_hist=lo_Eph, nlo_hist=nlo_Eph, full_hist=full_Eph,
                                            scale_factor=1e3, x_label_main=r"$E_\gamma$ (GeV)",
-                                           x_label_k=r"$E_\gamma$ (GeV)", y_label_main=r"$d\sigma/dE_\gamma$",
+                                           x_label_k=r"$E_\gamma$ (GeV)", y_label_main=r"$\frac{d\sigma}{dE_\gamma}\ (\mu\mathrm{barn}/\mathrm{GeV})$",
                                            main_title=f"Photon Energy ({tag})", colors=colors)
 
     _, _, _, K_phi5 = draw_observable_and_k(ax_phi5, ax_K_phi5,
-                                            lo_hist=None, nlo_hist=nlo_phi5, full_hist=None,
+                                            lo_hist=lo_phi5, nlo_hist=nlo_phi5, full_hist=full_phi5,
                                             scale_factor=1e-3, x_label_main=r"$\phi_5$ (mrad)",
-                                            x_label_k=r"$\phi_5$ (mrad)", y_label_main=r"$d\sigma/d\phi_5$",
-                                            main_title=f"Photon Deflection Angle ({tag})", xlim=(-12,12), colors=colors)
+                                            x_label_k=r"$\phi_5$ (mrad)", y_label_main=r"$\frac{d\sigma}{d\phi_5}\ (\mu\mathrm{barn}/\mathrm{mrad})$",
+                                            main_title=f"Photon Deflection Angle ({tag})", force_main_linear=False, colors=colors)
 
     _, _, _, K_x5 = draw_observable_and_k(ax_x5, ax_K_x5,
-                                            lo_hist=None, nlo_hist=nlo_x5, full_hist=None,
+                                            lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5,
                                             scale_factor=1., x_label_main=r"$x_5$ (mrad)",
-                                            x_label_k=r"$x_5$ (m)", y_label_main=r"$d\sigma/dx_5$",
+                                            x_label_k=r"$x_5$ (m)", y_label_main=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
                                             main_title=f"Photon x({tag})", xlim=(-0.2,0.2), colors=colors)
 
     _, _, _, K_y5 = draw_observable_and_k(ax_y5, ax_K_y5,
                                             lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5,
                                             scale_factor=1., x_label_main=r"$y_5$ (mrad)",
-                                            x_label_k=r"$y_5$ (m)", y_label_main=r"$d\sigma/dy_5$",
+                                            x_label_k=r"$y_5$ (m)", y_label_main=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
                                             main_title=f"Photon y ({tag})", xlim=(-0.2,0.2), colors=colors)
 
 
@@ -316,6 +317,14 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     
     # x5 in y5-slices
+    for i, band in x5_bands_nlo.items():
+        if band is None or len(band) == 0:
+            print(f"Band {i}: EMPTY")
+            continue
+
+        y = band[:,1]
+        print(f"Band {i}: min={np.min(y):.3e}, max={np.max(y):.3e}, n={len(y)}")
+
     plot_bands(x5_bands_nlo,
             xlabel=r"$x_5\ (\mathrm{m})$",
             ylabel=r"$\frac{d\sigma}{dx_5}$",
@@ -324,7 +333,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             outdir=outdir,
             colors=colors,
             slice_name="y5",
-            slice_range=Y5_RANGE)
+            slice_range=Y5_RANGE,
+            yscale="log")
 
     # y5 in x5-slices
     plot_bands(y5_bands_nlo,
@@ -335,7 +345,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             outdir=outdir,
             colors=colors,
             slice_name="x5",
-            slice_range=X5_RANGE)
+            slice_range=X5_RANGE,
+            yscale="log")
 
     #theta5 = nlo_th5[:,0]       # extract the theta_5 values
     #tan_theta5 = np.tan(theta5)  # numpy tan; make sure theta5 is in radians!
@@ -369,7 +380,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_single_pair_plot( savename=f"{savename}_th5_pair", 
                           lo_hist=lo_th5, nlo_hist=nlo_th5, full_hist=full_th5, 
                           scale_factor=1.e-3, x_label=r"$\theta_5\ (\mathrm{mrad})$", y_label=r"$\frac{d\sigma}{d\theta_5}\ (\mu\mathrm{barn}/\mathrm{mrad})$", 
-                          main_title=f"Photon Scattering Angle ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, ) 
+                          main_title=f"Photon Scattering Angle ({tag})", xlim=(-1., 13.), colors=colors, outdir=outdir, ) 
     save_single_pair_plot( savename=f"{savename}_Eph_pair", 
                           lo_hist=lo_Eph, nlo_hist=nlo_Eph, full_hist=full_Eph, 
                           scale_factor=1.e3, x_label=r"$E_\gamma\ (\mathrm{GeV})$", y_label=r"$\frac{d\sigma}{dE_\gamma}\ (\mu\mathrm{barn}/\mathrm{GeV})$", 
@@ -377,11 +388,11 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_single_pair_plot( savename=f"{savename}_phi5_pair", 
                           lo_hist=lo_phi5, nlo_hist=nlo_phi5, full_hist=full_phi5, 
                           scale_factor=1.e-3, x_label=r"$\phi_5\ (\mathrm{mrad})$", y_label=r"$\frac{d\sigma}{d\phi_5}\ (\mu\mathrm{barn}/\mathrm{mrad})$", 
-                          main_title=f"Photon X-deflection ({tag})", xlim=(-12., 12.), colors=colors, outdir=outdir, ) 
+                          main_title=f"Photon X-deflection ({tag})", colors=colors, outdir=outdir, ) 
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
                           scale_factor=1.e-3, x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
-                          main_title=f"Photon X Hit ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, )
+                          main_title=f"Photon X Hit ({tag})", colors=colors, outdir=outdir, )
     save_single_pair_plot( savename=f"{savename}_y5_pair", 
                           lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
                           scale_factor=1.e-3, x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
@@ -413,5 +424,5 @@ make_plots_and_kfactors(tag="cms", savename_base=savename_base,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
 #print(nlo_Emu[:10])
-print(nlo_ql52[:10])
-print(nlo.histograms)
+#print(nlo_ql52[:10])
+#print(nlo.histograms)

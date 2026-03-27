@@ -6,19 +6,19 @@
   implicit none
 
   integer, parameter :: nrq = 34
-  integer, parameter :: nrbins = 500
+  integer, parameter :: nrbins = 50
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 50._prec, -pi*1000._prec, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.345e-3_prec,  95.e3_prec, -12.e-3_prec, 50._prec, -pi*1000._prec, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.191_prec,-0.191_prec, &                                              ! x5[m], y5[m]
     0._prec,0._prec, &	! ql5(2),ql5(1)
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi*1000._prec, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi*1000._prec, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.191_prec,0.191_prec, &                                                ! x5[m], y5[m]
     650._prec,650._prec, &	! ql5(2),ql5(1)
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
@@ -131,9 +131,6 @@
     pass_cut(12) = .false. !y5
     pass_cut(13) = .false. !ql5(2)
     pass_cut(14) = .false. !ql5(1)
-    do i=1, nr_bandhists
-      pass_cut(last_hist_nr+i) = .false.
-    end do
   endif
 
   ! Lab values

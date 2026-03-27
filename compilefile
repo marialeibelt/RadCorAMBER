@@ -1,0 +1,5 @@
+#real userfile:
+gfortran -fPIC -I ~/mcmule-release --shared -o user.so /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/userfiles/user-NLO.f95 
+
+#Test time:
+#gfortran -fPIC -I ~/mcmule-release --shared -o user.so /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/userfiles/user-NLO_timetest.f95 
