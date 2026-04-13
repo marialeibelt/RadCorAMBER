@@ -2,6 +2,8 @@ from pymule import *
 import matplotlib.pyplot as plt
 import numpy as np
 from plotting import *
+import matplotlib.ticker as ticker
+
 
 # =========================
 # Paths
@@ -17,10 +19,10 @@ outdir_vals = homedir + "Vals/"
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest", 
            "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",
-           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2"]
+           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_14_04"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03","13_04"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -34,7 +36,7 @@ band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
 
-savename_base = savenames[8] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[9] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -96,6 +98,7 @@ lo_phi5_cms, nlo_phi5_cms, full_phi5_cms = lo["phi5_cms"], nlo["phi5_cms"], full
 # Colors
 # =========================
 colors = dict(lo="#1f77b4", nlo="#ff7f0e", full="#2ca02c", K="#d62728")
+#colors = dict(lo="#2ca02c", nlo="#4fa3ff", full="#ff69b4", K="#d62728")
 
 # =========================
 # Function to draw observables and K-factor
@@ -317,17 +320,16 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     
     # x5 in y5-slices
-    for i, band in x5_bands_nlo.items():
-        if band is None or len(band) == 0:
-            print(f"Band {i}: EMPTY")
-            continue
-
-        y = band[:,1]
-        print(f"Band {i}: min={np.min(y):.3e}, max={np.max(y):.3e}, n={len(y)}")
+    #for i, band in x5_bands_nlo.items():
+    #    if band is None or len(band) == 0:
+    #        print(f"Band {i}: EMPTY")
+    #        continue
+    #    y = band[:,1]
+    #    print(f"Band {i}: min={np.min(y):.3e}, max={np.max(y):.3e}, n={len(y)}")
 
     plot_bands(x5_bands_nlo,
             xlabel=r"$x_5\ (\mathrm{m})$",
-            ylabel=r"$\frac{d\sigma}{dx_5}$",
+            ylabel=r"$\frac{d\sigma}{dx_5} (\mu\mathrm{barn}/\mathrm{m})$",
             title=f"x5 distribution in y5-slices ({tag})",
             savename=f"{savename}_x5_allbands",
             outdir=outdir,
@@ -339,7 +341,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
     # y5 in x5-slices
     plot_bands(y5_bands_nlo,
             xlabel=r"$y_5\ (\mathrm{m})$",
-            ylabel=r"$\frac{d\sigma}{dy_5}$",
+            ylabel=r"$\frac{d\sigma}{dy_5} (\mu\mathrm{barn}/\mathrm{m})$",
             title=f"y5 distribution in x5-slices ({tag})",
             savename=f"{savename}_y5_allbands",
             outdir=outdir,
@@ -348,10 +350,56 @@ def make_plots_and_kfactors( *, tag, savename_base,
             slice_range=X5_RANGE,
             yscale="log")
 
+    # =========================
+    # 2D plot: x5 vs y5
+    # =========================
+    keys = sorted(x5_bands_nlo.keys())
+
+    rows = []
+    for i in keys:
+        band = np.array(x5_bands_nlo[i])
+        if band is not None and len(band) > 0:
+            vals = band[:, 1]
+            n_rebin = len(vals) // n_bands
+            vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).sum(axis=1)
+            rows.append(vals_rebinned)
+
+    Z = np.array(rows)  # (10, 10)
+
+    # Change here: z-range ----------------------------------------------------!
+    Z = np.clip(Z, 0, 500)
+
+    x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
+    print("x_centers:", x_centers)
+    print("Y5_RANGE:", Y5_RANGE)    
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    im = ax.imshow(Z,extent=[band_min, band_max, band_min, band_max],origin="lower", aspect="auto", cmap="viridis")
+    grid_ticks = np.arange(band_min, band_max + bin_width, bin_width)
+    grid_ticks = np.round(grid_ticks, 6)
+    for t in grid_ticks:
+        ax.axvline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
+        ax.axhline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
+    ax.set_xticks(grid_ticks, minor=True)
+    ax.set_yticks(grid_ticks, minor=True)
+    ax.grid(which="minor", linestyle="--", linewidth=0.4, alpha=0.5)
+
+    cbar = plt.colorbar(im, ax=ax)
+    cbar.set_label(r"$\frac{d^2\sigma}{dx_5\,dy_5}$")
+    ax.set_xlabel(r"$x_5\ (\mathrm{m})$")
+    ax.set_ylabel(r"$y_5\ (\mathrm{m})$")
+    ax.set_title(f"2D distribution ({tag})")
+    ax.set_xlim(-0.2, 0.2)
+    ax.set_ylim(-0.2, 0.2)
+
+    save_figure(fig, f"{savename}_x5y5_2D", outdir=outdir)
+    plt.close(fig)
+
+
+
     #theta5 = nlo_th5[:,0]       # extract the theta_5 values
     #tan_theta5 = np.tan(theta5)  # numpy tan; make sure theta5 is in radians!
     #print("tan(theta_5) values:", tan_theta5)
-
 
     # ---------- write K-value files ---------- 
     write_file_with_values(outdir_vals + f"K_theta_3_{savename}.txt", K_th3, f"th3_{tag} bin center", "K_th3") 
@@ -412,16 +460,16 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
                         lo_y5=lo_y5, nlo_y5=nlo_y5, full_y5=full_y5,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
-make_plots_and_kfactors(tag="cms", savename_base=savename_base,
-                        lo_th3=lo_th3_cms, nlo_th3=nlo_th3_cms, full_th3=full_th3_cms,
-                        lo_Emu=lo_Emu_cms, nlo_Emu=nlo_Emu_cms, full_Emu=full_Emu_cms,
-                        lo_th5=lo_th5_cms, nlo_th5=nlo_th5_cms, full_th5=full_th5_cms,
-                        lo_Eph=lo_Eph_cms, nlo_Eph=nlo_Eph_cms, full_Eph=full_Eph_cms,
-                        nlo_ql51=None, nlo_ql52=None,
-                        lo_phi5=None, nlo_phi5=None, full_phi5=None,
-                        lo_x5=None, nlo_x5=None, full_x5=None,
-                        lo_y5=None, nlo_y5=None, full_y5=None,
-                        outdir=outdir, outdir_vals=outdir_vals, colors=colors)
+# make_plots_and_kfactors(tag="cms", savename_base=savename_base,
+#                         lo_th3=lo_th3_cms, nlo_th3=nlo_th3_cms, full_th3=full_th3_cms,
+#                         lo_Emu=lo_Emu_cms, nlo_Emu=nlo_Emu_cms, full_Emu=full_Emu_cms,
+#                         lo_th5=lo_th5_cms, nlo_th5=nlo_th5_cms, full_th5=full_th5_cms,
+#                         lo_Eph=lo_Eph_cms, nlo_Eph=nlo_Eph_cms, full_Eph=full_Eph_cms,
+#                         nlo_ql51=None, nlo_ql52=None,
+#                         lo_phi5=None, nlo_phi5=None, full_phi5=None,
+#                         lo_x5=None, nlo_x5=None, full_x5=None,
+#                         lo_y5=None, nlo_y5=None, full_y5=None,
+#                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
 #print(nlo_Emu[:10])
 #print(nlo_ql52[:10])

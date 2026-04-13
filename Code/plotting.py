@@ -11,6 +11,9 @@ def plot_errorband(ax, hist, color):
     plt.sca(ax)
     for line in errorband(hist):
         line.set_color(color)
+        line.set_alpha(0.6) #Macht Linien bisschen durchsichtig
+        #line.set_linewidth(1.2)
+
 
 # =========================
 # Plot LO, NLO, and full distributions with error bands
