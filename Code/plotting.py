@@ -37,7 +37,28 @@ def plot_lo_nlo_full(ax, lo, nlo, full, colors, labels=None):
 def plot_bands(bands_dict, *,
                xlabel, ylabel, title, savename, outdir, colors,
                slice_name="y5", slice_range=(-0.09, 0.09),
-               yscale="linear", xscale="linear"):
+               yscale="linear", xscale="linear",
+               rebin=None):   # <-- new
+
+    def rebin_band(band, factor):
+        if factor is None or factor <= 1:
+            return band
+
+        # sort by x
+        band = band[np.argsort(band[:, 0])]
+
+        # chunk-based rebinning (keine Daten gehen verloren)
+        chunks = []
+        for i in range(0, len(band), factor):
+            chunk = band[i:i+factor]
+            if len(chunk) == 0:
+                continue
+
+            x_mean = chunk[:, 0].mean()
+            y_mean = chunk[:, 1].mean()
+            chunks.append([x_mean, y_mean])
+
+        return np.array(chunks)
 
     fig, ax = plt.subplots(figsize=(6, 5))
 
@@ -61,20 +82,20 @@ def plot_bands(bands_dict, *,
         band = bands_dict[i]
         if band is None or len(band) == 0:
             continue
+        band = np.array(band, copy=True)   # <-- wichtig!
 
-        # Nur finite Werte
         mask = np.isfinite(band[:, 0]) & np.isfinite(band[:, 1])
         band = band[mask]
         if len(band) == 0:
             continue
 
-        if len(band) == 0:
-            continue
-
+        # --- apply rebinning here ---
+        band_rebinned = rebin_band(band, rebin)
         color = cmap(idx / max(n_bands - 1, 1))
         low, high = edges[idx], edges[idx + 1]
         label = f"{low:.3f} < {slice_name} < {high:.3f}"
-        ax.plot(band[:, 0], band[:, 1], color=color, label=label)
+        ax.plot(band_rebinned[:, 0], band_rebinned[:, 1],
+                color=color, label=label)
 
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
@@ -87,7 +108,6 @@ def plot_bands(bands_dict, *,
 
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
-
 # =========================
 # Styling for scientific x-axis
 # =========================
@@ -150,7 +170,7 @@ def add_secondary_xaxis(ax, transform_func, xlabel=None, scale="linear"):
 def save_figure(fig, name, outdir, dpi=700):
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    #fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
+    fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
 
 # =========================

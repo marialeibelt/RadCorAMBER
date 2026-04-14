@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from plotting import *
 import matplotlib.ticker as ticker
+from matplotlib.colors import LogNorm
 
 
 # =========================
@@ -19,10 +20,10 @@ outdir_vals = homedir + "Vals/"
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest", 
            "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",
-           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_14_04"]
+           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03","13_04"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03","13_04","14_04","14_04_add"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -36,7 +37,7 @@ band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
 
-savename_base = savenames[9] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[10] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -336,7 +337,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             colors=colors,
             slice_name="y5",
             slice_range=Y5_RANGE,
-            yscale="log")
+            yscale="log",
+            rebin=1)
 
     # y5 in x5-slices
     plot_bands(y5_bands_nlo,
@@ -348,7 +350,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             colors=colors,
             slice_name="x5",
             slice_range=X5_RANGE,
-            yscale="log")
+            yscale="log",
+            rebin=1)
 
     # =========================
     # 2D plot: x5 vs y5
@@ -367,14 +370,14 @@ def make_plots_and_kfactors( *, tag, savename_base,
     Z = np.array(rows)  # (10, 10)
 
     # Change here: z-range ----------------------------------------------------!
-    Z = np.clip(Z, 0, 500)
+    Z = np.clip(Z, 0.0000000001, 1000)
 
     x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
     print("x_centers:", x_centers)
     print("Y5_RANGE:", Y5_RANGE)    
 
     fig, ax = plt.subplots(figsize=(6, 5))
-    im = ax.imshow(Z,extent=[band_min, band_max, band_min, band_max],origin="lower", aspect="auto", cmap="viridis")
+    im = ax.imshow(Z,extent=[band_min, band_max, band_min, band_max],origin="lower", aspect="auto", cmap="viridis",norm=LogNorm())
     grid_ticks = np.arange(band_min, band_max + bin_width, bin_width)
     grid_ticks = np.round(grid_ticks, 6)
     for t in grid_ticks:
@@ -439,12 +442,12 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           main_title=f"Photon X-deflection ({tag})", colors=colors, outdir=outdir, ) 
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
-                          scale_factor=1.e-3, x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
+                          scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
                           main_title=f"Photon X Hit ({tag})", colors=colors, outdir=outdir, )
     save_single_pair_plot( savename=f"{savename}_y5_pair", 
                           lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
-                          scale_factor=1.e-3, x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
-                          main_title=f"Photon Y Hit ({tag})", xlim=(-2., 2.), colors=colors, outdir=outdir, )
+                          scale_factor=1., x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
+                          main_title=f"Photon Y Hit ({tag})", colors=colors, outdir=outdir, )
 
 # =========================
 # Run for LAB and CMS

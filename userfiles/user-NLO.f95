@@ -39,7 +39,6 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, " * Emu = 150 GeV"
   print*, " * 1.35 < th_mu < 1.65 mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -89,16 +88,6 @@
   if(th3 .lt. 1.35e-3) pass_cut = .false.
   if(th3 .gt. 1.65e-3) pass_cut = .false.
   if(Emu .lt. 70.e3) pass_cut = .false.
-
-  ! initialize photon variables
-  Eph = 0._prec
-  th5 = 0._prec
-  phi5 = 0._prec
-  Eph_cms = 0._prec
-  th5_cms = 0._prec
-  phi5_cms = 0._prec
-  x5 = 0._prec
-  y5 = 0._prec
 
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
