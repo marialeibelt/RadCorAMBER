@@ -20,16 +20,19 @@ outdir_vals = homedir + "Vals/"
 lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest", 
            "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",
-           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04"]
+           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04", 
+           "mp2mp_NLO_20_04"]
 
 nlo_outs = lo_outs
-savenames = ["combined", "15_03", "17_03", "18_03", "23_03", "24_03", "25_03","26_03","27_03","13_04","14_04","14_04_add"]
+savenames = ["combined", "15_03", "17_03", "18_03", "23_03", 
+             "24_03", "25_03","26_03","27_03","13_04",
+             "14_04","14_04_add","20_04"]
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 18
-nlo_i = 18
+lo_i = 20
+nlo_i = 20
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
@@ -37,7 +40,7 @@ band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
 
-savename_base = savenames[10] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[12] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup

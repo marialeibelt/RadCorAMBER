@@ -39,7 +39,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, " * 1.35 < th_mu < 1.65 mrad"
+  print*, " * 1. < th_mu < 10. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
   print*, " * -12. < th_ph < 12. mrad"
@@ -59,6 +59,7 @@
   integer :: n_bands,i,offset_x,offset_y,last_hist_nr,nr_bandhists
   real(kind=prec) :: band_min, band_max, bin_width
   character(len=3) :: str_i
+  real(kind=prec) :: thmu_low, thmu_up,Emu_low
 
   call fix_mu
 
@@ -70,24 +71,29 @@
   ql5 = boost_rf(q2,q5)
   ql6 = boost_rf(q2,q6)
   ql7 = boost_rf(q2,q7)
-
+  
+  ! Cuts
+  Eph_cut = 200._prec
+  thmu_low = 1.35e-3
+  thmu_up = 1.65e-3
+  Emu_low = 70.e3
+  
+  d_detec = 30._prec
+  ! proton rest frame
   q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
   th3 = atan2(q3perp, ql3(3))
   Emu = ql3(4)
-  Eph_cut = 200._prec
-  d_detec = 30._prec
-
-  ! cms frame
+  ! lab frame ?????????
   q3perp_cms = sqrt(q3(1)**2 + q3(2)**2)
   th3_cms = atan2(q3perp_cms,q3(3))
   Emu_cms = q3(4)
 
   pass_cut = .true.
 
-  ! Muon cuts
-  if(th3 .lt. 1.35e-3) pass_cut = .false.
-  if(th3 .gt. 1.65e-3) pass_cut = .false.
-  if(Emu .lt. 70.e3) pass_cut = .false.
+  ! Muon cuts  
+  if(th3 .lt. thmu_low) pass_cut = .false.
+  if(th3 .gt. thmu_up) pass_cut = .false.
+  if(Emu .lt. Emu_low) pass_cut = .false.
 
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
@@ -108,19 +114,6 @@
   last_hist_nr = 14
   n_bands = 10 !must be an even number	
   nr_bandhists = 2*n_bands
-  
-  if (ql5(4) .le. 0._prec) then !if no photon exists don't fill photon histograms
-    pass_cut(3) = .false.  !th5
-    pass_cut(4) = .false.  !Eph  
-    pass_cut(5) = .false.  !phi5
-    pass_cut(8) = .false.  !th5_cms
-    pass_cut(9) = .false.  !Eph_cms	
-    pass_cut(10) = .false. !phi5_cms
-    pass_cut(11) = .false. !x5
-    pass_cut(12) = .false. !y5
-    pass_cut(13) = .false. !ql5(2)
-    pass_cut(14) = .false. !ql5(1)
-  endif
 
   ! Lab values
   names(1) = 'th3'
@@ -165,7 +158,7 @@
   do i=1,n_bands
     write(str_i,'(I0)') i
     names(offset_y+i) = 'x5_B'//trim(str_i)
-    pass_cut(offset_y+i) = (ql5(4) .gt. 0._prec) .and. &
+    pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
                           (band_min + (i-1)*bin_width .le. y5) .and. &
                           (y5 .lt. band_min + i*bin_width)
     quant(offset_y+i) = x5
@@ -175,7 +168,7 @@
   do i=1,n_bands
     write(str_i,'(I0)') i
     names(offset_x+i) = 'y5_B'//trim(str_i)
-    pass_cut(offset_x+i) = (ql5(4) .gt. 0._prec) .and. &
+    pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
                             (band_min + (i-1)*bin_width .le. x5) .and. &
                             (x5 .lt. band_min + i*bin_width)
     quant(offset_x+i) = y5
