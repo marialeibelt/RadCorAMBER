@@ -6,7 +6,7 @@
   implicit none
 
   integer, parameter :: nrq = 34
-  integer, parameter :: nrbins = 50
+  integer, parameter :: nrbins = 200
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
@@ -63,7 +63,7 @@
 
   call fix_mu
 
-  ! proton rest frame
+  ! proton rest frame / lab frame
   ql1 = boost_rf(q2,q1)
   ql2 = boost_rf(q2,q2)
   ql3 = boost_rf(q2,q3)
@@ -79,11 +79,12 @@
   Emu_low = 70.e3
   
   d_detec = 30._prec
-  ! proton rest frame
+  ! proton rest frame / lab frame
   q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
   th3 = atan2(q3perp, ql3(3))
   Emu = ql3(4)
-  ! lab frame ?????????
+  
+  ! cms frame
   q3perp_cms = sqrt(q3(1)**2 + q3(2)**2)
   th3_cms = atan2(q3perp_cms,q3(3))
   Emu_cms = q3(4)
@@ -105,11 +106,12 @@
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5)
-  if (Eph .gt. Eph_cut) then
+  if ((Eph .gt. Eph_cut).and.(phi5 .gt. 0.)) then !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !if (Eph .gt. Eph_cut) then
     if (abs(th5) .gt. 12.e-3) pass_cut = .false.
   endif
 
-
+  if(.not.all(pass_cut)) return
   !Information for x,y bands
   last_hist_nr = 14
   n_bands = 10 !must be an even number	
@@ -159,6 +161,7 @@
     write(str_i,'(I0)') i
     names(offset_y+i) = 'x5_B'//trim(str_i)
     pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
+                           (phi5 .gt. 0.) .and. & !!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!
                           (band_min + (i-1)*bin_width .le. y5) .and. &
                           (y5 .lt. band_min + i*bin_width)
     quant(offset_y+i) = x5
@@ -169,6 +172,7 @@
     write(str_i,'(I0)') i
     names(offset_x+i) = 'y5_B'//trim(str_i)
     pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
+                           (phi5 .gt. 0.) .and. & !!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!
                             (band_min + (i-1)*bin_width .le. x5) .and. &
                             (x5 .lt. band_min + i*bin_width)
     quant(offset_x+i) = y5
