@@ -5,11 +5,11 @@
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 34
+  integer, parameter :: nrq = 35
   integer, parameter :: nrbins = 200
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.345e-3_prec, 0.999998_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3[rad],costh3[], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.191_prec,-0.191_prec, &                                              ! x5[m], y5[m]
     0._prec,0._prec, &	! ql5(2),ql5(1)
@@ -17,7 +17,7 @@
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 0.999999_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3[rad],costh3[], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.191_prec,0.191_prec, &                                                ! x5[m], y5[m]
     650._prec,650._prec, &	! ql5(2),ql5(1)
@@ -51,7 +51,7 @@
   FUNCTION QUANT(q1,q2,q3,q4,q5,q6,q7)
   real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
   real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)
-  real(kind=prec) :: th3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
+  real(kind=prec) :: th3,costh3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
   real(kind=prec) :: phi5
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
@@ -96,16 +96,18 @@
   if(th3 .gt. thmu_up) pass_cut = .false.
   if(Emu .lt. Emu_low) pass_cut = .false.
 
+  costh3 = cos(th3)
+  
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
-  th5 = atan2(q5perp, ql5(3))
+  th5 = atan2(q5perp, ql5(3)) !always >0
   phi5 = atan2(ql5(2),ql5(1))
   Eph_cms = q5(4)
   q5perp_cms = sqrt(q5(1)**2 + q5(2)**2)
   th5_cms = atan2(q5perp_cms, q5(3))
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
-  y5 = d_detec*tan(th5)*sin(phi5)
+  y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if ((Eph .gt. Eph_cut).and.(phi5 .gt. 0.)) then !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !if (Eph .gt. Eph_cut) then
     if (abs(th5) .gt. 12.e-3) pass_cut = .false.
@@ -113,7 +115,7 @@
 
   if(.not.all(pass_cut)) return
   !Information for x,y bands
-  last_hist_nr = 14
+  last_hist_nr = 15
   n_bands = 10 !must be an even number	
   nr_bandhists = 2*n_bands
 
@@ -150,6 +152,9 @@
   quant(13) = ql5(2)
   names(14) = "ql5(1)"
   quant(14) = ql5(1)
+  
+  names(15) = "costh3"
+  quant(15) = costh3
 
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
