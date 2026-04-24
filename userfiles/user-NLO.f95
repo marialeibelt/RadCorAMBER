@@ -9,18 +9,20 @@
   integer, parameter :: nrbins = 200
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    1.345e-3_prec, 0.999998_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3[rad],costh3[], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    -0.191_prec,-0.191_prec, &                                              ! x5[m], y5[m]
-    0._prec,0._prec, &	! ql5(2),ql5(1)
+    1.345e-3_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
+    0._prec,0._prec, &						! ql5(2),ql5(1)
+    0.999998_prec, & 						!costh3[]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 0.999999_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3[rad],costh3[], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    0.191_prec,0.191_prec, &                                                ! x5[m], y5[m]
-    650._prec,650._prec, &	! ql5(2),ql5(1)
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
+    650._prec,650._prec, &						! ql5(2),ql5(1)
+    0.999999_prec, &							!costh3[]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
     
@@ -108,8 +110,7 @@
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
-  if ((Eph .gt. Eph_cut).and.(phi5 .gt. 0.)) then !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  !if (Eph .gt. Eph_cut) then
+  if (Eph .gt. Eph_cut) then
     if (abs(th5) .gt. 12.e-3) pass_cut = .false.
   endif
 
@@ -166,7 +167,6 @@
     write(str_i,'(I0)') i
     names(offset_y+i) = 'x5_B'//trim(str_i)
     pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
-                           (phi5 .gt. 0.) .and. & !!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!
                           (band_min + (i-1)*bin_width .le. y5) .and. &
                           (y5 .lt. band_min + i*bin_width)
     quant(offset_y+i) = x5
@@ -177,7 +177,6 @@
     write(str_i,'(I0)') i
     names(offset_x+i) = 'y5_B'//trim(str_i)
     pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
-                           (phi5 .gt. 0.) .and. & !!!!!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!!!!!!!!!!!
                             (band_min + (i-1)*bin_width .le. x5) .and. &
                             (x5 .lt. band_min + i*bin_width)
     quant(offset_x+i) = y5

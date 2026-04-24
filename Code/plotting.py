@@ -170,7 +170,7 @@ def add_secondary_xaxis(ax, transform_func, xlabel=None, scale="linear"):
 def save_figure(fig, name, outdir, dpi=700):
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
-    fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
+    #fig.savefig(outdir / f"{name}.pdf", bbox_inches="tight")
     fig.savefig(outdir / f"{name}.png", dpi=dpi, bbox_inches="tight")
 
 # =========================
