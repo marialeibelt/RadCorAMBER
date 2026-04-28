@@ -14,7 +14,7 @@
     -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     0.999998_prec, & 						!costh3[]
-    1.e-4_prec,&                                                !Q2
+    1.e-4_prec,&                                                !Qsq
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
@@ -24,7 +24,7 @@
     0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     0.999999_prec, &							!costh3[]
-    1._prec,&                                                           !Q2
+    1._prec,&                                                           !Qsq
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
     
@@ -56,7 +56,7 @@
   real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
   real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)
   real(kind=prec) :: th3,costh3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real(kind=prec) :: phi5,Q2
+  real(kind=prec) :: phi5,Qsq
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
   real(kind=prec) :: quant(nrq)
@@ -104,7 +104,7 @@
 
   costh3 = cos(th3)
   
-  Q2 = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
+  Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
   th5 = atan2(q5perp, ql5(3)) !always >0
@@ -162,8 +162,8 @@
   names(15) = "costh3"
   quant(15) = costh3
   
-  names(16) = "Q2"
-  quant(16) = Q2
+  names(16) = "Qsq"
+  quant(16) = Qsq
 
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
