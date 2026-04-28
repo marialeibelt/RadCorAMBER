@@ -5,24 +5,26 @@
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 35
+  integer, parameter :: nrq = 36
   integer, parameter :: nrbins = 200
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    1.345e-3_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.345e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    0.295e-3_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    0.295e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     0.999998_prec, & 						!costh3[]
+    1.e-4_prec,&                                                !Q2
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    1.655e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     0.999999_prec, &							!costh3[]
+    1._prec,&                                                           !Q2
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
     
@@ -41,7 +43,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, " * 1. < th_mu < 10. mrad"
+  print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
   print*, " * -12. < th_ph < 12. mrad"
@@ -54,7 +56,7 @@
   real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
   real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)
   real(kind=prec) :: th3,costh3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real(kind=prec) :: phi5
+  real(kind=prec) :: phi5,Q2
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
   real(kind=prec) :: quant(nrq)
@@ -76,8 +78,10 @@
   
   ! Cuts
   Eph_cut = 200._prec
-  thmu_low = 1.35e-3
-  thmu_up = 1.65e-3
+  !thmu_low = 1.35e-3
+  !thmu_up = 1.65e-3
+  thmu_low = 0.3e-3
+  thmu_up = 2.e-3
   Emu_low = 70.e3
   
   d_detec = 30._prec
@@ -117,7 +121,7 @@
 
   if(.not.all(pass_cut)) return
   !Information for x,y bands
-  last_hist_nr = 15
+  last_hist_nr = 16
   n_bands = 10 !must be an even number	
   nr_bandhists = 2*n_bands
 
@@ -157,6 +161,9 @@
   
   names(15) = "costh3"
   quant(15) = costh3
+  
+  names(16) = "Q2"
+  quant(16) = Q2
 
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
