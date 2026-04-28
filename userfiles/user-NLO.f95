@@ -100,6 +100,7 @@
 
   costh3 = cos(th3)
   
+  Q2 = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
   th5 = atan2(q5perp, ql5(3)) !always >0

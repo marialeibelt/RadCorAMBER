@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from plotting import *
 
-def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!!
+def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!! LO!!!
     Emu = 100
-    mp = 0.93827
-    mmu = 0.10566
+    mp = 0.938272088
+    mmu = 0.105658375
     pmuvec = np.sqrt(Emu**2 - mmu**2)
 
     a = Emu / mp
@@ -15,7 +15,7 @@ def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!!
     x = 2 * xi / (2 + a * xi)
 
     Q2 = x * pmuvec**2
-    alpha = 1/137.036
+    alpha = 1/137.035999084
 
     tau = Q2 / (4 * mp**2)
     s = 2*Emu*mp + mp**2 + mmu**2
@@ -23,9 +23,14 @@ def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!!
     R = (pmuvec**2 - tau*(s - 2*mp**2*(1+tau))) / (pmuvec**2*(1+tau))
     eps = (Emu**2 - tau*(s - mmu**2)) / (pmuvec**2 - tau*(s - 2*mp**2*(1+tau)))
 
-    mup = 2.793
+    mup = 2.79284734
     GE = (1 + Q2/0.71)**(-2)
     GM = mup * GE
+
+
+    #print("GE: ",GE)
+    #print("GM: ",GM)
+    #print("Q2: ",Q2)
 
     #ddQ2 = (2+a*xi)**2/(4*pmuvec**2) * (1-2*m*xi*np.cos(theta))/(2*(1-m*xi**2)) * ddcostheta
     #ddcostheta = 1 / ((2+a*xi)**2/(4*pmuvec**2) * (1-2*m*xi*np.cos(theta))/(2*(1-m*xi**2))) ddQ2
@@ -33,4 +38,4 @@ def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!!
 
     jac = (2+a*xi)**2/(4*pmuvec**2) * (1-2*m*xi*np.cos(theta))/(2*(1-m*xi**2))
 
-    return dsigmadQ2 / jac * (0.389379 * 1e3)
+    return dsigmadQ2 / jac * (0.389379365 * 1e3)

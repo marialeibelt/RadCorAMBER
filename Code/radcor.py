@@ -6,6 +6,8 @@ from theo_calc import *
 import matplotlib.ticker as ticker
 from matplotlib.colors import LogNorm
 from scipy.integrate import quad
+from scipy.stats import gaussian_kde
+from scipy.interpolate import UnivariateSpline
 
 
 # =========================
@@ -29,7 +31,7 @@ nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
-             "24_04"]                                           #15  
+             "24_04","28_04"]                                   #15-16 
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -46,10 +48,10 @@ th3_min_cut = 1.35e-3
 th3_max_cut = 1.65e-3
 th3_min = 1.345e-3
 th3_max = 1.655e-3
-costh3_max = np.cos(th3_min)
-costh3_min = np.cos(th3_max)
+costh3_max = np.cos(th3_min_cut)
+costh3_min = np.cos(th3_max_cut)
 
-savename_base = savenames[15] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[16] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -147,7 +149,7 @@ def draw_observable_and_k(ax_main, ax_k, *, lo_hist, nlo_hist, full_hist,
         if full_s is not None and np.all(full_s[:, 1] <= 0):
             yscale_to_use = "linear"
 
-    style_sci_x(ax_main, x_label_main, y_label_main, main_title, yscale=yscale_to_use, sharex=False)
+    style_sci_x(ax_main, x_label_main, y_label_main, main_title, yscale=yscale_to_use)
     if xlim is not None:
         ax_main.set_xlim(*xlim)
 
@@ -189,7 +191,7 @@ def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist,
 # =========================
 # Plot cos(th3) analytical vs. numerical
 # =========================    
-def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, outdir):
+def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, outdir, outdir_vals):
 
     fig, axes = create_figure(
         nrows=2, ncols=1, figsize=(7,6),
@@ -200,7 +202,7 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, ou
     ax_k    = axes[1,0]
 
     # -------------------------
-    # MC scaling + plotting
+    # num scaling + plotting
     # -------------------------
     lo_s   = scaleplot(lo_hist, 1.0)
     nlo_s  = scaleplot(nlo_hist, 1.0)
@@ -210,62 +212,69 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, ou
                      labels={"lo":"LO", "nlo":"NLO", "full":"LO+NLO"})
 
     # -------------------------
-    # analytic curve (smooth line)
+    # analytic curve (correct mapping)
     # -------------------------
     theta_grid = np.linspace(th3_min_cut, th3_max_cut, 500)
+    costh_grid = np.cos(theta_grid)
+
     dsig_grid = np.array([dsigma_dcosth(t) for t in theta_grid])
 
-    ax_main.plot(theta_grid, dsig_grid,
-                 color="black", linestyle="--", label="analytic")
+    ax_main.plot(costh_grid, dsig_grid,
+                color="black", linestyle="--", label="analytic")
 
     ax_main.legend()
 
     style_sci_x(
         ax_main,
-        r"$\theta_3$",
-        r"$\frac{d\sigma}{d\theta_3}\ (\mu\mathrm{barn})$",
+        r"$\cos\theta_3$",
+        r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
         "Muon Scattering Angle (lab)",
         yscale="linear"
     )
 
-    ax_main.set_xlim(th3_min_cut, th3_max_cut)
+    ax_main.set_xlim(85.5*1e-7+9.9999e-1, costh3_max)
 
     # -------------------------
-    # bin-integrated analytic (quad version)
+    # McMule smoothing + analytic comparison
     # -------------------------
-    num = scaleplot(full_hist, 1.0)
-    x_num = num[:,0]
-    y_num = num[:,1]
-
-    bin_width = np.diff(x_num).mean()
-
-    dsig_binned = []
-
-    ###Take only if in cut range####################
-    for x in x_num:
-        xmin = max(x - bin_width/2, th3_min_cut)
-        xmax = min(x + bin_width/2, th3_max_cut)
-
-        val, err = quad(dsigma_dcosth, xmin, xmax)
-        dsig_binned.append(val / bin_width)
-
-    dsig_binned = np.array(dsig_binned)
 
     # -------------------------
-    # comparison
+    # Bin-by-bin Vergleich Numerik vs. Analytik
     # -------------------------
-    diff = y_num - dsig_binned
-    rel_diff = 100 * diff / np.where(np.abs(dsig_binned) > 1e-20, dsig_binned, np.nan)
+    num = finite_bins(scaleplot(lo_hist, 1.0))
+    x_num = num[:, 0]  # das sind cos(theta)-Werte
+    y_num = num[:, 1]
+    err_num = num[:, 2]
 
-    out = np.column_stack([x_num, y_num, dsig_binned, diff, rel_diff])
+    # cos(theta) -> theta zurückrechnen für dsigma_dcosth
+    theta_at_bins = np.arccos(x_num)
+    theo_at_bins = np.array([dsigma_dcosth(t) for t in theta_at_bins])
 
-    np.savetxt(
-        "costh3.csv",
+    diff = y_num - theo_at_bins
+    rel_diff = 100 * diff / np.where(np.abs(theo_at_bins) > 1e-20, theo_at_bins, np.nan)
+
+    out = np.column_stack([x_num, y_num, err_num, theo_at_bins, diff, rel_diff])
+    np.savetxt(outdir_vals + "costh3.csv",
         out,
         delimiter=",",
-        header="x_num,y_num,analytic,diff,rel_diff",
+        header="cos_theta,mc,mc_err,theory,diff,rel_diff_percent",
         comments=""
     )
+
+    fig, ax = plt.subplots()
+    ax.errorbar(x_num, rel_diff, yerr=100*err_num/theo_at_bins, fmt='o', markersize=2)
+    ax.axhline(0, color='k', linestyle='--')
+    ax.set_xlabel(r"$\cos\theta_3$")
+    ax.set_ylabel(r"$(num - ana)/\mathrm{ana}\ (\%)$")
+    ax.set_title("Relative difference numeric vs. analytic (LO)")
+    lim1=0.999998636
+    #lim2=0.999998999
+    lim2=0.999999
+    ax.set_xlim(lim1,lim2)
+    ax.set_ylim(-10.,5.)
+    save_figure(fig, f"{savename}_rel_diff", outdir=outdir)
+    plt.close(fig)
+
 
     # -------------------------
     # K-factor (unchanged)
@@ -277,7 +286,6 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, ou
 
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
-
 
 # =========================
 # Function to make plots & K-factors
@@ -495,6 +503,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
             rows.append(vals_rebinned)
 
     Z = np.array(rows)  # (10, 10)
+    sigma_total = np.sum(Z)
+    print(sigma_total)
 
     x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
 
@@ -510,7 +520,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
     ax.grid(which="minor", linestyle="--", linewidth=0.4, alpha=0.5)
 
     cbar = plt.colorbar(im, ax=ax)
-    cbar.set_label(r"$\frac{d^2\sigma}{dx_5\,dy_5}$")
+    cbar.set_label(r"$\Delta\sigma\ \text{per bin}\ (\mu\mathrm{barn})$")
     ax.set_xlabel(r"$x_5\ (\mathrm{m})$")
     ax.set_ylabel(r"$y_5\ (\mathrm{m})$")
     ax.set_title(f"2D distribution ({tag})")
@@ -608,4 +618,5 @@ plot_costh3_with_analytic(lo_hist=lo_costh3,
                           full_hist=full_costh3,
                           colors=colors,
                           savename=f"{savename_base}_costh3_analytic",
-                          outdir=outdir)
+                          outdir=outdir,
+                          outdir_vals=outdir_vals)

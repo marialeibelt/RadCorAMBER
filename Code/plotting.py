@@ -111,8 +111,13 @@ def plot_bands(bands_dict, *,
 # =========================
 # Styling for scientific x-axis
 # =========================
-def style_sci_x(ax, xlabel, ylabel, title, yscale="log", sharex=False):
+def style_sci_x(ax, xlabel, ylabel, title, yscale="log"):
     style_axis(ax, xlabel=xlabel, ylabel=ylabel, title=title, yscale=yscale, legend=False)
+
+def finite_bins(hist):
+    """Entfernt Bins mit nicht-finiten x-Werten (McMule underflow/overflow)."""
+    mask = np.isfinite(hist[:, 0])
+    return hist[mask]
 
 # =========================
 # General axis styling
