@@ -1,7 +1,7 @@
-## Generated at 22:46 on April 28 2026 by ge93juy
-# git version: b'main' (b'dc06109')
-# To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
-#      --seeds 77382 43733 99754 62403 90785 68817 55823 51656 28659 52418 40434 57878 87066 65098 41278 62979 75104 57344 19867 78565 \
+## Generated at 22:52 on April 28 2026 by marialei
+# git version: b'main' (b'0252b57')
+# To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
+#      --seeds 12504 29719 37274 66923 55053 71500 21965 75256 92441 77799 60998 28940 96530 90010 50763 89711 11459 29764 40215 25470 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
 #      --output-dir mp2mp_NLO_28_04 \
@@ -9,11 +9,11 @@
 #      --stat 0,1000,10,20000,10,5 \
 #      --stat F,1000,10,20000,10,5 \
 #      --stat R,2000,10,70000,10,5 \
-#      --stat A,1000,10,70000,10,5
+#      --stat A,1000,10,20000,10,5
 [McMule]
 
 # specify the program to run relative to `pwd`
-mcmule = "mcmule"
+mcmule = "/nfs/mnemosyne/user/ge93juy/private/mcmule-release/mcmule"
 # Specify the variables nenter_ad, itmx_ad, nenter and itmx
 # for each piece you want to run.
 
@@ -21,4 +21,4 @@ mcmule = "mcmule"
 mp2mp0 = { ncall_pre = 1000, itmx_pre = 10, ncall = 20000, itmx = 10 }
 mp2mpF = { ncall_pre = 1000, itmx_pre = 10, ncall = 20000, itmx = 10 }
 mp2mpR = { ncall_pre = 2000, itmx_pre = 10, ncall = 70000, itmx = 10 }
-mp2mpA = { ncall_pre = 1000, itmx_pre = 10, ncall = 70000, itmx = 10 }
+mp2mpA = { ncall_pre = 1000, itmx_pre = 10, ncall = 20000, itmx = 10 }

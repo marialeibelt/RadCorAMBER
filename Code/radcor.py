@@ -13,8 +13,8 @@ from scipy.interpolate import UnivariateSpline
 # =========================
 # Paths
 # =========================
-homedir = "/home/marialei/AMBER_RadCor/" # Laptop
-#homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
+homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
