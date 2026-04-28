@@ -1,7 +1,7 @@
-## Generated at 22:52 on April 28 2026 by marialei
-# git version: b'main' (b'0252b57')
+## Generated at 22:59 on April 28 2026 by marialei
+# git version: b'main' (b'b842ee5')
 # To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
-#      --seeds 12504 29719 37274 66923 55053 71500 21965 75256 92441 77799 60998 28940 96530 90010 50763 89711 11459 29764 40215 25470 \
+#      --seeds 46939 92425 93060 90063 99500 10174 33593 85849 30228 74356 81636 74102 33358 31257 88032 19853 21576 60882 69374 59202 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
 #      --output-dir mp2mp_NLO_28_04 \

@@ -1,7 +1,7 @@
-## Generated at 22:52 on April 28 2026 by marialei
-# git version: b'main' (b'0252b57')
+## Generated at 22:59 on April 28 2026 by marialei
+# git version: b'main' (b'b842ee5')
 # To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
-#      --seeds 12504 29719 37274 66923 55053 71500 21965 75256 92441 77799 60998 28940 96530 90010 50763 89711 11459 29764 40215 25470 \
+#      --seeds 46939 92425 93060 90063 99500 10174 33593 85849 30228 74356 81636 74102 33358 31257 88032 19853 21576 60882 69374 59202 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
 #      --output-dir mp2mp_NLO_28_04 \
@@ -15,33 +15,33 @@ conf mp2mp.toml
 mode vegas
 
 
-run 25470 1.0 mp2mp0 0
-run 40215 1.0 mp2mp0 0
-run 29764 1.0 mp2mp0 0
-run 11459 1.0 mp2mp0 0
-run 89711 1.0 mp2mp0 0
+run 59202 1.0 mp2mp0 0
+run 69374 1.0 mp2mp0 0
+run 60882 1.0 mp2mp0 0
+run 21576 1.0 mp2mp0 0
+run 19853 1.0 mp2mp0 0
 
 
 
-run 50763 0.1 mp2mpF 0
-run 90010 0.1 mp2mpF 0
-run 96530 0.1 mp2mpF 0
-run 28940 0.1 mp2mpF 0
-run 60998 0.1 mp2mpF 0
+run 88032 0.1 mp2mpF 0
+run 31257 0.1 mp2mpF 0
+run 33358 0.1 mp2mpF 0
+run 74102 0.1 mp2mpF 0
+run 81636 0.1 mp2mpF 0
 
 
 
-run 77799 0.1 mp2mpR 0
-run 92441 0.1 mp2mpR 0
-run 75256 0.1 mp2mpR 0
-run 21965 0.1 mp2mpR 0
-run 71500 0.1 mp2mpR 0
+run 74356 0.1 mp2mpR 0
+run 30228 0.1 mp2mpR 0
+run 85849 0.1 mp2mpR 0
+run 33593 0.1 mp2mpR 0
+run 10174 0.1 mp2mpR 0
 
 
 
-run 55053 1.0 mp2mpA 0
-run 66923 1.0 mp2mpA 0
-run 37274 1.0 mp2mpA 0
-run 29719 1.0 mp2mpA 0
-run 12504 1.0 mp2mpA 0
+run 99500 1.0 mp2mpA 0
+run 90063 1.0 mp2mpA 0
+run 93060 1.0 mp2mpA 0
+run 92425 1.0 mp2mpA 0
+run 46939 1.0 mp2mpA 0
 
