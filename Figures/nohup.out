@@ -1,2 +1,0 @@
-usage: pymule batch shell [-h] [-n N] menufile
-pymule batch shell: error: argument menufile: path does not exist: "menu-mp2mp.menu"

@@ -3,11 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from plotting import *
 from theo_calc import *
-import matplotlib.ticker as ticker
 from matplotlib.colors import LogNorm
-from scipy.integrate import quad
-from scipy.stats import gaussian_kde
-from scipy.interpolate import UnivariateSpline
 
 
 # =========================
@@ -25,33 +21,31 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",   #5-9
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
-           "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos"]                   #20-23
+           "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
+           "mp2mp_NLO_29_04"] #25
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
-             "24_04","28_04"]                                   #15-16 
+             "24_04","28_04","29_04"]                           #15-17
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 23
-nlo_i = 23
+lo_i = 25
+nlo_i = 25
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
 band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
-th3_min_cut = 1.35e-3
-th3_max_cut = 1.65e-3
-th3_min = 1.345e-3
-th3_max = 1.655e-3
-costh3_max = np.cos(th3_min_cut)
-costh3_min = np.cos(th3_max_cut)
+#th3_min_cut = 0.3e-3
+#th3_max_cut = 2.e-3
 
-savename_base = savenames[16] + "_" + nlo_outs[nlo_i]
+
+savename_base = savenames[17] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -76,9 +70,11 @@ lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
 lo_ql51, nlo_ql51, full_ql51 = lo["ql5(1)"], nlo["ql5(1)"], full["ql5(1)"]
 lo_ql52, nlo_ql52, full_ql52 = lo["ql5(2)"], nlo["ql5(2)"], full["ql5(2)"]
 lo_costh3, nlo_costh3, full_costh3 = lo["costh3"], nlo["costh3"], full["costh3"]
+lo_Q2, nlo_Q2, full_Q2 = lo["Qsq"], nlo["Qsq"], full["Qsq"]
 
 x5_bands_lo, x5_bands_nlo, x5_bands_full = {}, {}, {}
 y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
+
 
 # =========================
 # Fill bands robustly with try/except to avoid KeyError
@@ -110,182 +106,26 @@ lo_th5_cms, nlo_th5_cms, full_th5_cms = lo["th5_cms"], nlo["th5_cms"], full["th5
 lo_Eph_cms, nlo_Eph_cms, full_Eph_cms = lo["Eph_cms"], nlo["Eph_cms"], full["Eph_cms"]
 lo_phi5_cms, nlo_phi5_cms, full_phi5_cms = lo["phi5_cms"], nlo["phi5_cms"], full["phi5_cms"]
 
+
 # =========================
 # Colors
 # =========================
 colors = dict(lo="#1f77b4", nlo="#ff7f0e", full="#2ca02c", K="#d62728")
 #colors = dict(lo="#2ca02c", nlo="#4fa3ff", full="#ff69b4", K="#d62728")
 
-# =========================
-# Function to draw observables and K-factor
-# =========================
-def draw_observable_and_k(ax_main, ax_k, *, lo_hist, nlo_hist, full_hist,
-                          scale_factor, x_label_main, x_label_k, y_label_main,
-                          main_title, xlim=None, main_yscale="log", force_main_linear=False,
-                          colors=None, hide_main_xticks=True):
-
-    # Wenn keine Daten übergeben wurden, alles ausblenden und zurückgeben
-    if nlo_hist is None:
-        ax_main.set_visible(False)
-        ax_k.set_visible(False)
-        return None, None, None, None
-
-    lo_s   = scaleplot(lo_hist, scale_factor) if lo_hist is not None else None
-    nlo_s  = scaleplot(nlo_hist, scale_factor)
-    full_s = scaleplot(full_hist, scale_factor) if full_hist is not None else None
-
-    # Plotten
-    plot_lo_nlo_full(ax_main, lo_s, nlo_s, full_s, colors,
-                    labels=dict(
-                        **({"lo": "LO"} if lo_s is not None else {}),
-                        nlo="NLO",
-                        **({"full": "LO + NLO"} if full_s is not None else {})
-                    ))
-
-    yscale_to_use = main_yscale
-    if force_main_linear:
-        yscale_to_use = "linear"
-    else:
-        if full_s is not None and np.all(full_s[:, 1] <= 0):
-            yscale_to_use = "linear"
-
-    style_sci_x(ax_main, x_label_main, y_label_main, main_title, yscale=yscale_to_use)
-    if xlim is not None:
-        ax_main.set_xlim(*xlim)
-
-    if full_s is not None:
-        K = mergebins(divideplots(nlo_s, full_s), 5)
-        plot_K(ax_k, K, colors["K"], x_label_k)
-    else:
-        K = None
-        ax_k.set_visible(False)
-
-    if xlim is not None:
-        ax_k.set_xlim(*xlim)
-    else:
-        ax_k.set_xlim(ax_main.get_xlim())
-
-    if hide_main_xticks:
-        ax_main.tick_params(axis="x", labelbottom=False)
-        ax_main.set_xlabel(None)
-
-    ax_k.tick_params(axis="x", labelbottom=True)
-    return lo_s, nlo_s, full_s, K
-
-def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist, 
-                          scale_factor, x_label, y_label, main_title, 
-                          xlim=None, main_yscale="log", force_main_linear=False, 
-                          colors=None, outdir=None, ): 
-    fig, axes = create_figure( nrows=2, ncols=1, figsize=(7, 6), 
-                              font_size=12, sharex=True, gridspec_kw={ "height_ratios": [3, 1], "hspace": 0., }, 
-                              ) 
-    ax_main = axes[0, 0] 
-    ax_k = axes[1, 0] 
-    draw_observable_and_k( ax_main, ax_k, lo_hist=lo_hist, nlo_hist=nlo_hist, full_hist=full_hist,
-                           scale_factor=scale_factor, x_label_main=None, x_label_k=x_label, y_label_main= y_label, main_title=main_title, 
-                           xlim=xlim, main_yscale=main_yscale, force_main_linear=force_main_linear, colors=colors, ) 
-    save_figure(fig, savename, outdir=outdir) 
-    plt.close(fig) 
-
 
 # =========================
-# Plot cos(th3) analytical vs. numerical
-# =========================    
-def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, colors, savename, outdir, outdir_vals):
+# Limits
+# =========================
+th3vals = finite_bins(full_th3)
+th3_min = np.min(th3vals[:, 0])
+th3_max = np.max(th3vals[:, 0])
+print("th3_min:    ",th3_min*1e3,", th3_max:    ",th3_max*1e3, " (in mrad)")
+costh3vals = finite_bins(full_costh3)
+costh3_min = np.min(costh3vals[:, 0])
+costh3_max = np.max(costh3vals[:, 0])
+print("costh3_min: ",costh3_min,", costh3_max: ",costh3_max)
 
-    fig, axes = create_figure(
-        nrows=2, ncols=1, figsize=(7,6),
-        gridspec_kw={"height_ratios":[3,1], "hspace":0}
-    )
-
-    ax_main = axes[0,0]
-    ax_k    = axes[1,0]
-
-    # -------------------------
-    # num scaling + plotting
-    # -------------------------
-    lo_s   = scaleplot(lo_hist, 1.0)
-    nlo_s  = scaleplot(nlo_hist, 1.0)
-    full_s = scaleplot(full_hist, 1.0)
-
-    plot_lo_nlo_full(ax_main, lo_s, nlo_s, full_s, colors,
-                     labels={"lo":"LO", "nlo":"NLO", "full":"LO+NLO"})
-
-    # -------------------------
-    # analytic curve (correct mapping)
-    # -------------------------
-    theta_grid = np.linspace(th3_min_cut, th3_max_cut, 500)
-    costh_grid = np.cos(theta_grid)
-
-    dsig_grid = np.array([dsigma_dcosth(t) for t in theta_grid])
-
-    ax_main.plot(costh_grid, dsig_grid,
-                color="black", linestyle="--", label="analytic")
-
-    ax_main.legend()
-
-    style_sci_x(
-        ax_main,
-        r"$\cos\theta_3$",
-        r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
-        "Muon Scattering Angle (lab)",
-        yscale="linear"
-    )
-
-    ax_main.set_xlim(85.5*1e-7+9.9999e-1, costh3_max)
-
-    # -------------------------
-    # McMule smoothing + analytic comparison
-    # -------------------------
-
-    # -------------------------
-    # Bin-by-bin Vergleich Numerik vs. Analytik
-    # -------------------------
-    num = finite_bins(scaleplot(lo_hist, 1.0))
-    x_num = num[:, 0]  # das sind cos(theta)-Werte
-    y_num = num[:, 1]
-    err_num = num[:, 2]
-
-    # cos(theta) -> theta zurückrechnen für dsigma_dcosth
-    theta_at_bins = np.arccos(x_num)
-    theo_at_bins = np.array([dsigma_dcosth(t) for t in theta_at_bins])
-
-    diff = y_num - theo_at_bins
-    rel_diff = 100 * diff / np.where(np.abs(theo_at_bins) > 1e-20, theo_at_bins, np.nan)
-
-    out = np.column_stack([x_num, y_num, err_num, theo_at_bins, diff, rel_diff])
-    np.savetxt(outdir_vals + "costh3.csv",
-        out,
-        delimiter=",",
-        header="cos_theta,mc,mc_err,theory,diff,rel_diff_percent",
-        comments=""
-    )
-
-    fig, ax = plt.subplots()
-    ax.errorbar(x_num, rel_diff, yerr=100*err_num/theo_at_bins, fmt='o', markersize=2)
-    ax.axhline(0, color='k', linestyle='--')
-    ax.set_xlabel(r"$\cos\theta_3$")
-    ax.set_ylabel(r"$(num - ana)/\mathrm{ana}\ (\%)$")
-    ax.set_title("Relative difference numeric vs. analytic (LO)")
-    lim1=0.999998636
-    #lim2=0.999998999
-    lim2=0.999999
-    ax.set_xlim(lim1,lim2)
-    ax.set_ylim(-10.,5.)
-    save_figure(fig, f"{savename}_rel_diff", outdir=outdir)
-    plt.close(fig)
-
-
-    # -------------------------
-    # K-factor (unchanged)
-    # -------------------------
-    K = mergebins(divideplots(nlo_s, full_s), 5)
-    plot_K(ax_k, K, colors["K"], r"$\cos\theta_3$")
-
-    ax_k.set_xlim(ax_main.get_xlim())
-
-    save_figure(fig, savename, outdir=outdir)
-    plt.close(fig)
 
 # =========================
 # Function to make plots & K-factors
@@ -297,16 +137,18 @@ def make_plots_and_kfactors( *, tag, savename_base,
                             lo_Eph, nlo_Eph, full_Eph, 
                             lo_phi5, nlo_phi5, full_phi5, 
                             lo_costh3, nlo_costh3, full_costh3,
+                            lo_Q2, nlo_Q2, full_Q2,
                             nlo_ql51=None, nlo_ql52=None,
                             lo_x5, nlo_x5, full_x5,
                             lo_y5, nlo_y5, full_y5,
                             outdir, outdir_vals, colors, ): 
     savename = f"{savename_base}_{tag}" 
 
-    # ----------------- write value files for all variables -----------------
+    # =========================
+    # write value files for all variables
+    # =========================   
     # (var, has_cms, photon_only, lab_only)
-    # photon_only=True  -> nur NLO schreiben (LO=0, full≈NLO, kein Photon in LO)
-    # photon_only=False -> lo, nlo, full schreiben
+
     variables = [
         ("th3",  True,  False, False),
         ("Emu",  True,  False, False),
@@ -314,33 +156,27 @@ def make_plots_and_kfactors( *, tag, savename_base,
         ("Eph",  True,  True,  False),
         ("phi5", False, True,  False),
         ("costh3", False, False,  True),
+        ("Q2", False, False,  True),
         ("x5",   False, True,  False),
         ("y5",   False, True,  False),
         ("ql51", False, True,  True),
         ("ql52", False, True,  True),
     ]
 
-    # ----------- NEW: explicit mapping instead of globals() -----------
     data_map = {
         "th3":  {"lo": lo_th3,  "nlo": nlo_th3,  "full": full_th3,
                 "lo_cms": lo_th3_cms, "nlo_cms": nlo_th3_cms, "full_cms": full_th3_cms},
-
         "Emu":  {"lo": lo_Emu,  "nlo": nlo_Emu,  "full": full_Emu,
                 "lo_cms": lo_Emu_cms, "nlo_cms": nlo_Emu_cms, "full_cms": full_Emu_cms},
-
         "th5":  {"lo": lo_th5,  "nlo": nlo_th5,  "full": full_th5,
                 "lo_cms": lo_th5_cms, "nlo_cms": nlo_th5_cms, "full_cms": full_th5_cms},
-
         "Eph":  {"lo": lo_Eph,  "nlo": nlo_Eph,  "full": full_Eph,
                 "lo_cms": lo_Eph_cms, "nlo_cms": nlo_Eph_cms, "full_cms": full_Eph_cms},
-
         "phi5": {"lo": lo_phi5, "nlo": nlo_phi5, "full": full_phi5},
-
         "costh3": {"lo": lo_costh3, "nlo": nlo_costh3, "full": full_costh3},
-
+        "Q2": {"lo": lo_Q2, "nlo": nlo_Q2, "full": full_Q2},
         "x5":   {"lo": lo_x5,   "nlo": nlo_x5,   "full": full_x5},
         "y5":   {"lo": lo_y5,   "nlo": nlo_y5,   "full": full_y5},
-
         "ql51": {"nlo": nlo_ql51},
         "ql52": {"nlo": nlo_ql52},
     }
@@ -355,28 +191,19 @@ def make_plots_and_kfactors( *, tag, savename_base,
         for order in orders:
             arr = data_map.get(var, {}).get(order, None)
             if arr is not None:
-                write_file_with_values(
-                    outdir_vals + f"{order}_{var}_{savename}.txt",
-                    arr,
-                    f"{var}_{tag} bin centers",
-                    "value"
-                )
+                write_file_with_values(outdir_vals + f"{order}_{var}_{savename}.txt",arr,f"{var}_{tag} bin centers","value")
 
         # cms frame
         if has_cms:
             for order in orders:
                 arr_cms = data_map.get(var, {}).get(f"{order}_cms", None)
                 if arr_cms is not None:
-                    write_file_with_values(
-                        outdir_vals + f"{order}_{var}_cms_{savename}.txt",
-                        arr_cms,
-                        f"{var}_cms_{tag} bin centers",
-                        "value"
-                    )
+                    write_file_with_values(outdir_vals + f"{order}_{var}_cms_{savename}.txt",arr_cms,f"{var}_cms_{tag} bin centers","value")
 
-    # --------------------
+                    
+    # =========================
     # Create combined figure
-    # --------------------
+    # =========================   
     fig, axes = create_figure(nrows=8, ncols=2, figsize=(16,22), font_size=12,sharex=False, gridspec_kw={"height_ratios":[3,1]*4,"hspace":0.6})
 
     ax_th3, ax_costh3 = axes[0]
@@ -402,8 +229,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                            lo_hist=lo_th3, nlo_hist=nlo_th3, full_hist=full_th3,
                                            scale_factor=1e-3, x_label_main=r"$\theta_3$ (mrad)",
                                            x_label_k=r"$\theta_3$ (mrad)", y_label_main=r"$\frac{d\sigma}{d\theta_3}\ (\mu\mathrm{barn}/\mathrm{mrad})$",
-                                           main_title=f"Muon Scattering Angle ({tag})",
-                                           xlim=(1.3,1.7), force_main_linear=True, colors=colors)
+                                           main_title=f"Muon Scattering Angle ({tag})", force_main_linear=False, colors=colors)
 
     _, _, _, K_Emu = draw_observable_and_k(ax_Emu, ax_K_Emu,
                                            lo_hist=lo_Emu, nlo_hist=nlo_Emu, full_hist=full_Emu,
@@ -434,7 +260,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                             x_label_main=r"$\cos\theta_3$",
                                             x_label_k=r"$\cos\theta_3$",
                                             y_label_main=r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
-                                            main_title=f"Muon Scattering Angle cos({tag})", xlim=(costh3_min,costh3_max),
+                                            main_title=f"Muon Scattering Angle cos({tag})",
                                             force_main_linear=True,
                                             colors=colors)
 
@@ -472,8 +298,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
             colors=colors,
             slice_name="y5",
             slice_range=Y5_RANGE,
-            yscale="log",
-            rebin=1)
+            yscale="log")
 
     # y5 in x5-slices
     plot_bands(y5_bands_nlo,
@@ -485,8 +310,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
             colors=colors,
             slice_name="x5",
             slice_range=X5_RANGE,
-            yscale="log",
-            rebin=1)
+            yscale="log")
 
     # =========================
     # 2D plot: x5 vs y5
@@ -530,13 +354,9 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_figure(fig, f"{savename}_x5y5_2D", outdir=outdir)
     plt.close(fig)
 
-
-
-    #theta5 = nlo_th5[:,0]       # extract the theta_5 values
-    #tan_theta5 = np.tan(theta5)  # numpy tan; make sure theta5 is in radians!
-    #print("tan(theta_5) values:", tan_theta5)
-
-    # ---------- write K-value files ---------- 
+    # =========================
+    # write K-value files
+    # =========================
     write_file_with_values(outdir_vals + f"K_theta_3_{savename}.txt", K_th3, f"th3_{tag} bin center", "K_th3") 
     write_file_with_values(outdir_vals + f"K_E_mu_{savename}.txt", K_Emu, f"Emu_{tag} bin center", "K_Emu") 
     write_file_with_values(outdir_vals + f"K_theta_5_{savename}.txt", K_th5, f"th5_{tag} bin center", "K_th5") 
@@ -552,12 +372,13 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     print(f"[INFO] K-factor files written for {tag}.")
 
-
-    # ---------- separate pair plots ---------- 
+    # =========================
+    # separate pair plots
+    # =========================
     save_single_pair_plot( savename=f"{savename}_th3_pair", 
                           lo_hist=lo_th3, nlo_hist=nlo_th3, full_hist=full_th3, 
                           scale_factor=1.e-3, x_label=r"$\theta_3\ (\mathrm{mrad})$", y_label=r"$\frac{d\sigma}{d\theta_3}\ (\mu\mathrm{barn}/\mathrm{mrad})$", 
-                          main_title=f"Muon Scattering Angle ({tag})", xlim=(1.3, 1.7), force_main_linear=True, colors=colors, outdir=outdir, ) 
+                          main_title=f"Muon Scattering Angle ({tag})", force_main_linear=True, colors=colors, outdir=outdir, ) 
     save_single_pair_plot( savename=f"{savename}_Emu_pair", 
                           lo_hist=lo_Emu, nlo_hist=nlo_Emu, full_hist=full_Emu, 
                           scale_factor=1.e3, x_label=r"$E_\mu\ (\mathrm{GeV})$", y_label=r"$\frac{d\sigma}{dE_\mu}\ (\mu\mathrm{barn}/\mathrm{GeV})$", 
@@ -577,7 +398,11 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_single_pair_plot(savename=f"{savename}_costh3_pair",
                           lo_hist=lo_costh3, nlo_hist=nlo_costh3, full_hist=full_costh3,
                           scale_factor=1., x_label=r"$\cos\theta_3$", y_label=r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
-                          main_title=f"Muon Scattering Angle cos({tag})", xlim=(costh3_min, costh3_max),force_main_linear=True,colors=colors, outdir=outdir,)
+                          main_title=f"Muon Scattering Angle cos({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
+    save_single_pair_plot(savename=f"{savename}_Q2_pair",
+                          lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
+                          scale_factor=1., x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
+                          main_title=f"$Q^2$({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
                           scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
@@ -586,6 +411,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
                           scale_factor=1., x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
                           main_title=f"Photon Y Hit ({tag})", colors=colors, outdir=outdir, )
+
 
 # =========================
 # Run for LAB and CMS
@@ -597,6 +423,7 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
                         lo_Eph=lo_Eph, nlo_Eph=nlo_Eph, full_Eph=full_Eph,
                         lo_phi5=lo_phi5, nlo_phi5=nlo_phi5, full_phi5=full_phi5,
                         lo_costh3=lo_costh3, nlo_costh3=nlo_costh3, full_costh3=full_costh3,
+                        lo_Q2=lo_Q2, nlo_Q2=nlo_Q2, full_Q2=full_Q2,
                         nlo_ql51=nlo_ql51, nlo_ql52=nlo_ql52,
                         lo_x5=lo_x5, nlo_x5=nlo_x5, full_x5=full_x5,
                         lo_y5=lo_y5, nlo_y5=nlo_y5, full_y5=full_y5,
@@ -613,10 +440,23 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
 #                         lo_y5=None, nlo_y5=None, full_y5=None,
 #                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
+# =========================
+# Plot Numeric vs. Analytic
+# =========================
 plot_costh3_with_analytic(lo_hist=lo_costh3,
                           nlo_hist=nlo_costh3,
                           full_hist=full_costh3,
+                          th3_min=th3_min, th3_max=th3_max,
                           colors=colors,
                           savename=f"{savename_base}_costh3_analytic",
+                          outdir=outdir,
+                          outdir_vals=outdir_vals)
+
+plot_Q2_with_analytic(lo_hist=lo_Q2,
+                          nlo_hist=nlo_Q2,
+                          full_hist=full_Q2,
+                          ylow_diff=-0.5,yup_diff=1.5,
+                          colors=colors,
+                          savename=f"{savename_base}_Q2_analytic",
                           outdir=outdir,
                           outdir_vals=outdir_vals)

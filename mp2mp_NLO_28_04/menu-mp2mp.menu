@@ -1,7 +1,7 @@
-## Generated at 22:59 on April 28 2026 by marialei
-# git version: b'main' (b'b842ee5')
-# To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
-#      --seeds 46939 92425 93060 90063 99500 10174 33593 85849 30228 74356 81636 74102 33358 31257 88032 19853 21576 60882 69374 59202 \
+## Generated at 09:35 on April 29 2026 by ge93juy
+# git version: b'main' (b'7d10069')
+# To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
+#      --seeds 21721 91647 67215 97365 18289 20192 51237 14102 75129 93351 75759 45365 36550 47986 48532 13591 84266 87851 82287 75029 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
 #      --output-dir mp2mp_NLO_28_04 \
@@ -15,33 +15,33 @@ conf mp2mp.toml
 mode vegas
 
 
-run 59202 1.0 mp2mp0 0
-run 69374 1.0 mp2mp0 0
-run 60882 1.0 mp2mp0 0
-run 21576 1.0 mp2mp0 0
-run 19853 1.0 mp2mp0 0
+#run 75029 1.0 mp2mp0 0 #Done
+#run 82287 1.0 mp2mp0 0 #Done
+#run 87851 1.0 mp2mp0 0 #Done
+#run 84266 1.0 mp2mp0 0 #Done
+#run 13591 1.0 mp2mp0 0 #Done
 
 
 
-run 88032 0.1 mp2mpF 0
-run 31257 0.1 mp2mpF 0
-run 33358 0.1 mp2mpF 0
-run 74102 0.1 mp2mpF 0
-run 81636 0.1 mp2mpF 0
+#run 48532 0.1 mp2mpF 0 #Done
+#run 47986 0.1 mp2mpF 0 #Done
+#run 36550 0.1 mp2mpF 0 #Done
+#run 45365 0.1 mp2mpF 0 #Done
+#run 75759 0.1 mp2mpF 0 #Done
 
 
 
-run 74356 0.1 mp2mpR 0
-run 30228 0.1 mp2mpR 0
-run 85849 0.1 mp2mpR 0
-run 33593 0.1 mp2mpR 0
-run 10174 0.1 mp2mpR 0
+#run 93351 0.1 mp2mpR 0 #Done
+#run 75129 0.1 mp2mpR 0 #Done
+#run 14102 0.1 mp2mpR 0 #Done
+#run 51237 0.1 mp2mpR 0 #Done
+#run 20192 0.1 mp2mpR 0 #Done
 
 
 
-run 99500 1.0 mp2mpA 0
-run 90063 1.0 mp2mpA 0
-run 93060 1.0 mp2mpA 0
-run 92425 1.0 mp2mpA 0
-run 46939 1.0 mp2mpA 0
+#run 18289 1.0 mp2mpA 0 #Done
+#run 97365 1.0 mp2mpA 0 #Done
+#run 67215 1.0 mp2mpA 0 #Done
+#run 91647 1.0 mp2mpA 0 #Done
+#run 21721 1.0 mp2mpA 0 #Done
 
