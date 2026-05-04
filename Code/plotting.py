@@ -24,6 +24,22 @@ def write_file_with_values(filename, parameter_array, xlabel, parameter_label):
             f.write(f"{bin_center: .6e}  {value: .6e}  {error: .6e}\n")
 
 
+def integrate_Q2_range(hist, q2_min=1000, q2_max=40000): #Q2 in MeV^2!
+    hist = np.array(hist)
+
+    centers = hist[:, 0]
+    values  = hist[:, 1]
+
+    # compute bin widths (robust)
+    widths = np.diff(centers)
+    widths = np.append(widths, widths[-1])  # assume last bin same width
+
+    mask = (centers >= q2_min) & (centers <= q2_max)
+
+    sigma = np.sum(values[mask] * widths[mask])
+    return sigma
+
+
 # =========================
 # Figure + saving
 # =========================

@@ -28,7 +28,7 @@ nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
-             "24_04","28_04","29_04"]                           #15-17
+             "24_04","28_04","29_04","4_5"]                     #15-18
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -45,7 +45,7 @@ X5_RANGE = (band_min, band_max)
 #th3_max_cut = 2.e-3
 
 
-savename_base = savenames[17] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[18] + "_" + nlo_outs[nlo_i]
 
 # =========================
 # Physics setup
@@ -460,3 +460,17 @@ plot_Q2_with_analytic(lo_hist=lo_Q2,
                           savename=f"{savename_base}_Q2_analytic",
                           outdir=outdir,
                           outdir_vals=outdir_vals)
+
+
+# =========================
+# Calculate total cross section
+# =========================
+lo_Q2_finite   = finite_bins(lo_Q2)
+#nlo_Q2_finite  = finite_bins(nlo_Q2)
+#full_Q2_finite = finite_bins(full_Q2)
+sigma_lo   = integrate_Q2_range(lo_Q2_finite, q2_min=1000, q2_max=40000)
+#sigma_nlo  = integrate_Q2_range(nlo_Q2_finite, q2_min=1000, q2_max=40000)
+#sigma_full = integrate_Q2_range(full_Q2_finite, q2_min=1000, q2_max=40000)
+sigma_lo_mb   = sigma_lo   / 1000
+
+print("sigma_LO   =", sigma_lo_mb,   "mb")
