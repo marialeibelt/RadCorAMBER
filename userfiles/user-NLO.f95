@@ -14,7 +14,7 @@
     -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     0.999998_prec, & 						!costh3[]
-    700._prec,&                                                	!Qsq in MeV^2
+    0._prec,&                                                	!Qsq in MeV^2
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
@@ -68,11 +68,11 @@
   call fix_mu
 
   ! proton rest frame / lab frame
-  ql1 = boost_rf(q2,q1)
-  ql2 = boost_rf(q2,q2)
-  ql3 = boost_rf(q2,q3)
-  ql4 = boost_rf(q2,q4)
-  ql5 = boost_rf(q2,q5)
+  ql1 = boost_rf(q2,q1) !muon in
+  ql2 = boost_rf(q2,q2) !proton in
+  ql3 = boost_rf(q2,q3) !muon out
+  ql4 = boost_rf(q2,q4) !proton out
+  ql5 = boost_rf(q2,q5) !photon
   ql6 = boost_rf(q2,q6)
   ql7 = boost_rf(q2,q7)
   

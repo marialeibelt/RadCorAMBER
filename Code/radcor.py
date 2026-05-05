@@ -4,6 +4,25 @@ import numpy as np
 from plotting import *
 from theo_calc import *
 from matplotlib.colors import LogNorm
+import sys
+
+class Tee:
+    """Writes output to both terminal and a file."""
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.file = open(filename, "w")
+    
+    def write(self, message):
+        self.terminal.write(message)
+        self.file.write(message)
+    
+    def flush(self):
+        self.terminal.flush()
+        self.file.flush()
+    
+    def close(self):
+        self.file.close()
+
 
 
 # =========================
@@ -28,7 +47,7 @@ nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
-             "24_04","28_04","29_04","4_5"]                     #15-18
+             "24_04","28_04","29_04","4_5","5_5"]               #15-19
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -45,7 +64,11 @@ X5_RANGE = (band_min, band_max)
 #th3_max_cut = 2.e-3
 
 
-savename_base = savenames[18] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[19] + "_" + nlo_outs[nlo_i]
+
+# Redirect stdout
+log_file = outdir_vals + f"{savename_base}_output.txt"
+sys.stdout = Tee(log_file)
 
 # =========================
 # Physics setup
@@ -61,6 +84,11 @@ full = lo + nlo
 # Extract observables (LAB)
 # =========================
 lo_th3, nlo_th3, full_th3 = lo["th3"], nlo["th3"], full["th3"]
+print(lo.value)
+print(nlo.value)
+print("lo: ",lo)
+print("nlo: ",nlo)
+exit()
 lo_Emu, nlo_Emu, full_Emu = lo["Emu"], nlo["Emu"], full["Emu"]
 lo_th5, nlo_th5, full_th5 = lo["th5"], nlo["th5"], full["th5"]
 lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
@@ -282,13 +310,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     
     # x5 in y5-slices
-    #for i, band in x5_bands_nlo.items():
-    #    if band is None or len(band) == 0:
-    #        print(f"Band {i}: EMPTY")
-    #        continue
-    #    y = band[:,1]
-    #    print(f"Band {i}: min={np.min(y):.3e}, max={np.max(y):.3e}, n={len(y)}")
-
     plot_bands(x5_bands_nlo,
             xlabel=r"$x_5\ (\mathrm{m})$",
             ylabel=r"$\frac{d\sigma}{dx_5} (\mu\mathrm{barn}/\mathrm{m})$",
@@ -323,12 +344,19 @@ def make_plots_and_kfactors( *, tag, savename_base,
         if band is not None and len(band) > 0:
             vals = band[:, 1]
             n_rebin = len(vals) // n_bands
-            vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).sum(axis=1)
-            rows.append(vals_rebinned)
+            #vals_rebinned = vals[:n_bands]
+            #rows.append(vals_rebinned * bin_width)  
+
+            #vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).sum(axis=1)
+            vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).mean(axis=1) #dsigma/dx *Dx !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!new check
+            rows.append(vals_rebinned * bin_width)
 
     Z = np.array(rows)  # (10, 10)
-    sigma_total = np.sum(Z)
-    print(sigma_total)
+    sigma_photons_2D = np.sum(Z)
+    print("sigma_photons from 2D distribution: ", sigma_photons_2D*1e-3, " mb")
+
+    Rate_ECAL = calculate_rate(sigma_photons_2D*1e-3)
+    print("Rate_ECAL                            = ", Rate_ECAL, " 1/s")
 
     x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
 
@@ -344,10 +372,10 @@ def make_plots_and_kfactors( *, tag, savename_base,
     ax.grid(which="minor", linestyle="--", linewidth=0.4, alpha=0.5)
 
     cbar = plt.colorbar(im, ax=ax)
-    cbar.set_label(r"$\Delta\sigma\ \text{per bin}\ (\mu\mathrm{barn})$")
+    cbar.set_label(r"$\Delta\sigma\ \text{per ECAL cell}\ (\mu\mathrm{barn})$")
     ax.set_xlabel(r"$x_5\ (\mathrm{m})$")
     ax.set_ylabel(r"$y_5\ (\mathrm{m})$")
-    ax.set_title(f"2D distribution ({tag})")
+    ax.set_title(f"2D ECAL cell distribution ({tag})")
     ax.set_xlim(-0.2, 0.2)
     ax.set_ylim(-0.2, 0.2)
 
@@ -466,11 +494,44 @@ plot_Q2_with_analytic(lo_hist=lo_Q2,
 # Calculate total cross section
 # =========================
 lo_Q2_finite   = finite_bins(lo_Q2)
-#nlo_Q2_finite  = finite_bins(nlo_Q2)
-#full_Q2_finite = finite_bins(full_Q2)
-sigma_lo   = integrate_Q2_range(lo_Q2_finite, q2_min=1000, q2_max=40000)
-#sigma_nlo  = integrate_Q2_range(nlo_Q2_finite, q2_min=1000, q2_max=40000)
-#sigma_full = integrate_Q2_range(full_Q2_finite, q2_min=1000, q2_max=40000)
-sigma_lo_mb   = sigma_lo   / 1000
+nlo_Q2_finite  = finite_bins(nlo_Q2)
 
-print("sigma_LO   =", sigma_lo_mb,   "mb")
+sigma_lo_140   = integrate_Q2_range(lo_Q2_finite, q2_min=1000, q2_max=40000)
+sigma_lo_051   = integrate_Q2_range(lo_Q2_finite, q2_min=500, q2_max=1000)
+sigma_lo_full   = integrate_Q2_range(lo_Q2_finite, q2_min=700, q2_max=50000)
+sigma_nlo_full   = integrate_Q2_range(nlo_Q2_finite, q2_min=700, q2_max=50000)
+
+sigma_lo_mb_140   = sigma_lo_140   / 1000
+sigma_lo_mb_051   = sigma_lo_051   / 1000
+sigma_lo_mb_full   = sigma_lo_full   / 1000
+sigma_nlo_mb_full   = sigma_nlo_full   / 1000
+
+
+print("sigma_lo  (0.001 <  Q2 (GeV/c2) < 0.04)  = ", sigma_lo_mb_140, " mb")
+print("sigma_lo  (0.0005 < Q2 (GeV/c2) < 0.001) = ", sigma_lo_mb_051, " mb")
+print("sigma_lo  (0.0007 < Q2 (GeV/c2) < 0.05)  = ", sigma_lo_mb_full, " mb")
+print("sigma_nlo (0.0007 < Q2 (GeV/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
+
+# =========================
+# Calculate Zaehlrate
+# =========================
+ltarget = 60 #cm
+Hpres = 20 #bar
+Npvol = 2.687*1e19 #Protons/cm^3
+Ibeam = 2*1e6 #1/s
+
+Np = Npvol * 2 * (Hpres/1.013) * ltarget # #Protons/cm^2 = target thickness
+
+print("Np (target thickness): ",Np)
+
+Rate_140 = sigma_lo_mb_140 * 1e-27 * Np * Ibeam
+Rate_051 = sigma_lo_mb_051 * 1e-27 * Np * Ibeam
+Rate_full = sigma_lo_mb_full * 1e-27 * Np * Ibeam
+
+print("Rate (0.001  <  Q2 (GeV/c2) < 0.04)  = ", Rate_140, " 1/s")
+print("Rate (0.0005 <  Q2 (GeV/c2) < 0.001) = ", Rate_051, " 1/s")
+print("Rate (0.0007 <  Q2 (GeV/c2) < 0.05)  = ", Rate_full, " 1/s")
+
+
+sys.stdout.close()
+sys.stdout = sys.stdout.terminal  # restore normal stdout

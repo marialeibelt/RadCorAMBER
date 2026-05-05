@@ -27,17 +27,26 @@ def write_file_with_values(filename, parameter_array, xlabel, parameter_label):
 def integrate_Q2_range(hist, q2_min=1000, q2_max=40000): #Q2 in MeV^2!
     hist = np.array(hist)
 
-    centers = hist[:, 0]
+    centers = hist[:, 0] #centers = [c₀, c₁, c₂, ..., cₙ]
     values  = hist[:, 1]
 
-    # compute bin widths (robust)
-    widths = np.diff(centers)
-    widths = np.append(widths, widths[-1])  # assume last bin same width
+    widths = np.diff(centers) #np.diff(centers) = [c₁-c₀, c₂-c₁, ..., cₙ-c_{n-1}]
+    widths = np.append(widths, widths[-1])
 
     mask = (centers >= q2_min) & (centers <= q2_max)
 
     sigma = np.sum(values[mask] * widths[mask])
     return sigma
+
+def calculate_rate(sigma_mb):
+    ltarget = 60 #cm
+    Hpres = 20 #bar
+    Npvol = 2.687*1e19 #Protons/cm^3
+    Ibeam = 2*1e6 #1/s
+
+    Np = Npvol * 2 * (Hpres/1.013) * ltarget # #Protons/cm^2 = target thickness
+    rate = sigma_mb * 1e-27 * Np * Ibeam
+    return rate #1/s
 
 
 # =========================
@@ -297,6 +306,7 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, th3_min,th3_max,colo
     # Bin-by-bin Vergleich Numerik vs. Analytik
     # -------------------------
     num = finite_bins(scaleplot(lo_hist, 1.0))
+
     x_num = num[:, 0]  # das sind cos(theta)-Werte
     y_num = num[:, 1]
     err_num = num[:, 2]
@@ -333,7 +343,6 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, th3_min,th3_max,colo
 # Plot cos(th3) analytical vs. numerical
 # =========================    
 def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, colors, savename, outdir, outdir_vals):
-
     fig_main, axes = create_figure(nrows=2, ncols=1, figsize=(7,6), gridspec_kw={"height_ratios":[3,1], "hspace":0})
     ax_main = axes[0,0]
     ax_k    = axes[1,0]
@@ -358,12 +367,11 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, color
     # Normierung <--------------------needed????????????????????????
     #bin_width = x_num[1] - x_num[0]
     #y_num   = y_num / bin_width
-    #err_num = err_num / bin_width   
-
+    #err_num = err_num / bin_width 
     # -------------------------
     # analytic curve over correct Q² range in GeV²
     # -------------------------
-    q2_grid  = np.linspace(x_num[0], x_num[-1], 500)
+    q2_grid  = np.linspace(x_num[0], x_num[-1], 200)
     dsig_grid = np.array([float(dsigma_dQ2(t)) for t in q2_grid])  # µbarn/GeV²
 
     ax_main.plot(q2_grid, dsig_grid, color="black", linestyle="--", label="analytic")
@@ -378,13 +386,17 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, color
     # -------------------------
     # Bin-by-bin comparison numeric vs. analytic
     # -------------------------
-    theo_at_bins = np.array([dsigma_dQ2(t) for t in x_num])    
+    theo_at_bins = np.array([dsigma_dQ2(t) for t in x_num])     
+    print("y_num: ",y_num)  
+    print("theo_at_bins: ",theo_at_bins) 
     
-    print("scaled y_num[0]:", y_num[0])
-    print("analytic[0]:", theo_at_bins[0])
+    #print("scaled y_num[0]:", y_num[0])
+    #print("analytic[0]:", theo_at_bins[0])
 
     diff     = y_num - theo_at_bins
+    #print("diff: ",diff)
     rel_diff = 100. * diff / np.where(np.abs(theo_at_bins) > 1e-20, theo_at_bins, np.nan)
+    #print("rel_diff: ",rel_diff)
     #print("rel_diff: ",rel_diff)
     out = np.column_stack([x_num, y_num, err_num, theo_at_bins, diff, rel_diff])
     np.savetxt(outdir_vals + "Q2.csv", out, delimiter=",",header="Q2_GeV2,num,num_err,ana,diff,rel_diff_percent", comments="")

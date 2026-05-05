@@ -1,0 +1,4 @@
+[2.79414808e+02 2.89408626e-05]
+[3.28678344e+00 1.93613014e-04]
+lo:  <Record mp2mp0 xsec = 279.41481(3), 36 histograms>
+nlo:  <Record mp2mpR xsec = 3.2868(2), 36 histograms>
