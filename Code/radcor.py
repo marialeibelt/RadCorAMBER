@@ -28,8 +28,8 @@ class Tee:
 # =========================
 # Paths
 # =========================
-#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
-homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+homedir = "/home/marialei/AMBER_RadCor/" # Laptop
+#homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
@@ -47,13 +47,16 @@ nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
-             "24_04","28_04","29_04","4_5","5_5"]               #15-19
+             "24_04","28_04","29_04","4_5","5_5",               #15-19
+             "7_5"]                                             #20             
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
 lo_i = 25
 nlo_i = 25
+savename_i = 20
+
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
@@ -64,7 +67,7 @@ X5_RANGE = (band_min, band_max)
 #th3_max_cut = 2.e-3
 
 
-savename_base = savenames[19] + "_" + nlo_outs[nlo_i]
+savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
@@ -79,16 +82,12 @@ lo = mergefks(sigma("mp2mp0")) * alpha**2 * conv
 setup(folder=homedir + nlo_outs[nlo_i] + "/out")
 nlo = (mergefks(sigma("mp2mpR"), sigma("mp2mpF"), anyxi=sigma("mp2mpA")) * alpha**3 * conv)
 full = lo + nlo
+onlyR = (mergefks(sigma("mp2mpR")) * alpha**3 * conv)
 
 # =========================
 # Extract observables (LAB)
 # =========================
 lo_th3, nlo_th3, full_th3 = lo["th3"], nlo["th3"], full["th3"]
-print(lo.value)
-print(nlo.value)
-print("lo: ",lo)
-print("nlo: ",nlo)
-exit()
 lo_Emu, nlo_Emu, full_Emu = lo["Emu"], nlo["Emu"], full["Emu"]
 lo_th5, nlo_th5, full_th5 = lo["th5"], nlo["th5"], full["th5"]
 lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
@@ -353,10 +352,11 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     Z = np.array(rows)  # (10, 10)
     sigma_photons_2D = np.sum(Z)
-    print("sigma_photons from 2D distribution: ", sigma_photons_2D*1e-3, " mb")
-
+    print("\nsigma_photons from 2D distribution: ", sigma_photons_2D*1e-3, " mb")
+    sigma_onlyR = onlyR.value*1e-3
+    print("sigma_onlyR: ",sigma_onlyR, " mb")
     Rate_ECAL = calculate_rate(sigma_photons_2D*1e-3)
-    print("Rate_ECAL                            = ", Rate_ECAL, " 1/s")
+    print("\nRate_ECAL = ", Rate_ECAL, " 1/s")
 
     x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
 
@@ -397,8 +397,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
         write_file_with_values(outdir_vals + f"K_x5_{savename}.txt", K_x5, f"x5_{tag} bin center", "K_x5")
     if K_y5 is not None:
         write_file_with_values(outdir_vals + f"K_y5_{savename}.txt", K_y5, f"y5_{tag} bin center", "K_y5")
-
-    print(f"[INFO] K-factor files written for {tag}.")
 
     # =========================
     # separate pair plots
@@ -474,6 +472,7 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
 plot_costh3_with_analytic(lo_hist=lo_costh3,
                           nlo_hist=nlo_costh3,
                           full_hist=full_costh3,
+                          nbins=500,
                           th3_min=th3_min, th3_max=th3_max,
                           colors=colors,
                           savename=f"{savename_base}_costh3_analytic",
@@ -483,6 +482,7 @@ plot_costh3_with_analytic(lo_hist=lo_costh3,
 plot_Q2_with_analytic(lo_hist=lo_Q2,
                           nlo_hist=nlo_Q2,
                           full_hist=full_Q2,
+                          nbins=500,
                           ylow_diff=-0.5,yup_diff=1.5,
                           colors=colors,
                           savename=f"{savename_base}_Q2_analytic",
@@ -506,11 +506,10 @@ sigma_lo_mb_051   = sigma_lo_051   / 1000
 sigma_lo_mb_full   = sigma_lo_full   / 1000
 sigma_nlo_mb_full   = sigma_nlo_full   / 1000
 
-
-print("sigma_lo  (0.001 <  Q2 (GeV/c2) < 0.04)  = ", sigma_lo_mb_140, " mb")
-print("sigma_lo  (0.0005 < Q2 (GeV/c2) < 0.001) = ", sigma_lo_mb_051, " mb")
-print("sigma_lo  (0.0007 < Q2 (GeV/c2) < 0.05)  = ", sigma_lo_mb_full, " mb")
-print("sigma_nlo (0.0007 < Q2 (GeV/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
+print("\nsigma_lo  (0.001  < Q2 (GeV2/c2) < 0.04)  = ", sigma_lo_mb_140, "   mb")
+print("sigma_lo  (0.0005 < Q2 (GeV2/c2) < 0.001) = ", sigma_lo_mb_051, "  mb")
+print("sigma_lo  (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_lo_mb_full, "   mb")
+print("sigma_nlo (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
 
 # =========================
 # Calculate Zaehlrate
@@ -522,15 +521,15 @@ Ibeam = 2*1e6 #1/s
 
 Np = Npvol * 2 * (Hpres/1.013) * ltarget # #Protons/cm^2 = target thickness
 
-print("Np (target thickness): ",Np)
+print("\nNp (target thickness): ",Np," Protons/cm^2")
 
-Rate_140 = sigma_lo_mb_140 * 1e-27 * Np * Ibeam
-Rate_051 = sigma_lo_mb_051 * 1e-27 * Np * Ibeam
-Rate_full = sigma_lo_mb_full * 1e-27 * Np * Ibeam
+Rate_140 = calculate_rate(sigma_lo_mb_140)
+Rate_051 = calculate_rate(sigma_lo_mb_051)
+Rate_full = calculate_rate(sigma_lo_mb_full)
 
-print("Rate (0.001  <  Q2 (GeV/c2) < 0.04)  = ", Rate_140, " 1/s")
-print("Rate (0.0005 <  Q2 (GeV/c2) < 0.001) = ", Rate_051, " 1/s")
-print("Rate (0.0007 <  Q2 (GeV/c2) < 0.05)  = ", Rate_full, " 1/s")
+print("\nRate (0.001  <  Q2 (GeV2/c2) < 0.04)  = ", Rate_140, "  1/s")
+print("Rate (0.0005 <  Q2 (GeV2/c2) < 0.001) = ", Rate_051, " 1/s")
+print("Rate (0.0007 <  Q2 (GeV2/c2) < 0.05)  = ", Rate_full, " 1/s")
 
 
 sys.stdout.close()

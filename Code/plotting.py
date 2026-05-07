@@ -39,7 +39,7 @@ def integrate_Q2_range(hist, q2_min=1000, q2_max=40000): #Q2 in MeV^2!
     return sigma
 
 def calculate_rate(sigma_mb):
-    ltarget = 60 #cm
+    ltarget = 160 #cm
     Hpres = 20 #bar
     Npvol = 2.687*1e19 #Protons/cm^3
     Ibeam = 2*1e6 #1/s
@@ -271,7 +271,7 @@ def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist,
     plt.close(fig) 
 
 
-def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, th3_min,th3_max,colors, savename, outdir, outdir_vals):
+def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, nbins, th3_min,th3_max,colors, savename, outdir, outdir_vals):
 
     fig_main, axes = create_figure(nrows=2, ncols=1, figsize=(7,6),gridspec_kw={"height_ratios":[3,1], "hspace":0})
     ax_main = axes[0,0]
@@ -289,7 +289,7 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, th3_min,th3_max,colo
     # -------------------------
     # analytic curve
     # -------------------------
-    theta_grid = np.linspace(th3_min, th3_max, 500)
+    theta_grid = np.linspace(th3_min, th3_max, nbins)
     costh_grid = np.cos(theta_grid)
 
     dsig_grid = np.array([dsigma_dcosth(t) for t in theta_grid])
@@ -342,7 +342,7 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, th3_min,th3_max,colo
 # =========================
 # Plot cos(th3) analytical vs. numerical
 # =========================    
-def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, colors, savename, outdir, outdir_vals):
+def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,nbins,ylow_diff,yup_diff, colors, savename, outdir, outdir_vals):
     fig_main, axes = create_figure(nrows=2, ncols=1, figsize=(7,6), gridspec_kw={"height_ratios":[3,1], "hspace":0})
     ax_main = axes[0,0]
     ax_k    = axes[1,0]
@@ -371,7 +371,7 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, color
     # -------------------------
     # analytic curve over correct Q² range in GeV²
     # -------------------------
-    q2_grid  = np.linspace(x_num[0], x_num[-1], 200)
+    q2_grid  = np.linspace(x_num[0], x_num[-1], nbins)
     dsig_grid = np.array([float(dsigma_dQ2(t)) for t in q2_grid])  # µbarn/GeV²
 
     ax_main.plot(q2_grid, dsig_grid, color="black", linestyle="--", label="analytic")
@@ -387,8 +387,8 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, color
     # Bin-by-bin comparison numeric vs. analytic
     # -------------------------
     theo_at_bins = np.array([dsigma_dQ2(t) for t in x_num])     
-    print("y_num: ",y_num)  
-    print("theo_at_bins: ",theo_at_bins) 
+    #print("y_num: ",y_num)  
+    #print("theo_at_bins: ",theo_at_bins) 
     
     #print("scaled y_num[0]:", y_num[0])
     #print("analytic[0]:", theo_at_bins[0])
@@ -396,7 +396,6 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,ylow_diff,yup_diff, color
     diff     = y_num - theo_at_bins
     #print("diff: ",diff)
     rel_diff = 100. * diff / np.where(np.abs(theo_at_bins) > 1e-20, theo_at_bins, np.nan)
-    #print("rel_diff: ",rel_diff)
     #print("rel_diff: ",rel_diff)
     out = np.column_stack([x_num, y_num, err_num, theo_at_bins, diff, rel_diff])
     np.savetxt(outdir_vals + "Q2.csv", out, delimiter=",",header="Q2_GeV2,num,num_err,ana,diff,rel_diff_percent", comments="")

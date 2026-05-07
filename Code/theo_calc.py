@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from plotting import *
 
 def dsigma_dcosth(theta):  # Gives dsigmadcostheta in mubarn!!! LO!!!
-    Emu = 100 #GeV
+    Emu = 100. #GeV
     mp = 0.938272088 #GeV
     mmu = 0.105658375 #GeV
     pmuvec = np.sqrt(Emu**2 - mmu**2)

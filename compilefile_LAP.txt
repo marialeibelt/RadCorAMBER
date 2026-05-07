@@ -1,0 +1,2 @@
+#Laptop:
+gfortran -fPIC -I /home/marialei/mcmule-release --shared -o user.so /home/marialei/AMBER_RadCor/userfiles/user-NLO.f95

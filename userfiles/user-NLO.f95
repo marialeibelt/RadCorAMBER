@@ -6,11 +6,11 @@
   implicit none
 
   integer, parameter :: nrq = 36
-  integer, parameter :: nrbins = 200
+  integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    0.295e-3_prec, 95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    0.295e-3_prec,  95.e3_prec, -0.5e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    0.295e-3_prec, 95.e3_prec, -13e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     0.999998_prec, & 						!costh3[]
@@ -19,12 +19,12 @@
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    2.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     0.999999_prec, &							!costh3[]
-    50000._prec,&                                                     	!Qsq in MeV^2
+    5.e4_prec,&                                                     	!Qsq in MeV^2
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
     
@@ -43,6 +43,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
+  print*, "Big Q2 range [0.001;0.04] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -116,7 +117,8 @@
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if (Eph .gt. Eph_cut) then
-    if (abs(th5) .gt. 12.e-3) pass_cut = .false.
+    if ((Qsq.gt.0.001).and.(Qsq.lt.0.04)) then
+      if (abs(th5) .gt. 12.e-3) pass_cut = .false.
   endif
 
   if(.not.all(pass_cut)) return
