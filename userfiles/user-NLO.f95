@@ -119,7 +119,8 @@
   if (Eph .gt. Eph_cut) then
     if ((Qsq.gt.0.001).and.(Qsq.lt.0.04)) then
       if (abs(th5) .gt. 12.e-3) pass_cut = .false.
-  endif
+    end if        ! <-- closes the Qsq check
+  end if          ! <-- closes the Eph_cut check
 
   if(.not.all(pass_cut)) return
   !Information for x,y bands
