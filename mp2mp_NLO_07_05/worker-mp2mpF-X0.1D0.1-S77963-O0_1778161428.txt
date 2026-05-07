@@ -1,0 +1,39 @@
+Starting job mp2mpF-X0.1D0.1-S77963-O0_1778161428 at 1778161429.048839
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [0.001;0.04] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 50MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -1.4934501718916243E-003   2.1340487444920011E-004
+ internal avgi, sd:   -1.3448950305201134E-003   2.2375577308668984E-005
+ internal avgi, sd:   -1.3116048819803228E-003   1.2679412091918149E-006
+ internal avgi, sd:   -1.3133297159421938E-003   6.4713664363554699E-008
+ internal avgi, sd:   -1.3133523423770673E-003   1.2523077027320011E-008
+ internal avgi, sd:   -1.3133346448349291E-003   5.1758635780113017E-009
+ internal avgi, sd:   -1.3133281659479976E-003   2.9936514853707281E-009
+ internal avgi, sd:   -1.3133272347722381E-003   2.1703349905222099E-009
+ internal avgi, sd:   -1.3133269936698659E-003   2.1643391066598897E-009

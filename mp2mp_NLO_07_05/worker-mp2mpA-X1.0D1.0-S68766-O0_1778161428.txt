@@ -1,0 +1,40 @@
+Starting job mp2mpA-X1.0D1.0-S68766-O0_1778161428 at 1778161430.0496445
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [0.001;0.04] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 50MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    2.0975759918084470E-002   4.9610889211001829E-003
+ internal avgi, sd:    2.0180036565028578E-002   8.5891376907088369E-004
+ internal avgi, sd:    2.1342467458424854E-002   5.6315459605481649E-005
+ internal avgi, sd:    2.1364301448707691E-002   2.8631148503350765E-006
+ internal avgi, sd:    2.1212445692386169E-002   3.1388828876312025E-007
+ internal avgi, sd:    2.1212445696568633E-002   3.1388566914524077E-007
+ internal avgi, sd:    2.1212477466442722E-002   3.1385353581866082E-007
+ internal avgi, sd:    2.1226520390477198E-002   3.0039421685092686E-007
+ internal avgi, sd:    2.1341247910317624E-002   1.4904926838721819E-007
+ internal avgi, sd:    2.1366221871171095E-002   8.5439451731761620E-008
