@@ -117,7 +117,7 @@
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if (Eph .gt. Eph_cut) then
-    if ((Qsq.gt.0.001).and.(Qsq.lt.0.04)) then
+    if ((Qsq.lt.0.001).and.(Qsq.gt.0.04)) then
       if (abs(th5) .gt. 12.e-3) pass_cut = .false.
     end if        ! <-- closes the Qsq check
   end if          ! <-- closes the Eph_cut check
