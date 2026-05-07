@@ -296,8 +296,8 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, nbins, th3_min,th3_m
 
     ax_main.plot(costh_grid, dsig_grid,color="black", linestyle="--", label="analytic")
     ax_main.legend()
-    ax_main.set_xlim(0.9999979,0.9999991)
-    ax_main.set_ylim(1e4,1.3*1e7)
+    #ax_main.set_xlim(0.9999979,0.9999991)
+    #ax_main.set_ylim(1e4,1.3*1e7)
 
     style_sci_x(ax_main,r"$\cos\theta_3$",r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$","Muon Scattering Angle (lab)",yscale="linear")
 
