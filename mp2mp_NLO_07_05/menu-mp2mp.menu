@@ -16,28 +16,28 @@ mode vegas
 
 
 run 70022 1.0 mp2mp0 0
-run 85394 1.0 mp2mp0 0
+#run 85394 1.0 mp2mp0 0
 #run 20440 1.0 mp2mp0 0
 #run 61156 1.0 mp2mp0 0
 
 
 
 run 77963 0.1 mp2mpF 0
-run 75308 0.1 mp2mpF 0
+#run 75308 0.1 mp2mpF 0
 #run 96319 0.1 mp2mpF 0
 #run 34882 0.1 mp2mpF 0
 
 
 
-run 13147 0.1 mp2mpR 0
-run 19955 0.1 mp2mpR 0
+#run 13147 0.1 mp2mpR 0
+#run 19955 0.1 mp2mpR 0
 #run 84868 0.1 mp2mpR 0
 #run 92630 0.1 mp2mpR 0
 
 
 
 run 68766 1.0 mp2mpA 0
-run 35852 1.0 mp2mpA 0
+#run 35852 1.0 mp2mpA 0
 #run 91843 1.0 mp2mpA 0
 #run 68623 1.0 mp2mpA 0
 
