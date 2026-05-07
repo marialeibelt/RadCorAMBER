@@ -1,0 +1,43 @@
+Starting job mp2mp0-X1.0D1.0-S14936-O0_1778189077 at 1778189077.538488
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Full Q2 range [0.;0.05] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 50MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    8.4275621350929988E-003   2.4552362473380866E-003
+ internal avgi, sd:    1.3125295199807759E-002   6.2413165201502313E-004
+ internal avgi, sd:    1.3403854875783223E-002   4.5659154250085948E-005
+ internal avgi, sd:    1.3465066204235442E-002   1.7528021570791434E-006
+ internal avgi, sd:    1.3465091899418791E-002   1.7526576036093487E-006
+ internal avgi, sd:    1.3465269691537581E-002   1.7481534521439335E-006
+ internal avgi, sd:    1.3467640115785743E-002   1.3758067889649362E-006
+ internal avgi, sd:    1.3474751157960157E-002   3.0160899621119811E-007
+ internal avgi, sd:    1.3475538637334890E-002   9.8533155323869287E-008
+ internal avgi, sd:    1.3475553560662479E-002   5.2207426621683752E-008
+
+
+Job finished, running took 313.5619297027588s

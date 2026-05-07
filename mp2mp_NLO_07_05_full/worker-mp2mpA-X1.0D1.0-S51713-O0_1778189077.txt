@@ -1,0 +1,36 @@
+Starting job mp2mpA-X1.0D1.0-S51713-O0_1778189077 at 1778189397.1353116
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Full Q2 range [0.;0.05] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 50MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    2.4230987601017263E-002   5.3686312885339281E-003
+ internal avgi, sd:    1.9819664577766575E-002   8.1731280201663176E-004
+ internal avgi, sd:    2.1355484415791038E-002   6.1945521419228667E-005
+
+
+Job finished, running took 15.055982828140259s

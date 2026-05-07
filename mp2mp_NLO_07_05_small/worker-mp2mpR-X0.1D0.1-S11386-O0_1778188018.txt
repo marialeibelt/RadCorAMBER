@@ -1,0 +1,43 @@
+Starting job mp2mpR-X0.1D0.1-S11386-O0_1778188018 at 1778188031.9936614
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Small Q2 range [0.0005;0.001] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 50MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    1.5775231001837118E-002   1.5777899431727683E-002
+ internal avgi, sd:    5.4091598174518937E-003   3.8841957581770789E-003
+ internal avgi, sd:    1.3744228878317920E-003   3.6125968591406676E-004
+ internal avgi, sd:    1.5148609047320786E-003   7.0247908502904478E-005
+ internal avgi, sd:    1.5524210252176524E-003   6.6217161117270438E-005
+ internal avgi, sd:    1.5914648806352901E-003   5.1771663280538169E-005
+ internal avgi, sd:    1.6198475878286250E-003   4.9863370989141229E-005
+ internal avgi, sd:    1.6223141429738176E-003   4.5654693626297336E-005
+ internal avgi, sd:    1.6573025289893612E-003   3.9051984232682113E-005
+ internal avgi, sd:    1.6811574816366578E-003   3.3506541332225811E-005
+
+
+Job finished, running took 883.9898421764374s
