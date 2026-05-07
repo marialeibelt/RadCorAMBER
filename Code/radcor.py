@@ -41,7 +41,7 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
-           "mp2mp_NLO_29_04"] #25
+           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big"] #25-26
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
@@ -53,8 +53,8 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 25
-nlo_i = 25
+lo_i = 26
+nlo_i = 26
 savename_i = 20
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
@@ -501,35 +501,44 @@ sigma_lo_051   = integrate_Q2_range(lo_Q2_finite, q2_min=500, q2_max=1000)
 sigma_lo_full   = integrate_Q2_range(lo_Q2_finite, q2_min=700, q2_max=50000)
 sigma_nlo_full   = integrate_Q2_range(nlo_Q2_finite, q2_min=700, q2_max=50000)
 
+sigma_lo = lo.value #0.001-0.04 HeV2/c2
+sigma_ph = onlyR.value 
+
 sigma_lo_mb_140   = sigma_lo_140   / 1000
 sigma_lo_mb_051   = sigma_lo_051   / 1000
 sigma_lo_mb_full   = sigma_lo_full   / 1000
 sigma_nlo_mb_full   = sigma_nlo_full   / 1000
 
+sigma_lo_mb = sigma_lo /1000
+sigma_ph_mb = sigma_ph /1000
+
 print("\nsigma_lo  (0.001  < Q2 (GeV2/c2) < 0.04)  = ", sigma_lo_mb_140, "   mb")
-print("sigma_lo  (0.0005 < Q2 (GeV2/c2) < 0.001) = ", sigma_lo_mb_051, "  mb")
-print("sigma_lo  (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_lo_mb_full, "   mb")
-print("sigma_nlo (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
+#print("sigma_lo  (0.0005 < Q2 (GeV2/c2) < 0.001) = ", sigma_lo_mb_051, "  mb")
+#print("sigma_lo  (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_lo_mb_full, "   mb")
+#print("sigma_nlo (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
+
+print("\nsigma_lo(paper)  (0.001  < Q2 (GeV2/c2) < 0.04)  = 0.225 mb")
+
+print("\nsigma_lo(.value)  (0.001  < Q2 (GeV2/c2) < 0.04)  = ", sigma_lo_mb, "  mb")
+print("sigma_ph(.value)  (0.001  < Q2 (GeV2/c2) < 0.04) = ", sigma_ph_mb, "  mb")
 
 # =========================
 # Calculate Zaehlrate
 # =========================
-ltarget = 60 #cm
-Hpres = 20 #bar
-Npvol = 2.687*1e19 #Protons/cm^3
-Ibeam = 2*1e6 #1/s
-
-Np = Npvol * 2 * (Hpres/1.013) * ltarget # #Protons/cm^2 = target thickness
-
-print("\nNp (target thickness): ",Np," Protons/cm^2")
-
 Rate_140 = calculate_rate(sigma_lo_mb_140)
-Rate_051 = calculate_rate(sigma_lo_mb_051)
-Rate_full = calculate_rate(sigma_lo_mb_full)
+#Rate_051 = calculate_rate(sigma_lo_mb_051)
+#Rate_full = calculate_rate(sigma_lo_mb_full)
+
+Rate = calculate_rate(sigma_lo_mb)
+Rate_ph = calculate_rate(sigma_ph_mb)
 
 print("\nRate (0.001  <  Q2 (GeV2/c2) < 0.04)  = ", Rate_140, "  1/s")
-print("Rate (0.0005 <  Q2 (GeV2/c2) < 0.001) = ", Rate_051, " 1/s")
-print("Rate (0.0007 <  Q2 (GeV2/c2) < 0.05)  = ", Rate_full, " 1/s")
+#print("Rate (0.0005 <  Q2 (GeV2/c2) < 0.001) = ", Rate_051, " 1/s")
+#print("Rate (0.0007 <  Q2 (GeV2/c2) < 0.05)  = ", Rate_full, " 1/s")
+print("\nRate (0.001  <  Q2 (GeV2/c2) < 0.04) Paper = 86.6 1/s")
+print("Rate (0.0005  <  Q2 (GeV2/c2) < 0.001) Paper = 89.0 1/s")
+print("\nRate (.value) (0.001   <  Q2 (GeV2/c2) < 0.04)  = ", Rate, "  1/s")
+print("Rate Photon (.value) (0.001  <  Q2 (GeV2/c2) < 0.04) = ", Rate_ph, " 1/s")
 
 
 sys.stdout.close()

@@ -1,0 +1,20 @@
+th3_min:     0.29671 , th3_max:     2.0032900000000002  (in mrad)
+costh3_min:  0.999998001 , costh3_max:  0.999998999
+
+sigma_photons from 2D distribution:  0.0006734580481076577  mb
+sigma_onlyR:  [2.61187218e-04 2.10225660e-07]  mb
+
+Rate_ECAL =  0.2286539656801139  1/s
+
+sigma_lo  (0.001  < Q2 (GeV2/c2) < 0.04)  =  0.25053417337329226    mb
+
+sigma_lo(.value)  (0.001  < Q2 (GeV2/c2) < 0.04)  =  [2.79412376e-01 4.61960549e-08]   mb
+sigma_ph(.value)  (0.001  < Q2 (GeV2/c2) < 0.04) =  [2.61187218e-04 2.10225660e-07]   mb
+
+Rate (0.001  <  Q2 (GeV2/c2) < 0.04)  =  85.06191653831851   1/s
+
+Rate (0.001  <  Q2 (GeV2/c2) < 0.04) Paper = 86.6 1/s
+Rate (0.0005  <  Q2 (GeV2/c2) < 0.001) Paper = 89.0 1/s
+
+Rate (.value) (0.001   <  Q2 (GeV2/c2) < 0.04)  =  [9.48667077e+01 1.56845867e-05]   1/s
+Rate Photon (.value) (0.001  <  Q2 (GeV2/c2) < 0.04) =  [8.86788620e-02 7.13762809e-05]  1/s

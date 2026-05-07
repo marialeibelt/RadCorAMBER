@@ -43,7 +43,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Big Q2 range [0.001;0.04] GeV²]"
+  print*, "Small Q2 range [0.0005;0.001] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -117,7 +117,7 @@
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if (Eph .gt. Eph_cut) then
-    if ((Qsq.lt.0.001).and.(Qsq.gt.0.04)) then
+    if ((Qsq.lt.0.0005).and.(Qsq.gt.0.001)) then
       if (abs(th5) .gt. 12.e-3) pass_cut = .false.
     end if        ! <-- closes the Qsq check
   end if          ! <-- closes the Eph_cut check
