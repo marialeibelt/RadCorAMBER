@@ -13,7 +13,7 @@
     0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
-    0.999998_prec, & 						!costh3[]
+    -1._prec, & 						!costh3[]
     0._prec,&                                                	!Qsq in MeV^2
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
     -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
@@ -23,7 +23,7 @@
     2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
-    0.999999_prec, &							!costh3[]
+    1._prec, &								!costh3[]
     5.e4_prec,&                                                     	!Qsq in MeV^2
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
     0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]

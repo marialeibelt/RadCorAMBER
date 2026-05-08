@@ -24,18 +24,27 @@ def write_file_with_values(filename, parameter_array, xlabel, parameter_label):
             f.write(f"{bin_center: .6e}  {value: .6e}  {error: .6e}\n")
 
 
-def integrate_Q2_range(hist, q2_min=1000, q2_max=40000): #Q2 in MeV^2!
-    hist = np.array(hist)
+def integrate_hist(hist, xmin=None, xmax=None):
 
-    centers = hist[:, 0] #centers = [c₀, c₁, c₂, ..., cₙ]
+    hist = np.array(hist)
+    hist = finite_bins(hist)
+
+    centers = hist[:, 0]
     values  = hist[:, 1]
 
-    widths = np.diff(centers) #np.diff(centers) = [c₁-c₀, c₂-c₁, ..., cₙ-c_{n-1}]
+    widths = np.diff(centers)
     widths = np.append(widths, widths[-1])
 
-    mask = (centers >= q2_min) & (centers <= q2_max)
+    mask = np.ones_like(centers, dtype=bool)
+
+    if xmin is not None:
+        mask &= (centers >= xmin)
+
+    if xmax is not None:
+        mask &= (centers <= xmax)
 
     sigma = np.sum(values[mask] * widths[mask])
+
     return sigma
 
 def calculate_rate(sigma_mb):

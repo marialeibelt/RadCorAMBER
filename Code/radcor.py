@@ -41,7 +41,7 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
-           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_07_05_full"] #25-28
+           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full"] #25-28
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
@@ -74,9 +74,9 @@ savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
-#print("=========================","\nBIG - 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
-#print("=========================","\nSMALL - 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
-print("=========================","\nFULL - 0.  <  Q2 (GeV2/c2) < 0.05","\n=========================")
+#print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
+#print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
+print("=========================","\nFULL -- 0. <  Q2 (GeV2/c2) < 0.05","\n=========================")
 
 # =========================
 # Physics setup
@@ -499,10 +499,10 @@ plot_Q2_with_analytic(lo_hist=lo_Q2,
 lo_Q2_finite   = finite_bins(lo_Q2)
 nlo_Q2_finite  = finite_bins(nlo_Q2)
 
-sigma_lo_140   = integrate_Q2_range(lo_Q2_finite, q2_min=1000, q2_max=40000)
-sigma_lo_051   = integrate_Q2_range(lo_Q2_finite, q2_min=500, q2_max=1000)
-sigma_lo_full   = integrate_Q2_range(lo_Q2_finite, q2_min=0, q2_max=50000)
-sigma_nlo_full   = integrate_Q2_range(nlo_Q2_finite, q2_min=0, q2_max=50000)
+sigma_lo_140   = integrate_hist(lo_Q2_finite, xmin=1000, xmax=40000)
+sigma_lo_051   = integrate_hist(lo_Q2_finite, xmin=500, xmax=1000)
+sigma_lo_full   = integrate_hist(lo_Q2_finite, xmin=0, xmax=50000)
+sigma_nlo_full   = integrate_hist(nlo_Q2_finite, xmin=0, xmax=50000)
 
 sigma_lo = lo.value #0.001-0.04 GeV2/c2
 sigma_ph = onlyR.value 
@@ -559,6 +559,23 @@ print("Integrate Range: ", Rate_full)
 print(".value:          ", Rate)
 print("\n.value photon:    ", Rate_ph)
 #---------------------------------------------------------------------------
+print("\n-------------------------")
+print("\nsigma_nlo/sigma_lo: ", nlo.value/lo.value)
+print("sigma_R/sigma_nlo: ", onlyR.value/nlo.value *100, "%")
+
+
+int_th3 = integrate_hist(lo_th3)
+int_costh3 = integrate_hist(lo_costh3)
+int_Q2 = integrate_hist(lo_Q2)
+int_th5_lo = integrate_hist(lo_th5)
+int_th5 = integrate_hist(nlo_th5)
+
+print("\n-------------------------","\nUSed integrate_hist","\n-------------------------")
+print("int_th3(lo):     ", int_th3)
+print("int_costh3(lo):  ", int_costh3)
+print("int_Q2(lo):      ", int_Q2)
+print("int_th5(lo):     ", int_th5_lo)
+print("int_th5(nlo):    ", int_th5)
 
 
 sys.stdout.close()
