@@ -43,7 +43,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Small Q2 range [0.0005;0.001] GeV²]"
+  print*, "Full Q2 range [0.;0.05] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -106,7 +106,7 @@
   costh3 = cos(th3)
   
   Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
-  if ((Qsq.lt.5.e2).and.(Qsq.gt.1.e3)) pass_cut = .false.
+  if ((Qsq.lt.0.).and.(Qsq.gt.5.e4)) pass_cut = .false.
   
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)

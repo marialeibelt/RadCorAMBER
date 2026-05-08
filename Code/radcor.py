@@ -53,10 +53,11 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 26
-nlo_i = 26
-savename_i = 20
+lo_i = 28
+nlo_i = 28
+savename_i = 21
 nbins = 500
+
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
@@ -73,6 +74,9 @@ savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
+#print("=========================","\nBIG - 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
+#print("=========================","\nSMALL - 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
+print("=========================","\nFULL - 0.  <  Q2 (GeV2/c2) < 0.05","\n=========================")
 
 # =========================
 # Physics setup
@@ -354,10 +358,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
     Z = np.array(rows)  # (10, 10)
     sigma_photons_2D = np.sum(Z)
     print("\nsigma_photons from 2D distribution: ", sigma_photons_2D*1e-3, " mb")
-    sigma_onlyR = onlyR.value*1e-3
-    print("sigma_onlyR: ",sigma_onlyR, " mb")
     Rate_ECAL = calculate_rate(sigma_photons_2D*1e-3)
-    print("\nRate_ECAL = ", Rate_ECAL, " 1/s")
+    print("Rate_ECAL from 2D distribution:     ", Rate_ECAL, " 1/s")
 
     x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
 
@@ -382,7 +384,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
 
     save_figure(fig, f"{savename}_x5y5_2D", outdir=outdir)
     plt.close(fig)
-
+    '''
     # =========================
     # write K-value files
     # =========================
@@ -398,7 +400,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
         write_file_with_values(outdir_vals + f"K_x5_{savename}.txt", K_x5, f"x5_{tag} bin center", "K_x5")
     if K_y5 is not None:
         write_file_with_values(outdir_vals + f"K_y5_{savename}.txt", K_y5, f"y5_{tag} bin center", "K_y5")
-
+    '''
     # =========================
     # separate pair plots
     # =========================
@@ -499,47 +501,64 @@ nlo_Q2_finite  = finite_bins(nlo_Q2)
 
 sigma_lo_140   = integrate_Q2_range(lo_Q2_finite, q2_min=1000, q2_max=40000)
 sigma_lo_051   = integrate_Q2_range(lo_Q2_finite, q2_min=500, q2_max=1000)
-sigma_lo_full   = integrate_Q2_range(lo_Q2_finite, q2_min=700, q2_max=50000)
-sigma_nlo_full   = integrate_Q2_range(nlo_Q2_finite, q2_min=700, q2_max=50000)
+sigma_lo_full   = integrate_Q2_range(lo_Q2_finite, q2_min=0, q2_max=50000)
+sigma_nlo_full   = integrate_Q2_range(nlo_Q2_finite, q2_min=0, q2_max=50000)
 
-sigma_lo = lo.value #0.001-0.04 HeV2/c2
+sigma_lo = lo.value #0.001-0.04 GeV2/c2
 sigma_ph = onlyR.value 
 
+#Umrechnung in mb
 sigma_lo_mb_140   = sigma_lo_140   / 1000
 sigma_lo_mb_051   = sigma_lo_051   / 1000
 sigma_lo_mb_full   = sigma_lo_full   / 1000
-sigma_nlo_mb_full   = sigma_nlo_full   / 1000
 
 sigma_lo_mb = sigma_lo /1000
 sigma_ph_mb = sigma_ph /1000
-
-print("\nsigma_lo  (0.001  < Q2 (GeV2/c2) < 0.04)  = ", sigma_lo_mb_140, "   mb")
-#print("sigma_lo  (0.0005 < Q2 (GeV2/c2) < 0.001) = ", sigma_lo_mb_051, "  mb")
-#print("sigma_lo  (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_lo_mb_full, "   mb")
-#print("sigma_nlo (0.0007 < Q2 (GeV2/c2) < 0.05)  = ", sigma_nlo_mb_full, " mb")
-
-print("\nsigma_lo(paper)  (0.001  < Q2 (GeV2/c2) < 0.04)  = 0.225 mb")
-
-print("\nsigma_lo(.value)  (0.001  < Q2 (GeV2/c2) < 0.04)  = ", sigma_lo_mb, "  mb")
-print("sigma_ph(.value)  (0.001  < Q2 (GeV2/c2) < 0.04) = ", sigma_ph_mb, "  mb")
 
 # =========================
 # Calculate Zaehlrate
 # =========================
 Rate_140 = calculate_rate(sigma_lo_mb_140)
-#Rate_051 = calculate_rate(sigma_lo_mb_051)
-#Rate_full = calculate_rate(sigma_lo_mb_full)
+Rate_051 = calculate_rate(sigma_lo_mb_051)
+Rate_full = calculate_rate(sigma_lo_mb_full)
 
 Rate = calculate_rate(sigma_lo_mb)
 Rate_ph = calculate_rate(sigma_ph_mb)
 
-print("\nRate (0.001  <  Q2 (GeV2/c2) < 0.04)  = ", Rate_140, "  1/s")
-#print("Rate (0.0005 <  Q2 (GeV2/c2) < 0.001) = ", Rate_051, " 1/s")
-#print("Rate (0.0007 <  Q2 (GeV2/c2) < 0.05)  = ", Rate_full, " 1/s")
-print("\nRate (0.001  <  Q2 (GeV2/c2) < 0.04) Paper = 86.6 1/s")
-print("Rate (0.0005  <  Q2 (GeV2/c2) < 0.001) Paper = 89.0 1/s")
-print("\nRate (.value) (0.001   <  Q2 (GeV2/c2) < 0.04)  = ", Rate, "  1/s")
-print("Rate Photon (.value) (0.001  <  Q2 (GeV2/c2) < 0.04) = ", Rate_ph, " 1/s")
+
+
+print("\n-------------------------","\nCROSS SECTIONS in mb","\n-------------------------")
+#---------------------------------------------------------------------------BIG
+#print("Integrate Range: ", sigma_lo_mb_140)
+#print(".value:         ", sigma_lo_mb)
+#print("Paper:            0.225")
+#print("\n.value photon:  ", sigma_ph_mb)
+#---------------------------------------------------------------------------SMALL
+#print("Integrate Range: ", sigma_lo_mb_051)
+#print(".value:         ", sigma_lo_mb)
+#print("\n.value photon:  ", sigma_ph_mb)
+#---------------------------------------------------------------------------FULL
+print("Integrate Range: ", sigma_lo_mb_full)
+print(".value:         ", sigma_lo_mb)
+print("\n.value photon:  ", sigma_ph_mb)
+#---------------------------------------------------------------------------
+
+print("\n-------------------------","\nRATES in 1/s","\n-------------------------")
+#---------------------------------------------------------------------------BIG
+#print("Integrate Range: ", Rate_140)
+#print(".value:          ", Rate)
+#print("Paper:            86.6")
+#print("\n.value photon:   ", Rate_ph)
+#---------------------------------------------------------------------------SMALL
+#print("Integrate Range: ", Rate_051)
+#print(".value:          ", Rate)
+#print("Paper:            89.0 1/s")
+#print("\n.value photon:    ", Rate_ph)
+#---------------------------------------------------------------------------FULL
+print("Integrate Range: ", Rate_full)
+print(".value:          ", Rate)
+print("\n.value photon:    ", Rate_ph)
+#---------------------------------------------------------------------------
 
 
 sys.stdout.close()
