@@ -41,14 +41,14 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
-           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big"] #25-26
+           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_07_05_full"] #25-28
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
-             "7_5"]                                             #20             
+             "7_5","8_5"]                                       #20-21             
 
 # =========================
 # Dataset choice/ Has to be checked each time!
@@ -56,6 +56,7 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 lo_i = 26
 nlo_i = 26
 savename_i = 20
+nbins = 500
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
@@ -427,7 +428,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           main_title=f"Muon Scattering Angle cos({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
     save_single_pair_plot(savename=f"{savename}_Q2_pair",
                           lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
-                          scale_factor=1., x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
+                          scale_factor=1.e-3, x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
                           main_title=f"$Q^2$({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
@@ -472,7 +473,7 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
 plot_costh3_with_analytic(lo_hist=lo_costh3,
                           nlo_hist=nlo_costh3,
                           full_hist=full_costh3,
-                          nbins=500,
+                          nbins=nbins,
                           th3_min=th3_min, th3_max=th3_max,
                           colors=colors,
                           savename=f"{savename_base}_costh3_analytic",
@@ -482,7 +483,7 @@ plot_costh3_with_analytic(lo_hist=lo_costh3,
 plot_Q2_with_analytic(lo_hist=lo_Q2,
                           nlo_hist=nlo_Q2,
                           full_hist=full_Q2,
-                          nbins=500,
+                          nbins=nbins,
                           ylow_diff=-0.5,yup_diff=1.5,
                           colors=colors,
                           savename=f"{savename_base}_Q2_analytic",
