@@ -1,7 +1,7 @@
-## Generated at 23:05 on May 07 2026 by ge93juy
-# git version: b'main' (b'5710328')
+## Generated at 00:03 on May 08 2026 by ge93juy
+# git version: b'main' (b'af34e55')
 # To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
-#      --seeds 16294 34852 17484 74757 93929 67797 11386 49932 93076 14420 46277 65758 53539 84208 57650 68413 72549 34793 24584 29498 \
+#      --seeds 74716 26980 16999 22198 11237 33337 21723 56874 53930 18851 33652 18966 74321 93112 37425 12524 18859 80575 27603 37658 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
 #      --output-dir mp2mp_NLO_07_05_small \

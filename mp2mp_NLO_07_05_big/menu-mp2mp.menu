@@ -1,43 +1,47 @@
-## Generated at 20:30 on May 07 2026 by ge93juy
-# git version: b'main' (b'6adef3c')
+## Generated at 23:49 on May 07 2026 by ge93juy
+# git version: b'main' (b'af34e55')
 # To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
-#      --seeds 95100 12768 94723 93467 20250 87881 86014 55405 50435 49900 54122 78930 68601 85605 20745 14372 \
+#      --seeds 59519 50394 72079 87693 77654 19435 82947 38147 18836 12526 26132 16572 12881 76020 38151 27570 10827 91255 13672 70299 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
-#      --output-dir mp2mp_NLO_07_05_Themis \
+#      --output-dir mp2mp_NLO_07_05_big \
 #      --mcmule mcmule \
-#      --stat 0,1000,10,10000,10,4 \
-#      --stat F,1000,10,10000,10,4 \
-#      --stat R,2000,10,50000,10,4 \
-#      --stat A,1000,10,10000,10,4
+#      --stat 0,1000,10,10000,10,5 \
+#      --stat F,1000,10,10000,10,5 \
+#      --stat R,2000,10,50000,10,5 \
+#      --stat A,1000,10,10000,10,5
 
 conf mp2mp.toml
 mode vegas
 
 
-run 14372 1.0 mp2mp0 0
-run 20745 1.0 mp2mp0 0
-run 85605 1.0 mp2mp0 0
-run 68601 1.0 mp2mp0 0
+run 70299 1.0 mp2mp0 0
+run 13672 1.0 mp2mp0 0
+run 91255 1.0 mp2mp0 0
+run 10827 1.0 mp2mp0 0
+run 27570 1.0 mp2mp0 0
 
 
 
-run 78930 0.1 mp2mpF 0
-run 54122 0.1 mp2mpF 0
-run 49900 0.1 mp2mpF 0
-run 50435 0.1 mp2mpF 0
+run 38151 0.1 mp2mpF 0
+run 76020 0.1 mp2mpF 0
+run 12881 0.1 mp2mpF 0
+run 16572 0.1 mp2mpF 0
+run 26132 0.1 mp2mpF 0
 
 
 
-run 55405 0.1 mp2mpR 0
-run 86014 0.1 mp2mpR 0
-run 87881 0.1 mp2mpR 0
-run 20250 0.1 mp2mpR 0
+run 12526 0.1 mp2mpR 0
+run 18836 0.1 mp2mpR 0
+run 38147 0.1 mp2mpR 0
+run 82947 0.1 mp2mpR 0
+run 19435 0.1 mp2mpR 0
 
 
 
-run 93467 1.0 mp2mpA 0
-run 94723 1.0 mp2mpA 0
-run 12768 1.0 mp2mpA 0
-run 95100 1.0 mp2mpA 0
+run 77654 1.0 mp2mpA 0
+run 87693 1.0 mp2mpA 0
+run 72079 1.0 mp2mpA 0
+run 50394 1.0 mp2mpA 0
+run 59519 1.0 mp2mpA 0
 
