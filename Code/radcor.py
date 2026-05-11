@@ -36,12 +36,13 @@ outdir_vals = homedir + "Vals/"
 # =========================
 # Input definitions
 # =========================
-lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest",                  #0-4
-           "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",   #5-9
-           "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
-           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
-           "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
-           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full","mp2mp_NLO_08_05_full_costh3test"] #25-29
+lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15_03", "mp2mptest",                                   #0-4
+           "mp2mp_23_03", "mp2mp_NLO_24_03", "mp2mp_NLO_24_03_new", "mp2mp_NLO_24_03_evening", "mp2mp_NLO_26_03",                    #5-9
+           "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                                           #10-14
+           "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                                          #15-19
+           "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04",                  #20-24
+           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full","mp2mp_NLO_08_05_full_costh3test", #25-29
+           "mp2mp_NLO_11_05_BIG"] #30
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
@@ -53,8 +54,8 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 29
-nlo_i = 29
+lo_i = 30
+nlo_i = 30
 savename_i = 22
 nbins = 500
 
@@ -72,9 +73,9 @@ savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
-#print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
+print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
 #print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
-print("=========================","\nFULL -- 0. <  Q2 (GeV2/c2) < 0.05","\n=========================")
+#print("=========================","\nFULL -- 0. <  Q2 (GeV2/c2) < 0.05","\n=========================")
 
 # =========================
 # Physics setup
@@ -154,6 +155,7 @@ print("th3_min:    ",th3_min*1e3,", th3_max:    ",th3_max*1e3, " (in mrad)")
 costh3vals = finite_bins(full_costh3)
 costh3_min = np.min(costh3vals[:, 0])
 costh3_max = np.max(costh3vals[:, 0])
+"""
 print(full_th3[0, 0])
 print(full_costh3[0, 0])
 print("")
@@ -163,6 +165,8 @@ print("")
 print(full_th3[2, 0])
 print(full_costh3[2, 0])
 #exit()
+"""
+
 print("costh3_min: ",costh3_min,", costh3_max: ",costh3_max)
 
 
@@ -536,35 +540,35 @@ Rate_ph = calculate_rate(sigma_ph_mb)
 
 print("\n-------------------------","\nCROSS SECTIONS in mb","\n-------------------------")
 #---------------------------------------------------------------------------BIG
-#print("Integrate Range: ", sigma_lo_mb_140)
-#print(".value:         ", sigma_lo_mb)
-#print("Paper:            0.225")
-#print("\n.value photon:  ", sigma_ph_mb)
+print("Integrate Range: ", sigma_lo_mb_140)
+print(".value:         ", sigma_lo_mb)
+print("Paper:            0.225")
+print("\n.value photon:  ", sigma_ph_mb)
 #---------------------------------------------------------------------------SMALL
 #print("Integrate Range: ", sigma_lo_mb_051)
 #print(".value:         ", sigma_lo_mb)
 #print("\n.value photon:  ", sigma_ph_mb)
 #---------------------------------------------------------------------------FULL
-print("Integrate Range: ", sigma_lo_mb_full)
-print(".value:         ", sigma_lo_mb)
-print("\n.value photon:  ", sigma_ph_mb)
+#print("Integrate Range: ", sigma_lo_mb_full)
+#print(".value:         ", sigma_lo_mb)
+#print("\n.value photon:  ", sigma_ph_mb)
 #---------------------------------------------------------------------------
 
 print("\n-------------------------","\nRATES in 1/s","\n-------------------------")
 #---------------------------------------------------------------------------BIG
-#print("Integrate Range: ", Rate_140)
-#print(".value:          ", Rate)
-#print("Paper:            86.6")
-#print("\n.value photon:   ", Rate_ph)
+print("Integrate Range: ", Rate_140)
+print(".value:          ", Rate)
+print("Paper:            86.6")
+print("\n.value photon:   ", Rate_ph)
 #---------------------------------------------------------------------------SMALL
 #print("Integrate Range: ", Rate_051)
 #print(".value:          ", Rate)
 #print("Paper:            89.0 1/s")
 #print("\n.value photon:    ", Rate_ph)
 #---------------------------------------------------------------------------FULL
-print("Integrate Range: ", Rate_full)
-print(".value:          ", Rate)
-print("\n.value photon:    ", Rate_ph)
+#print("Integrate Range: ", Rate_full)
+#print(".value:          ", Rate)
+#print("\n.value photon:    ", Rate_ph)
 #---------------------------------------------------------------------------
 print("\n-------------------------")
 print("\nsigma_nlo/sigma_lo: ", nlo.value/lo.value)
