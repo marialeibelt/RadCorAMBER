@@ -11,22 +11,22 @@
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.295e-3_prec, 95.e3_prec, -13e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    -0.191_prec,-0.191_prec, &                                  ! x5[m], y5[m]
+    -0.2_prec,-0.2_prec, &                                  ! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     -1._prec, & 						!costh3[]
     0._prec,&                                                	!Qsq in MeV^2
-    -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec, & ! x5_B1..x5_B10[m]
-    -0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec,-0.191_prec /) ! y5_B1..y5_B10[m]
+    -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & ! x5_B1..x5_B10[m]
+    -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) ! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     2.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    0.191_prec,0.191_prec, &                                    	! x5[m], y5[m]
+    0.2_prec,0.2_prec, &                                    	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     1._prec, &								!costh3[]
     5.e4_prec,&                                                     	!Qsq in MeV^2
-    0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec, &  ! x5_B1..x5_B10[m]
-    0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec,0.191_prec /)  ! y5_B1..y5_B10[m]
+    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  ! x5_B1..x5_B10[m]
+    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, /)  ! y5_B1..y5_B10[m]
     
   integer :: userdim = 0
   integer :: namesLen=12
@@ -43,7 +43,9 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Full Q2 range [0.;0.05] GeV²]"
+  print*, "Big Q2 range [0.001;0.04] GeV²]"
+  !print*, "Small Q2 range [0.0005;0.001] GeV²]"
+  !print*, "Full Q2 range [1.e-6;0.05] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -79,11 +81,11 @@
   
   ! Cuts
   Eph_cut = 200._prec
-  !thmu_low = 1.35e-3
-  !thmu_up = 1.65e-3
-  thmu_low = 0.3e-3
-  thmu_up = 2.e-3
-  Emu_low = 70.e3
+  !thmu_low = 1.35e-3_prec
+  !thmu_up = 1.65e-3_prec
+  thmu_low = 0.3e-3_prec
+  thmu_up = 2.e-3_prec
+  Emu_low = 70.e3_prec
   
   d_detec = 30._prec
   ! proton rest frame / lab frame
@@ -106,7 +108,9 @@
   costh3 = cos(th3)
   
   Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
-  if ((Qsq.lt.0.).and.(Qsq.gt.5.e4)) pass_cut = .false.
+  if ((Qsq.lt.1.e3_prec).and.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
+  !if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
+  !if ((Qsq.lt.1._prec).and.(Qsq.gt.5.e4_prec)) pass_cut = .false.	!FULL
   
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
@@ -118,8 +122,10 @@
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
+  if ((x5.lt.-0.191_prec).and.(x5.gt.0.191_prec)) pass_cut = .false.
+  if ((y5.lt.-0.191_prec).and.(y5.gt.0.191_prec)) pass_cut = .false.
   if (Eph .gt. Eph_cut) then
-    if (abs(th5) .gt. 12.e-3) pass_cut = .false.
+    if (abs(th5) .gt. 12.e-3_prec) pass_cut = .false.
   end if          ! <-- closes the Eph_cut check
 
   if(.not.all(pass_cut)) return

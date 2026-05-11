@@ -1,7 +1,11 @@
 mp2mp
 5
 .1
+<<<<<<< Updated upstream
 mp2mp_NLO_08_05_full_costh3test
+=======
+mp2mp_NLO_11_05_BIG
+>>>>>>> Stashed changes
 0,F,R,A
 1000,10,10000,10
 1000,10,10000,10

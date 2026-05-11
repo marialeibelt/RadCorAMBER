@@ -41,21 +41,21 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_26_03_new","mp2mp_26_03_timetest","lesspoints3","smallth3","folder",                          #10-14
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                         #15-19
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04", #20-24
-           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full"] #25-28
+           "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full","mp2mp_NLO_08_05_full_costh3test"] #25-29
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
-             "7_5","8_5"]                                       #20-21             
+             "7_5","8_5","11_05"]                               #20-22          
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 28
-nlo_i = 28
-savename_i = 21
+lo_i = 29
+nlo_i = 29
+savename_i = 22
 nbins = 500
 
 
@@ -65,8 +65,6 @@ band_min = -(n_bands/2 * bin_width)
 band_max = n_bands/2 * bin_width
 Y5_RANGE = (band_min, band_max)
 X5_RANGE = (band_min, band_max)
-#th3_min_cut = 0.3e-3
-#th3_max_cut = 2.e-3
 
 
 savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
@@ -156,6 +154,15 @@ print("th3_min:    ",th3_min*1e3,", th3_max:    ",th3_max*1e3, " (in mrad)")
 costh3vals = finite_bins(full_costh3)
 costh3_min = np.min(costh3vals[:, 0])
 costh3_max = np.max(costh3vals[:, 0])
+print(full_th3[0, 0])
+print(full_costh3[0, 0])
+print("")
+print(full_th3[1, 0])
+print(full_costh3[1, 0])
+print("")
+print(full_th3[2, 0])
+print(full_costh3[2, 0])
+#exit()
 print("costh3_min: ",costh3_min,", costh3_max: ",costh3_max)
 
 
