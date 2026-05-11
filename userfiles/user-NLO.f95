@@ -26,7 +26,7 @@
     1._prec, &								!costh3[]
     5.e4_prec,&                                                     	!Qsq in MeV^2
     0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  ! x5_B1..x5_B10[m]
-    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, /)  ! y5_B1..y5_B10[m]
+    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  ! y5_B1..y5_B10[m]
     
   integer :: userdim = 0
   integer :: namesLen=12
