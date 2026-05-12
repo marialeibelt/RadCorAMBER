@@ -49,14 +49,14 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
-             "7_5","8_5","11_05"]                               #20-22          
+             "7_5","8_5","11_05","12_5"]                        #20-23       
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
 lo_i = 30
 nlo_i = 30
-savename_i = 22
+savename_i = 23
 nbins = 500
 
 
@@ -304,6 +304,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                             x_label_k=r"$\cos\theta_3$",
                                             y_label_main=r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
                                             main_title=f"Muon Scattering Angle cos({tag})",
+                                            xlim=(0.98,1.),
                                             force_main_linear=True,
                                             colors=colors)
 
@@ -438,11 +439,11 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_single_pair_plot(savename=f"{savename}_costh3_pair",
                           lo_hist=lo_costh3, nlo_hist=nlo_costh3, full_hist=full_costh3,
                           scale_factor=1., x_label=r"$\cos\theta_3$", y_label=r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
-                          main_title=f"Muon Scattering Angle cos({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
+                          main_title=f"Muon Scattering Angle cos({tag})",xlim=(0.98,1.),force_main_linear=True,colors=colors, outdir=outdir,)
     save_single_pair_plot(savename=f"{savename}_Q2_pair",
                           lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
                           scale_factor=1.e-3, x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
-                          main_title=f"$Q^2$({tag})",force_main_linear=True,colors=colors, outdir=outdir,)
+                          main_title=f"$Q^2$({tag})",ylim=(0.,1.e6),force_main_linear=False,colors=colors, outdir=outdir,)
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
                           scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 

@@ -43,7 +43,7 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Big Q2 range [0.001;0.04] GeV²]"
+  print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
   !print*, "Small Q2 range [0.0005;0.001] GeV²]"
   !print*, "Full Q2 range [1.e-6;0.05] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
@@ -107,8 +107,9 @@
 
   costh3 = cos(th3)
   
-  Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
-  if ((Qsq.lt.1.e3_prec).and.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
+  !Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
+  Qsq=-sq(ql1-ql3)
+  if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
   !if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
   !if ((Qsq.lt.1._prec).and.(Qsq.gt.5.e4_prec)) pass_cut = .false.	!FULL
   
@@ -122,8 +123,8 @@
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
-  if ((x5.lt.-0.191_prec).and.(x5.gt.0.191_prec)) pass_cut = .false.
-  if ((y5.lt.-0.191_prec).and.(y5.gt.0.191_prec)) pass_cut = .false.
+  if ((x5.lt.-0.191_prec).or.(x5.gt.0.191_prec)) pass_cut = .false.
+  if ((y5.lt.-0.191_prec).or.(y5.gt.0.191_prec)) pass_cut = .false.
   if (Eph .gt. Eph_cut) then
     if (abs(th5) .gt. 12.e-3_prec) pass_cut = .false.
   end if          ! <-- closes the Eph_cut check
