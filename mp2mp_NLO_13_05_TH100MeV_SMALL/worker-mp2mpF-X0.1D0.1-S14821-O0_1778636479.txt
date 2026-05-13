@@ -1,0 +1,62 @@
+Starting job mp2mpF-X0.1D0.1-S14821-O0_1778636479 at 1778636485.4110763
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Small Q2 range [5.e-4;1.e-3] GeV²]
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 100MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -1.1697835478927567E-003   1.4762125465472348E-004
+ internal avgi, sd:   -1.3251517197675900E-003   2.1294236158309494E-005
+ internal avgi, sd:   -1.3121407488247852E-003   1.2355427375425589E-006
+ internal avgi, sd:   -1.3133288933863123E-003   6.4779576011891336E-008
+ internal avgi, sd:   -1.3133356278128650E-003   1.2639128488799393E-008
+ internal avgi, sd:   -1.3133404882879711E-003   4.7139432241359558E-009
+ internal avgi, sd:   -1.3133401263474851E-003   3.2115067711400084E-009
+ internal avgi, sd:   -1.3133398127267249E-003   3.1975566337251743E-009
+ internal avgi, sd:   -1.3132812338195951E-003   2.8884316535769414E-009
+ internal avgi, sd:   -1.3108541998069997E-003   2.0086162621656642E-009
+ internal avgi, sd:   -1.3122360620700304E-003   2.7906516724330776E-006
+ internal avgi, sd:   -1.3131067579151222E-003   1.6390099699852513E-007
+ internal avgi, sd:   -1.3133291373902548E-003   1.4984290129313102E-008
+ internal avgi, sd:   -1.3133288128154392E-003   2.2995388452616089E-009
+ internal avgi, sd:   -1.3133295600905627E-003   6.2603365821168342E-010
+ internal avgi, sd:   -1.3133295606001232E-003   6.2586226873496273E-010
+ internal avgi, sd:   -1.3133064007426747E-003   6.0021665210179396E-010
+ internal avgi, sd:   -1.3106917604756385E-003   4.2239276217532931E-010
+ internal avgi, sd:   -1.3085620684464125E-003   2.5504206164431946E-010
+ internal avgi, sd:   -1.3063195264558332E-003   1.8807052915256443E-010
+ points:    10*  1M +  10* 10M         random seed:      14821
+ part: mp2mpF                       xicut: 0.10000    delcut: 0.10000
+ points on phase space   77420834 thereof fucked up          0
+         
+         
+         
+ result, error:  { -1.30632E-03,  1.88071E-10 };   chisq:  ****
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 5016.281834363937s
