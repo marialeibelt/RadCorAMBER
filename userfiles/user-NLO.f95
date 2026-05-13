@@ -43,9 +43,8 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
-  !print*, "Small Q2 range [0.0005;0.001] GeV²]"
-  !print*, "Full Q2 range [1.e-6;0.05] GeV²]"
+  !print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
+  print*, "Small Q2 range [5.e-4;1.e-3] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
   print*, " * Eph > 50MeV"
@@ -109,9 +108,8 @@
   
   !Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
   Qsq=-sq(ql1-ql3)
-  if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
-  !if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
-  !if ((Qsq.lt.1._prec).and.(Qsq.gt.5.e4_prec)) pass_cut = .false.	!FULL
+  !if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
+  if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
   
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)

@@ -42,21 +42,21 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "folder2", "folder3", "mp2mp_NLO_27_03", "mp2mp_NLO_27_03_2", "mp2mp_NLO_13_04",                                          #15-19
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04",                  #20-24
            "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full","mp2mp_NLO_08_05_full_costh3test", #25-29
-           "mp2mp_NLO_11_05_BIG"] #30
+           "mp2mp_NLO_11_05_BIG","mp2mp_NLO_12_05_BIG"] #30-31
 
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
-             "7_5","8_5","11_05","12_5"]                        #20-23       
+             "7_5","8_5","11_05","12_5","13_5"]                 #20-24     
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 30
-nlo_i = 30
-savename_i = 23
+lo_i = 31
+nlo_i = 31
+savename_i = 24
 nbins = 500
 
 
@@ -75,7 +75,6 @@ log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
 print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
 #print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
-#print("=========================","\nFULL -- 0. <  Q2 (GeV2/c2) < 0.05","\n=========================")
 
 # =========================
 # Physics setup
@@ -511,83 +510,40 @@ plot_Q2_with_analytic(lo_hist=lo_Q2,
 lo_Q2_finite   = finite_bins(lo_Q2)
 nlo_Q2_finite  = finite_bins(nlo_Q2)
 
-sigma_lo_140   = integrate_hist(lo_Q2_finite, xmin=1000, xmax=40000)
-sigma_lo_051   = integrate_hist(lo_Q2_finite, xmin=500, xmax=1000)
-sigma_lo_full   = integrate_hist(lo_Q2_finite, xmin=0, xmax=50000)
-sigma_nlo_full   = integrate_hist(nlo_Q2_finite, xmin=0, xmax=50000)
-
-sigma_lo = lo.value #0.001-0.04 GeV2/c2
-sigma_ph = onlyR.value 
-
-#Umrechnung in mb
-sigma_lo_mb_140   = sigma_lo_140   / 1000
-sigma_lo_mb_051   = sigma_lo_051   / 1000
-sigma_lo_mb_full   = sigma_lo_full   / 1000
-
+sigma_lo = lo.value
+sigma_nlo = nlo.value
+sigma_full = full.value
+sigma_Rph = onlyR.value 
 sigma_lo_mb = sigma_lo /1000
-sigma_ph_mb = sigma_ph /1000
+sigma_nlo_mb = sigma_nlo /1000
+sigma_full_mb = sigma_full /1000
+sigma_Rph_mb = sigma_Rph /1000
 
 # =========================
-# Calculate Zaehlrate
+# Calculate Rate
 # =========================
-Rate_140 = calculate_rate(sigma_lo_mb_140)
-Rate_051 = calculate_rate(sigma_lo_mb_051)
-Rate_full = calculate_rate(sigma_lo_mb_full)
-
 Rate = calculate_rate(sigma_lo_mb)
-Rate_ph = calculate_rate(sigma_ph_mb)
+Rate_Rph = calculate_rate(sigma_Rph_mb)
 
 
+print("\n-------------------------","\nRESULTS","\n-------------------------")
+print("LO cross section:                         ", sigma_lo_mb, "mb")
+print("LO cross section Paper Big Range:           0.255 mb")
 
-print("\n-------------------------","\nCROSS SECTIONS in mb","\n-------------------------")
-#---------------------------------------------------------------------------BIG
-print("Integrate Range: ", sigma_lo_mb_140)
-print(".value:         ", sigma_lo_mb)
-print("Paper:            0.225")
-print("\n.value photon:  ", sigma_ph_mb)
-#---------------------------------------------------------------------------SMALL
-#print("Integrate Range: ", sigma_lo_mb_051)
-#print(".value:         ", sigma_lo_mb)
-#print("\n.value photon:  ", sigma_ph_mb)
-#---------------------------------------------------------------------------FULL
-#print("Integrate Range: ", sigma_lo_mb_full)
-#print(".value:         ", sigma_lo_mb)
-#print("\n.value photon:  ", sigma_ph_mb)
-#---------------------------------------------------------------------------
+print("\nLO Rate:               ", Rate,"1/s")
+print("Paper:                   86.6 1/s")
+print("Rate Paper Small Range:  89.0 1/s")
 
-print("\n-------------------------","\nRATES in 1/s","\n-------------------------")
-#---------------------------------------------------------------------------BIG
-print("Integrate Range: ", Rate_140)
-print(".value:          ", Rate)
-print("Paper:            86.6")
-print("\n.value photon:   ", Rate_ph)
-#---------------------------------------------------------------------------SMALL
-#print("Integrate Range: ", Rate_051)
-#print(".value:          ", Rate)
-#print("Paper:            89.0 1/s")
-#print("\n.value photon:    ", Rate_ph)
-#---------------------------------------------------------------------------FULL
-#print("Integrate Range: ", Rate_full)
-#print(".value:          ", Rate)
-#print("\n.value photon:    ", Rate_ph)
-#---------------------------------------------------------------------------
-print("\n-------------------------")
-print("\nsigma_nlo/sigma_lo: ", nlo.value/lo.value)
-print("sigma_R/sigma_nlo: ", onlyR.value/nlo.value *100, "%")
+print("\n------------------------- NLO STUFF -------------------------")
+print("Cross section real photon: ", sigma_Rph_mb, "mb")
+print("Rate real photon:          ", Rate_Rph, "1/s")
+print("sigma_R/sigma_nlo:         ", sigma_Rph_mb/sigma_nlo_mb)
 
+print("\nLO cross section:   ",sigma_lo_mb, "mb")
+print("NLO cross section:  ",sigma_nlo_mb, "mb")
+print("sigma_nlo/sigma_lo: ", sigma_nlo_mb/sigma_lo_mb)
 
-int_th3 = integrate_hist(lo_th3)
-int_costh3 = integrate_hist(lo_costh3)
-int_Q2 = integrate_hist(lo_Q2)
-int_th5_lo = integrate_hist(lo_th5)
-int_th5 = integrate_hist(nlo_th5)
-
-print("\n-------------------------","\nUSed integrate_hist","\n-------------------------")
-print("int_th3(lo):     ", int_th3)
-print("int_costh3(lo):  ", int_costh3)
-print("int_Q2(lo):      ", int_Q2)
-print("int_th5(lo):     ", int_th5_lo)
-print("int_th5(nlo):    ", int_th5)
+print("\nsigma_full: ",sigma_full_mb,"mb")
 
 
 sys.stdout.close()
