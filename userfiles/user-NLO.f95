@@ -43,11 +43,11 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  !print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
-  print*, "Small Q2 range [5.e-4;1.e-3] GeV²]"
+  print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
+ ! print*, "Small Q2 range [5.e-4;1.e-3] GeV²]"
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
-  print*, " * Eph > 50MeV"
+  print*, " * Eph > 500MeV"
   print*, " * -12. < th_ph < 12. mrad"
   print*, " * d_detec = 30 m"
   
@@ -58,7 +58,7 @@
   real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
   real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4),ql6(4),ql7(4)
   real(kind=prec) :: th3,costh3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-  real(kind=prec) :: phi5,Qsq
+  real(kind=prec) :: phi5,Qsq,x5_low,x5_up,y5_low,y5_up,th5_cut
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
   real(kind=prec) :: quant(nrq)
@@ -79,13 +79,18 @@
   ql7 = boost_rf(q2,q7)
   
   ! Cuts
-  Eph_cut = 200._prec
+  Eph_cut = 500._prec
   !thmu_low = 1.35e-3_prec
   !thmu_up = 1.65e-3_prec
   thmu_low = 0.3e-3_prec
   thmu_up = 2.e-3_prec
   Emu_low = 70.e3_prec
-  
+  th5_cut =12.e-3_prec
+  x5_low = -0.191_prec
+  x5_up = 0.191_prec
+  y5_low = -0.191_prec
+  y5_up = 0.191_prec
+
   d_detec = 30._prec
   ! proton rest frame / lab frame
   q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
@@ -108,8 +113,8 @@
   
   !Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
   Qsq=-sq(ql1-ql3)
-  !if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
-  if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
+  if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
+  !if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
   
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
@@ -121,10 +126,10 @@
   phi5_cms = atan2(q5(2),q5(1))
   x5 = d_detec*tan(th5)*cos(phi5)
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
-  if ((x5.lt.-0.191_prec).or.(x5.gt.0.191_prec)) pass_cut = .false.
-  if ((y5.lt.-0.191_prec).or.(y5.gt.0.191_prec)) pass_cut = .false.
+  if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
+  if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
   if (Eph .gt. Eph_cut) then
-    if (abs(th5) .gt. 12.e-3_prec) pass_cut = .false.
+    if (abs(th5) .gt. th5_cut) pass_cut = .false.
   end if          ! <-- closes the Eph_cut check
 
   if(.not.all(pass_cut)) return
