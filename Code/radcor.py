@@ -59,14 +59,6 @@ nlo_i = 36
 savename_i = 24
 nbins = 500
 
-lo_200_BIG_i = 21
-lo_200_SMALL_i = 22
-lo_100_BIG_i = 33
-lo_100_SMALL_i = 34
-lo_500_BIG_i = 35
-lo_500_SMALL_i = 36
-
-
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
