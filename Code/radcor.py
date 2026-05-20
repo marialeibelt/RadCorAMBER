@@ -49,14 +49,15 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
-             "7_5","8_5","11_05","12_5","13_5"]                 #20-24     
+             "7_5","8_5","11_05","12_5","13_5",                 #20-24  
+             "20_05"]                                           #25
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
 lo_i = 36
 nlo_i = 36
-savename_i = 24
+savename_i = 25
 nbins = 500
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
@@ -530,17 +531,17 @@ print("LO cross section:                         ", sigma_lo_mb, "mb")
 print("LO cross section Paper Big Range:           0.255 mb")
 
 print("\nLO Rate:               ", Rate,"1/s")
-print("Paper:                   86.6 1/s")
-print("Rate Paper Small Range:  89.0 1/s")
+#print("Paper:                   86.6 1/s")
+#print("Rate Paper Small Range:  89.0 1/s")
 
 print("\n------------------------- NLO STUFF -------------------------")
 print("Cross section real photon: ", sigma_Rph_mb, "mb")
 print("Rate real photon:          ", Rate_Rph, "1/s")
-print("sigma_R/sigma_nlo:         ", sigma_Rph_mb/sigma_nlo_mb)
+#print("sigma_R/sigma_nlo:         ", sigma_Rph_mb/sigma_nlo_mb)
 
-print("\nLO cross section:   ",sigma_lo_mb, "mb")
+#print("\nLO cross section:   ",sigma_lo_mb, "mb")
 print("NLO cross section:  ",sigma_nlo_mb, "mb")
-print("sigma_nlo/sigma_lo: ", sigma_nlo_mb/sigma_lo_mb)
+#print("sigma_nlo/sigma_lo: ", sigma_nlo_mb/sigma_lo_mb)
 
 print("\nsigma_full: ",sigma_full_mb,"mb")
 

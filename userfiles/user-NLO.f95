@@ -43,11 +43,11 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Big Q2 range [1.e-3;4.e-2] GeV²]"
- ! print*, "Small Q2 range [5.e-4;1.e-3] GeV²]"
+  !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  print*, "Small Q2 range [5.e-4;1.e-3] GeV²"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
-  print*, " * Eph > 500MeV"
+  print*, " * Eph > 100MeV"	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   print*, " * -12. < th_ph < 12. mrad"
   print*, " * d_detec = 30 m"
   
@@ -62,9 +62,9 @@
   real(kind=prec) :: q3perp_cms,th3_cms,Emu_cms,Eph_cms,th5_cms,q5perp_cms,phi5_cms
   real(kind=prec) :: d_detec,x5,y5
   real(kind=prec) :: quant(nrq)
-  integer :: n_bands,i,offset_x,offset_y,last_hist_nr,nr_bandhists
-  real(kind=prec) :: band_min, band_max, bin_width
-  character(len=3) :: str_i
+  integer :: n_bands,i,offset_x,offset_y,last_hist_nr
+  real(kind=prec) :: band_min, bin_width
+  character(len=3) :: str_i,Qsq_window
   real(kind=prec) :: thmu_low, thmu_up,Emu_low
 
   call fix_mu
@@ -79,9 +79,9 @@
   ql7 = boost_rf(q2,q7)
   
   ! Cuts
-  Eph_cut = 500._prec
-  !thmu_low = 1.35e-3_prec
-  !thmu_up = 1.65e-3_prec
+  Eph_cut = 100._prec !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !Qsq_window = 'BIG'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  Qsq_window = 'SMA'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   thmu_low = 0.3e-3_prec
   thmu_up = 2.e-3_prec
   Emu_low = 70.e3_prec
@@ -111,10 +111,14 @@
 
   costh3 = cos(th3)
   
-  !Qsq = - ( (ql1(4)-ql3(4))**2 - (ql1(1)-ql3(1))**2 - (ql1(2)-ql3(2))**2 - (ql1(3)-ql3(3))**2 )
   Qsq=-sq(ql1-ql3)
-  if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.	!BIG
-  !if ((Qsq.lt.5.e2_prec).and.(Qsq.gt.1.e3_prec)) pass_cut = .false.	!SMALL
+  
+  if (Qsq_window.eq.'BIG') then
+    if ((Qsq.lt.1.e3_prec).or.(Qsq.gt.4.e4_prec)) pass_cut = .false.
+  endif
+  if (Qsq_window.eq.'SMA') then
+    if ((Qsq.lt.5.e2_prec).or.(Qsq.gt.1.e3_prec)) pass_cut = .false.
+  endif
   
   Eph = ql5(4)
   q5perp = sqrt(ql5(1)**2 + ql5(2)**2)
@@ -135,8 +139,7 @@
   if(.not.all(pass_cut)) return
   !Information for x,y bands
   last_hist_nr = 16
-  n_bands = 10 !must be an even number	
-  nr_bandhists = 2*n_bands
+  n_bands = 10 !must be an even number
 
   ! Lab values
   names(1) = 'th3'
@@ -181,7 +184,6 @@
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
   band_min = -(n_bands/2.0_prec * bin_width)
-  band_max = n_bands/2.0_prec * bin_width
   ! Y slices (x5)
   offset_y = last_hist_nr
   do i=1,n_bands
