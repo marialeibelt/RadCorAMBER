@@ -48,7 +48,7 @@ def integrate_hist(hist, xmin=None, xmax=None):
     return sigma
 
 def calculate_rate(sigma_mb):
-    ltarget = 160 #cm
+    ltarget = 60 #cm
     Hpres = 20 #bar
     Npvol = 2.687*1e19 #Protons/cm^3
     Ibeam = 2*1e6 #1/s
