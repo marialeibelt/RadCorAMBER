@@ -43,7 +43,8 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_20_04","mp2mp_NLO_21_04","mp2mp_NLO_21_04_phicut","mp2mp_NLO_24_04_mitcos","mp2mp_NLO_28_04",                             #20-24
            "mp2mp_NLO_29_04","mp2mp_NLO_07_05_big","mp2mp_NLO_07_05_small","mp2mp_NLO_08_05_full","mp2mp_NLO_08_05_full_costh3test",                  #25-29
            "mp2mp_NLO_11_05_BIG","mp2mp_NLO_12_05_BIG","mp2mp_NLO_12_05_SMALL","mp2mp_NLO_12_05_TH100MeV_BIG","mp2mp_NLO_13_05_TH100MeV_SMALL",       #30-34
-           "mp2mp_NLO_13_05_TH500MeV_BIG","mp2mp_NLO_13_05_TH500MeV_SMALL","20_05_Eph100MeV_SMALL","20_05_Eph200MeV_SMALL","20_05_Eph500MeV_SMALL"] #35-39
+           "mp2mp_NLO_13_05_TH500MeV_BIG","mp2mp_NLO_13_05_TH500MeV_SMALL","20_05_Eph100MeV_SMALL","20_05_Eph200MeV_SMALL","20_05_Eph500MeV_SMALL",   #35-39
+           "20_05_Eph100MeV_BIG","20_05_Eph200MeV_BIG","20_05_Eph500MeV_BIG"] #40-42
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
@@ -55,8 +56,8 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 39
-nlo_i = 39
+lo_i = 42
+nlo_i = 42
 savename_i = 25
 nbins = 500
 
@@ -73,8 +74,8 @@ savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
-#print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
-print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
+print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
+#print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
 
 # =========================
 # Physics setup
