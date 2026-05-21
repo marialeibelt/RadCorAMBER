@@ -1,9 +1,10 @@
 mp2mp
 1
 .1
-test_20_05
+21_05_200MeV_superlargetest_BIG
 R
-100,10,1000,10
+20000,10,800000,10
+
 
 
 #mp2mp
