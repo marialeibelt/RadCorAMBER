@@ -1,0 +1,23 @@
+========================= 
+BIG -- 0.001  <  Q2 (GeV2/c2) < 0.04 
+=========================
+th3_min:     0.29671 , th3_max:     2.0032900000000002  (in mrad)
+costh3_min:  -0.998 , costh3_max:  0.998
+
+sigma_photons from 2D distribution:  0.0006143347836945861  mb
+Rate_ECAL from 2D distribution:      0.10429015210502526  1/s
+
+------------------------- 
+RESULTS 
+-------------------------
+LO cross section:                          [2.50566981e-01 3.09355954e-09] mb
+LO cross section Paper Big Range:           0.255 mb
+
+LO Rate:                [4.25365277e+01 5.25166088e-07] 1/s
+
+------------------------- NLO STUFF -------------------------
+Cross section real photon:  [7.98927510e-05 1.04848124e-06] mb
+Rate real photon:           [0.01356268 0.00017799] 1/s
+NLO cross section:   [2.82910574e-03 1.04848124e-06] mb
+
+sigma_full:  [2.53396087e-01 1.04848580e-06] mb
