@@ -57,8 +57,8 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 45
-nlo_i = 45
+lo_i = 44
+nlo_i = 44
 savename_i = 25
 nbins = 500
 
@@ -252,8 +252,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
     # =========================   
     fig, axes = create_figure(nrows=8, ncols=2, figsize=(16,22), font_size=12,sharex=False, gridspec_kw={"height_ratios":[3,1]*4,"hspace":0.6})
 
-    ax_th3, ax_costh3 = axes[0]
-    ax_K_th3, ax_K_costh3 = axes[1]
+    ax_th3, ax_Q2 = axes[0]
+    ax_K_th3, ax_K_Q2 = axes[1]
     ax_Emu, ax_Eph = axes[2]
     ax_K_Emu, ax_K_Eph = axes[3]
     ax_th5, ax_phi5  = axes[4]
@@ -266,7 +266,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
     ax_K_th5.sharex(ax_th5)
     ax_K_Eph.sharex(ax_Eph)
     ax_K_phi5.sharex(ax_phi5)
-    ax_K_costh3.sharex(ax_costh3)
+    ax_K_Q2.sharex(ax_Q2)
     ax_K_x5.sharex(ax_x5)
     ax_K_y5.sharex(ax_y5)
 
@@ -300,14 +300,13 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                             scale_factor=1e-3, x_label_main=r"$\phi_5$ (mrad)",
                                             x_label_k=r"$\phi_5$ (mrad)", y_label_main=r"$\frac{d\sigma}{d\phi_5}\ (\mu\mathrm{barn}/\mathrm{mrad})$",
                                             main_title=f"Photon Deflection Angle ({tag})", force_main_linear=False, colors=colors)
-    _, _, _, K_costh3 = draw_observable_and_k(ax_costh3, ax_K_costh3,
-                                            lo_hist=lo_costh3, nlo_hist=nlo_costh3, full_hist=full_costh3,
-                                            scale_factor=1.,
-                                            x_label_main=r"$\cos\theta_3$",
-                                            x_label_k=r"$\cos\theta_3$",
-                                            y_label_main=r"$\frac{d\sigma}{d\cos\theta_3}\ (\mu\mathrm{barn})$",
-                                            main_title=f"Muon Scattering Angle cos({tag})",
-                                            xlim=(0.98,1.),
+    _, _, _, K_Q2 = draw_observable_and_k(ax_Q2, ax_K_Q2,
+                                            lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
+                                            scale_factor=1.e6,
+                                            x_label_main=r"$Q^2$",
+                                            x_label_k=r"$Q^2$",
+                                            y_label_main=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
+                                            main_title=f"Momentum Transfer({tag})",
                                             force_main_linear=True,
                                             colors=colors)
 
@@ -409,8 +408,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
     write_file_with_values(outdir_vals + f"K_E_gamma_{savename}.txt", K_Eph, f"Eph_{tag} bin center", "K_Eph")
     if K_phi5 is not None:
         write_file_with_values(outdir_vals + f"K_phi5_{savename}.txt", K_phi5, f"phi5_{tag} bin center", "K_phi5")
-    if K_costh3 is not None:
-        write_file_with_values(outdir_vals + f"K_costh3_{savename}.txt", K_costh3, f"costh3_{tag} bin center", "K_costh3")
+    if K_Q2 is not None:
+        write_file_with_values(outdir_vals + f"K_Q2_{savename}.txt", K_Q2, f"costh3_{tag} bin center", "K_Q2")
     if K_x5 is not None:
         write_file_with_values(outdir_vals + f"K_x5_{savename}.txt", K_x5, f"x5_{tag} bin center", "K_x5")
     if K_y5 is not None:
@@ -422,7 +421,7 @@ def make_plots_and_kfactors( *, tag, savename_base,
     save_single_pair_plot( savename=f"{savename}_th3_pair", 
                           lo_hist=lo_th3, nlo_hist=nlo_th3, full_hist=full_th3, 
                           scale_factor=1.e-3, x_label=r"$\theta_3\ (\mathrm{mrad})$", y_label=r"$\frac{d\sigma}{d\theta_3}\ (\mu\mathrm{barn}/\mathrm{mrad})$", 
-                          main_title=f"Muon Scattering Angle ({tag})", force_main_linear=True, colors=colors, outdir=outdir, ) 
+                          main_title=f"Muon Scattering Angle ({tag})", force_main_linear=False, colors=colors, outdir=outdir, ) 
     save_single_pair_plot( savename=f"{savename}_Emu_pair", 
                           lo_hist=lo_Emu, nlo_hist=nlo_Emu, full_hist=full_Emu, 
                           scale_factor=1.e3, x_label=r"$E_\mu\ (\mathrm{GeV})$", y_label=r"$\frac{d\sigma}{dE_\mu}\ (\mu\mathrm{barn}/\mathrm{GeV})$", 
@@ -445,8 +444,8 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           main_title=f"Muon Scattering Angle cos({tag})",xlim=(0.98,1.),force_main_linear=True,colors=colors, outdir=outdir,)
     save_single_pair_plot(savename=f"{savename}_Q2_pair",
                           lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
-                          scale_factor=1.e-3, x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
-                          main_title=f"$Q^2$({tag})",ylim=(0.,1.e6),force_main_linear=False,colors=colors, outdir=outdir,)
+                          scale_factor=1.e6, x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
+                          main_title=f"$Q^2$({tag})",force_main_linear=False,colors=colors, outdir=outdir,)
     save_single_pair_plot( savename=f"{savename}_x5_pair", 
                           lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
                           scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 

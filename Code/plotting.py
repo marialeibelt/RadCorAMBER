@@ -371,12 +371,9 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,nbins,ylow_diff,yup_diff,
     # -------------------------
     num = finite_bins(scaleplot(lo_hist, 1.))
     x_num     = num[:, 0]  *1e-6  # MeV² -> GeV²
-    y_num     = num[:, 1]  *1.e6
-    err_num   = num[:, 2]  *1.e6
-    # Normierung <--------------------needed????????????????????????
-    #bin_width = x_num[1] - x_num[0]
-    #y_num   = y_num / bin_width
-    #err_num = err_num / bin_width 
+    y_num     = num[:, 1]  *1e6  # 1/MeV² -> 1/GeV²
+    err_num   = num[:, 2]  *1e6  # 1/MeV² -> 1/GeV²
+
     # -------------------------
     # analytic curve over correct Q² range in GeV²
     # -------------------------
@@ -384,13 +381,14 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,nbins,ylow_diff,yup_diff,
     dsig_grid = np.array([float(dsigma_dQ2(t)) for t in q2_grid])  # µbarn/GeV²
 
     ax_main.plot(q2_grid, dsig_grid, color="black", linestyle="--", label="analytic")
+    ax_main.set_ylim(1e-3,1*1e6)
     ax_main.legend()
 
     style_sci_x(ax_main,
                 r"$Q^2\ (\mathrm{GeV}^2)$",
                 r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn}/\mathrm{GeV}^2)$",
                 r"$Q^2$ distribution (lab)",
-                yscale="linear")
+                yscale="log")
 
     # -------------------------
     # Bin-by-bin comparison numeric vs. analytic
