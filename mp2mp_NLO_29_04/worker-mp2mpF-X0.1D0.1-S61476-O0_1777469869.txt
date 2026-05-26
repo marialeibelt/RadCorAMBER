@@ -1,7 +1,0 @@
-Starting job mp2mpF-X0.1D0.1-S61476-O0_1777469869 at 1777469872.428914
-
-STOP 9
- ./user.so: cannot open shared object file: No such file or directory
-
-
-Job finished, running took 5.039451599121094s
