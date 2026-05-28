@@ -10,8 +10,8 @@
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.295e-3_prec, 95.e3_prec, -13e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &  ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    -0.2_prec,-0.2_prec, &                                  ! x5[m], y5[m]
+    0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
+    -0.2_prec,-0.2_prec, &                                  	! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     -1._prec, & 						!costh3[]
     0._prec,&                                                	!Qsq in MeV^2
@@ -21,10 +21,10 @@
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     2.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
-    0.2_prec,0.2_prec, &                                    	! x5[m], y5[m]
+    0.2_prec,0.2_prec, &                                    	      	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     1._prec, &								!costh3[]
-    5.e4_prec,&                                                     	!Qsq in MeV^2
+    10.e4_prec,&                                                     	!Qsq in MeV^2
     0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  ! x5_B1..x5_B10[m]
     0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  ! y5_B1..y5_B10[m]
     
@@ -43,11 +43,12 @@
 
   SUBROUTINE INITUSER
   print*, "Welcome to Mary's McMule userfile <3"
-  print*, "Big Q2 range [1.e-3;4.e-2] GeV²"   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  print*, "Q2 released"
+  !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !print*, "Small Q2 range [5.e-4;1.e-3] GeV²"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   print*, " * 0.3 < th_mu < 2. mrad"
   print*, " * Emu > 70 GeV"
-  print*, " * Eph > 2 GeV"	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  print*, " * Eph > 200 MeV"	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   print*, " * -12. < th_ph < 12. mrad"
   print*, " * d_detec = 30 m"
   
@@ -79,8 +80,9 @@
   ql7 = boost_rf(q2,q7)
   
   ! Cuts
-  Eph_cut = 2000._prec !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  Qsq_window = 'BIG'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  Eph_cut = 200._prec !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  Qsq_window = 'REL'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !Qsq_window = 'BIG'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !Qsq_window = 'SMA'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   thmu_low = 0.3e-3_prec
   thmu_up = 2.e-3_prec
