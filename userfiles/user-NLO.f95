@@ -5,12 +5,11 @@
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 36
+  integer, parameter :: nrq = 31
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.295e-3_prec, 95.e3_prec, -13e-3_prec, 50._prec, -pi, &	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    0.295e-3_prec,  95.e3_prec, -12e-3_prec, 50._prec, -pi, &   ! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     -0.2_prec,-0.2_prec, &                                  	! x5[m], y5[m]
     0._prec,0._prec, &						! ql5(2),ql5(1)
     -1._prec, & 						!costh3[]
@@ -20,7 +19,6 @@
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     2.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
-    2.005e-3_prec, 101.e3_prec,  12.e-3_prec, 101.e3_prec,  pi, &  	! th3_cms[rad], Emu_cms[MeV], th5_cms[rad], Eph_cms[MeV], phi5_cms[rad]
     0.2_prec,0.2_prec, &                                    	      	! x5[m], y5[m]
     650._prec,650._prec, &						! ql5(2),ql5(1)
     1._prec, &								!costh3[]
@@ -84,8 +82,8 @@
   Qsq_window = 'REL'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !Qsq_window = 'BIG'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   !Qsq_window = 'SMA'  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  thmu_low = 0.3e-3_prec
-  thmu_up = 2.e-3_prec
+  thmu_low = 0.3e-3_prec !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  thmu_up = 2.e-3_prec   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   Emu_low = 70.e3_prec
   th5_cut =12.e-3_prec
   x5_low = -0.191_prec
@@ -134,13 +132,11 @@
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
   if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
-  if (Eph .gt. Eph_cut) then
-    if (abs(th5) .gt. th5_cut) pass_cut = .false.
-  end if          ! <-- closes the Eph_cut check
+  if ((Eph .gt. Eph_cut) .or. (abs(th5) .gt. th5_cut)) pass_cut = .false.
 
   if(.not.all(pass_cut)) return
   !Information for x,y bands
-  last_hist_nr = 16
+  last_hist_nr = 11
   n_bands = 10 !must be an even number
 
   ! Lab values
@@ -155,33 +151,21 @@
   names(5) = 'phi5'
   quant(5) = phi5
 
-  ! CMS values
-  names(6) = 'th3_cms'
-  quant(6) = th3_cms
-  names(7) = 'Emu_cms'
-  quant(7) = Emu_cms
-  names(8) = 'th5_cms'
-  quant(8) = th5_cms
-  names(9) = 'Eph_cms'
-  quant(9) = Eph_cms
-  names(10) = 'phi5_cms'
-  quant(10) = phi5_cms
-
-  names(11) = 'x5'
-  quant(11) = x5
-  names(12) = 'y5'
-  quant(12) = y5
+  names(6) = 'x5'
+  quant(6) = x5
+  names(7) = 'y5'
+  quant(7) = y5
   
-  names(13) = "ql5(2)"
-  quant(13) = ql5(2)
-  names(14) = "ql5(1)"
-  quant(14) = ql5(1)
+  names(8) = "ql5(2)"
+  quant(8) = ql5(2)
+  names(9) = "ql5(1)"
+  quant(9) = ql5(1)
   
-  names(15) = "costh3"
-  quant(15) = costh3
+  names(10) = "costh3"
+  quant(10) = costh3
   
-  names(16) = "Qsq"
-  quant(16) = Qsq
+  names(11) = "Qsq"
+  quant(11) = Qsq
 
   ! Banded slices
   bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]

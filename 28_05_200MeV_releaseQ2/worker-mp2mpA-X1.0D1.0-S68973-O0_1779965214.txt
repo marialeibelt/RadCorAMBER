@@ -1,0 +1,43 @@
+Starting job mp2mpA-X1.0D1.0-S68973-O0_1779965214 at 1779965229.287801
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Q2 released
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 200 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    2.1359927512725623E-002   1.1417251163336154E-003
+ internal avgi, sd:    2.1184034452586320E-002   1.4936237340998690E-004
+ internal avgi, sd:    2.1368001533847047E-002   7.6620633753897873E-006
+ internal avgi, sd:    2.1371126657929122E-002   7.1161176046069324E-006
+ internal avgi, sd:    2.1375050666042766E-002   4.0003363889610579E-006
+ internal avgi, sd:    2.1378018046616022E-002   3.0442779373161509E-007
+ internal avgi, sd:    2.1378418974418934E-002   3.8928842990265127E-008
+ internal avgi, sd:    2.1378388005261685E-002   9.6537967800198639E-009
+ internal avgi, sd:    2.1378389482561305E-002   4.6031817542044564E-009
+ internal avgi, sd:    2.1378389483469554E-002   4.6031808992483920E-009
+
+
+Job finished, running took 13219.312594652176s

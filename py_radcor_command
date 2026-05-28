@@ -1,3 +1,2 @@
 cd /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Figures/
-nautilus . &
 python3 /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/radcor.py

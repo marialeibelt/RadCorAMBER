@@ -1,0 +1,43 @@
+Starting job mp2mpA-X1.0D1.0-S77010-O0_1779967547 at 1779967549.505911
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Q2 released
+  * 0.075 < th_mu < 0.5 mrad
+  * Emu > 70 GeV
+  * Eph > 200 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   0.21407928122914860        4.6448904828873219E-002
+ internal avgi, sd:   0.22191586464887608        9.3915155196484419E-003
+ internal avgi, sd:   0.21619871447441924        6.1657668973043973E-004
+ internal avgi, sd:   0.21476218754012308        2.3286782797626291E-005
+ internal avgi, sd:   0.21464595004889261        1.3927950773762563E-006
+ internal avgi, sd:   0.21464595022352667        1.3927946921379819E-006
+ internal avgi, sd:   0.21464594943183413        1.3927899543932967E-006
+ internal avgi, sd:   0.21464605096483075        1.3923164989681975E-006
+ internal avgi, sd:   0.21465529458288196        1.3349455146643776E-006
+ internal avgi, sd:   0.21475731230749293        3.7020633316005028E-007
+
+
+Job finished, running took 10845.309931278229s

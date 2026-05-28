@@ -1,0 +1,43 @@
+Starting job mp2mpR-X0.1D0.1-S65756-O0_1779967343 at 1779967345.6573741
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Q2 released
+  * 0.075 < th_mu < 0.5 mrad
+  * Emu > 70 GeV
+  * Eph > 200 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -1.7193902554827970E-005   8.4065187778788421E-006
+ internal avgi, sd:   -2.1469070801167050E-005   8.2582504343519292E-006
+ internal avgi, sd:   -2.1421275815947783E-005   8.2579218597220345E-006
+ internal avgi, sd:   -2.1104213566719549E-005   8.2571261531575011E-006
+ internal avgi, sd:   -1.4512044385261094E-005   8.2445577862162541E-006
+ internal avgi, sd:   -1.0148807205406228E-005   8.2370141320463624E-006
+ internal avgi, sd:    3.1377862443778202E-006   8.2171603789042838E-006
+ internal avgi, sd:    1.1808797879887807E-005   8.2042711481834397E-006
+ internal avgi, sd:    3.0271419533704487E-005   8.1764415810927121E-006
+ internal avgi, sd:    4.5021940999221464E-005   8.1549020661201331E-006
+
+
+Job finished, running took 6678.7630133628845s

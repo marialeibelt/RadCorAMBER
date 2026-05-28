@@ -1,0 +1,43 @@
+Starting job mp2mpR-X0.1D0.1-S30105-O0_1779966760 at 1779966768.1370523
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Q2 released
+  * 1.2 < th_mu < 8. mrad
+  * Emu > 70 GeV
+  * Eph > 200 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -4.0073378829400413E-005   7.0350035980850707E-005
+ internal avgi, sd:    2.4986216694667031E-006   5.6957939196084948E-005
+ internal avgi, sd:    4.5804644518725408E-005   2.1281004338652784E-005
+ internal avgi, sd:    3.4728459070913943E-005   1.8883551268764424E-005
+ internal avgi, sd:    2.2162931672046886E-005   1.3966376530186861E-005
+ internal avgi, sd:   -9.9685693648160141E-008   1.2056370813450954E-005
+ internal avgi, sd:   -3.0156601546653636E-005   1.0056807375980264E-005
+ internal avgi, sd:   -3.2201932646557963E-005   1.0023035346092820E-005
+ internal avgi, sd:   -4.7205068479247873E-005   9.5578712122745994E-006
+ internal avgi, sd:   -4.9409579329462340E-005   9.5292288599182497E-006
+
+
+Job finished, running took 11680.776634931564s

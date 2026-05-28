@@ -28,8 +28,8 @@ class Tee:
 # =========================
 # Paths
 # =========================
-homedir = "/home/marialei/AMBER_RadCor/" # Laptop
-#homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
+homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
@@ -52,14 +52,14 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
              "7_5","8_5","11_05","12_5","13_5",                 #20-24  
-             "20_05"]                                           #25
+             "20_05","28_5"]                                    #25-26
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
 lo_i = 44
 nlo_i = 44
-savename_i = 25
+savename_i = 26
 nbins = 500
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
@@ -547,6 +547,40 @@ print("NLO cross section:  ",sigma_nlo_mb, "mb")
 #print("sigma_nlo/sigma_lo: ", sigma_nlo_mb/sigma_lo_mb)
 
 print("\nsigma_full: ",sigma_full_mb,"mb")
+
+
+# =========================
+# Fraction of photons with E_gamma > 2 GeV
+# =========================
+
+E_cut = 2000  # MeV
+onlyR_Eph = onlyR["Eph"]
+
+Eph_finite = finite_bins(onlyR_Eph)
+
+bin_centers = Eph_finite[:,0]
+bin_values  = Eph_finite[:,1]
+
+# average bin width
+bin_width = np.mean(np.diff(bin_centers))
+
+# total photon cross section
+sigma_total = np.sum(bin_values * bin_width)
+
+# only photons above cut
+mask = bin_centers > E_cut
+sigma_above = np.sum(bin_values[mask] * bin_width)
+
+fraction = sigma_above / sigma_total
+percent = fraction * 100
+
+print("\n-------------------------")
+print("onlyR.value: ",onlyR.value)
+print("sigma_total: ",sigma_total)
+print("sigma_above: ",sigma_above)
+print(f"\nFraction of photons with Eγ > {E_cut/1000} GeV:")
+print(percent, "%")
+
 
 
 sys.stdout.close()
