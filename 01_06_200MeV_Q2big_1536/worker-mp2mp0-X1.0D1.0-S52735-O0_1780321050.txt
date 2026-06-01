@@ -1,0 +1,49 @@
+Starting job mp2mp0-X1.0D1.0-S52735-O0_1780321050 at 1780321050.6090417
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [1.e-3;4.e-2] GeV²
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 200 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    1.3276019151475710E-002   3.3253376960058977E-003
+ internal avgi, sd:    1.2080801408348120E-002   6.4126900041070779E-004
+ internal avgi, sd:    1.2058482760410914E-002   4.3354683153014273E-005
+ internal avgi, sd:    1.2083788380952393E-002   3.5203050474957894E-005
+ internal avgi, sd:    1.2081280747008922E-002   3.8903158831428309E-006
+ internal avgi, sd:    1.2084481364924125E-002   3.9317645762928443E-007
+ internal avgi, sd:    1.2084241996638536E-002   1.4762513260181741E-007
+ internal avgi, sd:    1.2084341158101194E-002   6.0996638143579798E-008
+ internal avgi, sd:    1.2084311621519895E-002   3.4822558488714199E-008
+ internal avgi, sd:    1.2084282396446615E-002   2.6135317273331147E-008
+ internal avgi, sd:    1.2084007190971146E-002   3.2694248879808716E-007
+ internal avgi, sd:    1.2084266964189553E-002   2.1294641390159699E-008
+ internal avgi, sd:    1.2084254269381138E-002   7.2441715820409770E-009
+ internal avgi, sd:    1.2084268539341693E-002   4.1440595478556308E-009
+ internal avgi, sd:    1.2084268065480457E-002   2.8578512847513936E-009
+ internal avgi, sd:    1.2083109284003028E-002   2.2489229533832186E-009
+
+
+Job finished, running took 559.7083790302277s
