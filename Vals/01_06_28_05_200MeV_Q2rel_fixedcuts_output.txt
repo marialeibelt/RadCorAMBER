@@ -1,0 +1,8 @@
+========================= 
+BIG -- 0.001  <  Q2 (GeV2/c2) < 0.04 
+=========================
+th3_min:     0.29671 , th3_max:     2.0032900000000002  (in mrad)
+costh3_min:  -0.998 , costh3_max:  0.998
+
+sigma_photons from 2D distribution:  0.0  mb
+Rate_ECAL from 2D distribution:      0.0  1/s

@@ -28,8 +28,8 @@ class Tee:
 # =========================
 # Paths
 # =========================
-#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
-homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+homedir = "/home/marialei/AMBER_RadCor/" # Laptop
+#homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
 outdir = homedir + "Figures/"
 outdir_vals = homedir + "Vals/"
 
@@ -52,17 +52,17 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
              "7_5","8_5","11_05","12_5","13_5",                 #20-24  
-             "20_05","28_5","29_5"]                             #25-27
+             "20_05","28_5","29_5","01_06"]                     #25-28
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
 lo_i = 46
 nlo_i = 46
-savename_i = 27
+savename_i = 28
 nbins = 500
 
-bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
+bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-.191;19.1]
 n_bands = 10
 band_min = -(n_bands/2 * bin_width)
 band_max = n_bands/2 * bin_width
