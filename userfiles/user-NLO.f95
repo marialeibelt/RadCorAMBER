@@ -132,7 +132,10 @@
   y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
   if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
-  if ((Eph .lt. Eph_cut) .or. (abs(th5) .gt. th5_cut)) pass_cut = .false.
+  if ((Eph .gt. 0._prec) .and. (Eph .lt. Eph_cut)) pass_cut = .false.
+  if (Eph .gt. Eph_cut) then
+    if (abs(th5) .gt. th5_cut) pass_cut = .false.
+  endif
 
   if(.not.all(pass_cut)) return
   !Information for x,y bands
