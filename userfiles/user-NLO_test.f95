@@ -64,7 +64,7 @@ contains
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
-    Eph_cut    = 20._prec 
+    Eph_cut    = 200._prec 
     Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
     thmu_up    = 2.e-3_prec   

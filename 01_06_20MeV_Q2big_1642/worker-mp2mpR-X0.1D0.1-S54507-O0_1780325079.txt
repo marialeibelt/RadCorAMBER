@@ -47,3 +47,16 @@ Starting job mp2mpR-X0.1D0.1-S54507-O0_1780325079 at 1780325080.4861276
  internal avgi, sd:   -2.1236157868964732E-002   6.7530513611763210E-004
  internal avgi, sd:   -2.8153791075795371E-002   3.8655117740583048E-004
  internal avgi, sd:   -2.9826378297516484E-002   3.2448131368387141E-004
+ internal avgi, sd:   -2.9978847971055864E-002   3.2246450405708135E-004
+ points:    10*  5M +  10* 10M         random seed:      54507
+ part: mp2mpR                       xicut: 0.10000    delcut: 0.10000
+ points on phase space  110639534 thereof fucked up          0
+         
+         
+         
+ result, error:  { -2.99788E-02,  3.22465E-04 };   chisq:  ****
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 696.7513370513916s
