@@ -75,6 +75,7 @@ savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 # Redirect stdout
 log_file = outdir_vals + f"{savename_base}_output.txt"
 sys.stdout = Tee(log_file)
+print(savename_base)
 print("=========================","\nBIG -- 0.001  <  Q2 (GeV2/c2) < 0.04","\n=========================")
 #print("=========================","\nSMALL -- 0.0005  <  Q2 (GeV2/c2) < 0.001","\n=========================")
 
@@ -99,38 +100,8 @@ lo_Emu, nlo_Emu, full_Emu = lo["Emu"], nlo["Emu"], full["Emu"]
 lo_th5, nlo_th5, full_th5 = lo["th5"], nlo["th5"], full["th5"]
 lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
 lo_phi5, nlo_phi5, full_phi5 = lo["phi5"], nlo["phi5"], full["phi5"]
-lo_ql51, nlo_ql51, full_ql51 = lo["ql5(1)"], nlo["ql5(1)"], full["ql5(1)"]
-lo_ql52, nlo_ql52, full_ql52 = lo["ql5(2)"], nlo["ql5(2)"], full["ql5(2)"]
 lo_costh3, nlo_costh3, full_costh3 = lo["costh3"], nlo["costh3"], full["costh3"]
 lo_Q2, nlo_Q2, full_Q2 = lo["Qsq"], nlo["Qsq"], full["Qsq"]
-"""
-lo_x5, nlo_x5, full_x5 = lo["x5"], nlo["x5"], full["x5"]
-lo_y5, nlo_y5, full_y5 = lo["y5"], nlo["y5"], full["y5"]
-
-x5_bands_lo, x5_bands_nlo, x5_bands_full = {}, {}, {}
-y5_bands_lo, y5_bands_nlo, y5_bands_full = {}, {}, {}
-
-# =========================
-# Fill bands robustly with try/except to avoid KeyError
-# =========================
-for i in range(1, n_bands+1):
-    key_x = f"x5_B{i}"
-    key_y = f"y5_B{i}"
-
-    try:
-        x5_bands_lo[i]   = lo[key_x]
-        x5_bands_nlo[i]  = nlo[key_x]
-        x5_bands_full[i] = full[key_x]
-    except KeyError:
-        pass
-
-    try:
-        y5_bands_lo[i]   = lo[key_y]
-        y5_bands_nlo[i]  = nlo[key_y]
-        y5_bands_full[i] = full[key_y]
-    except KeyError:
-        pass
-"""
 
 
 # =========================
@@ -150,18 +121,6 @@ print("th3_min:    ",th3_min*1e3,", th3_max:    ",th3_max*1e3, " (in mrad)")
 costh3vals = finite_bins(full_costh3)
 costh3_min = np.min(costh3vals[:, 0])
 costh3_max = np.max(costh3vals[:, 0])
-"""
-print(full_th3[0, 0])
-print(full_costh3[0, 0])
-print("")
-print(full_th3[1, 0])
-print(full_costh3[1, 0])
-print("")
-print(full_th3[2, 0])
-print(full_costh3[2, 0])
-#exit()
-"""
-
 print("costh3_min: ",costh3_min,", costh3_max: ",costh3_max)
 
 
@@ -176,9 +135,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
                             lo_phi5, nlo_phi5, full_phi5, 
                             lo_costh3, nlo_costh3, full_costh3,
                             lo_Q2, nlo_Q2, full_Q2,
-                            nlo_ql51=None, nlo_ql52=None,
-                            lo_x5, nlo_x5, full_x5,
-                            lo_y5, nlo_y5, full_y5,
                             outdir, outdir_vals, colors, ): 
     savename = f"{savename_base}_{tag}" 
 
@@ -195,10 +151,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
         ("phi5", True,  False),
         ("costh3", False,  True),
         ("Q2", False,  True),
-        ("x5",   True,  False),
-        ("y5",   True,  False),
-        ("ql51", True,  True),
-        ("ql52", True,  True),
     ]
 
     data_map = {
@@ -209,10 +161,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
         "phi5": {"lo": lo_phi5, "nlo": nlo_phi5, "full": full_phi5},
         "costh3": {"lo": lo_costh3, "nlo": nlo_costh3, "full": full_costh3},
         "Q2": {"lo": lo_Q2, "nlo": nlo_Q2, "full": full_Q2},
-        "x5":   {"lo": lo_x5,   "nlo": nlo_x5,   "full": full_x5},
-        "y5":   {"lo": lo_y5,   "nlo": nlo_y5,   "full": full_y5},
-        "ql51": {"nlo": nlo_ql51},
-        "ql52": {"nlo": nlo_ql52},
     }
 
     for var, photon_only, lab_only in variables:
@@ -239,8 +187,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
     ax_K_Emu, ax_K_Eph = axes[3]
     ax_th5, ax_phi5  = axes[4]
     ax_K_th5, ax_K_phi5 = axes[5]
-    ax_x5, ax_y5 = axes[6]
-    ax_K_x5, ax_K_y5 = axes[7]
 
     ax_K_th3.sharex(ax_th3)
     ax_K_Emu.sharex(ax_Emu)
@@ -248,8 +194,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
     ax_K_Eph.sharex(ax_Eph)
     ax_K_phi5.sharex(ax_phi5)
     ax_K_Q2.sharex(ax_Q2)
-    ax_K_x5.sharex(ax_x5)
-    ax_K_y5.sharex(ax_y5)
 
     # ---------- LAB/CMS plots ----------
     _, _, _, K_th3 = draw_observable_and_k(ax_th3, ax_K_th3,
@@ -291,111 +235,10 @@ def make_plots_and_kfactors( *, tag, savename_base,
                                             force_main_linear=True,
                                             colors=colors)
 
-    _, _, _, K_x5 = draw_observable_and_k(ax_x5, ax_K_x5,
-                                            lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5,
-                                            scale_factor=1., x_label_main=r"$x_5$ (mrad)",
-                                            x_label_k=r"$x_5$ (m)", y_label_main=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-                                            main_title=f"Photon x({tag})", xlim=(-0.2,0.2), colors=colors)
-
-    _, _, _, K_y5 = draw_observable_and_k(ax_y5, ax_K_y5,
-                                            lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5,
-                                            scale_factor=1., x_label_main=r"$y_5$ (mrad)",
-                                            x_label_k=r"$y_5$ (m)", y_label_main=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-                                            main_title=f"Photon y ({tag})", xlim=(-0.2,0.2), colors=colors)
-
-
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
 
-    
-    # x5 in y5-slices
-    plot_bands(x5_bands_nlo,
-            xlabel=r"$x_5\ (\mathrm{m})$",
-            ylabel=r"$\frac{d\sigma}{dx_5} (\mu\mathrm{barn}/\mathrm{m})$",
-            title=f"x5 distribution in y5-slices ({tag})",
-            savename=f"{savename}_x5_allbands",
-            outdir=outdir,
-            colors=colors,
-            slice_name="y5",
-            slice_range=Y5_RANGE,
-            yscale="log")
 
-    # y5 in x5-slices
-    plot_bands(y5_bands_nlo,
-            xlabel=r"$y_5\ (\mathrm{m})$",
-            ylabel=r"$\frac{d\sigma}{dy_5} (\mu\mathrm{barn}/\mathrm{m})$",
-            title=f"y5 distribution in x5-slices ({tag})",
-            savename=f"{savename}_y5_allbands",
-            outdir=outdir,
-            colors=colors,
-            slice_name="x5",
-            slice_range=X5_RANGE,
-            yscale="log")
-
-    # =========================
-    # 2D plot: x5 vs y5
-    # =========================
-    keys = sorted(x5_bands_nlo.keys())
-
-    rows = []
-    for i in keys:
-        band = np.array(x5_bands_nlo[i])
-        if band is not None and len(band) > 0:
-            vals = band[:, 1]
-            n_rebin = len(vals) // n_bands
-            #vals_rebinned = vals[:n_bands]
-            #rows.append(vals_rebinned * bin_width)  
-
-            #vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).sum(axis=1)
-            vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).mean(axis=1) #dsigma/dx *Dx !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!new check
-            rows.append(vals_rebinned * bin_width)
-
-    Z = np.array(rows)  # (10, 10)
-    sigma_photons_2D = np.sum(Z)
-    print("\nsigma_photons from 2D distribution: ", sigma_photons_2D*1e-3, " mb")
-    Rate_ECAL = calculate_rate(sigma_photons_2D*1e-3)
-    print("Rate_ECAL from 2D distribution:     ", Rate_ECAL, " 1/s")
-
-    x_centers = np.linspace(-0.191 + bin_width/2, 0.191 - bin_width/2, 10)
-
-    fig, ax = plt.subplots(figsize=(6, 5))
-    im = ax.imshow(Z,extent=[band_min, band_max, band_min, band_max],origin="lower", aspect="auto", cmap="viridis",norm=LogNorm())
-    grid_ticks = np.arange(band_min, band_max + bin_width, bin_width)
-    grid_ticks = np.round(grid_ticks, 6)
-    for t in grid_ticks:
-        ax.axvline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
-        ax.axhline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
-    ax.set_xticks(grid_ticks, minor=True)
-    ax.set_yticks(grid_ticks, minor=True)
-    ax.grid(which="minor", linestyle="--", linewidth=0.4, alpha=0.5)
-
-    cbar = plt.colorbar(im, ax=ax)
-    cbar.set_label(r"$\Delta\sigma\ \text{per ECAL cell}\ (\mu\mathrm{barn})$")
-    ax.set_xlabel(r"$x_5\ (\mathrm{m})$")
-    ax.set_ylabel(r"$y_5\ (\mathrm{m})$")
-    ax.set_title(f"2D ECAL cell distribution ({tag})")
-    ax.set_xlim(-0.2, 0.2)
-    ax.set_ylim(-0.2, 0.2)
-
-    save_figure(fig, f"{savename}_x5y5_2D", outdir=outdir)
-    plt.close(fig)
-    '''
-    # =========================
-    # write K-value files
-    # =========================
-    write_file_with_values(outdir_vals + f"K_theta_3_{savename}.txt", K_th3, f"th3_{tag} bin center", "K_th3") 
-    write_file_with_values(outdir_vals + f"K_E_mu_{savename}.txt", K_Emu, f"Emu_{tag} bin center", "K_Emu") 
-    write_file_with_values(outdir_vals + f"K_theta_5_{savename}.txt", K_th5, f"th5_{tag} bin center", "K_th5") 
-    write_file_with_values(outdir_vals + f"K_E_gamma_{savename}.txt", K_Eph, f"Eph_{tag} bin center", "K_Eph")
-    if K_phi5 is not None:
-        write_file_with_values(outdir_vals + f"K_phi5_{savename}.txt", K_phi5, f"phi5_{tag} bin center", "K_phi5")
-    if K_Q2 is not None:
-        write_file_with_values(outdir_vals + f"K_Q2_{savename}.txt", K_Q2, f"costh3_{tag} bin center", "K_Q2")
-    if K_x5 is not None:
-        write_file_with_values(outdir_vals + f"K_x5_{savename}.txt", K_x5, f"x5_{tag} bin center", "K_x5")
-    if K_y5 is not None:
-        write_file_with_values(outdir_vals + f"K_y5_{savename}.txt", K_y5, f"y5_{tag} bin center", "K_y5")
-    '''
     # =========================
     # separate pair plots
     # =========================
@@ -427,14 +270,6 @@ def make_plots_and_kfactors( *, tag, savename_base,
                           lo_hist=lo_Q2, nlo_hist=nlo_Q2, full_hist=full_Q2,
                           scale_factor=1.e6, x_label=r"$Q^2\ (\mathrm{GeV}^2)$", y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
                           main_title=f"$Q^2$({tag})",force_main_linear=False,colors=colors, outdir=outdir,)
-    save_single_pair_plot( savename=f"{savename}_x5_pair", 
-                          lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5, 
-                          scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
-                          main_title=f"Photon X Hit ({tag})", colors=colors, outdir=outdir, )
-    save_single_pair_plot( savename=f"{savename}_y5_pair", 
-                          lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5, 
-                          scale_factor=1., x_label=r"$y_5\ (\mathrm{m})$", y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$", 
-                          main_title=f"Photon Y Hit ({tag})", colors=colors, outdir=outdir, )
 
 
 # =========================
@@ -448,21 +283,7 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
                         lo_phi5=lo_phi5, nlo_phi5=nlo_phi5, full_phi5=full_phi5,
                         lo_costh3=lo_costh3, nlo_costh3=nlo_costh3, full_costh3=full_costh3,
                         lo_Q2=lo_Q2, nlo_Q2=nlo_Q2, full_Q2=full_Q2,
-                        nlo_ql51=nlo_ql51, nlo_ql52=nlo_ql52,
-                        lo_x5=lo_x5, nlo_x5=nlo_x5, full_x5=full_x5,
-                        lo_y5=lo_y5, nlo_y5=nlo_y5, full_y5=full_y5,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
-
-# make_plots_and_kfactors(tag="cms", savename_base=savename_base,
-#                         lo_th3=lo_th3_cms, nlo_th3=nlo_th3_cms, full_th3=full_th3_cms,
-#                         lo_Emu=lo_Emu_cms, nlo_Emu=nlo_Emu_cms, full_Emu=full_Emu_cms,
-#                         lo_th5=lo_th5_cms, nlo_th5=nlo_th5_cms, full_th5=full_th5_cms,
-#                         lo_Eph=lo_Eph_cms, nlo_Eph=nlo_Eph_cms, full_Eph=full_Eph_cms,
-#                         nlo_ql51=None, nlo_ql52=None,
-#                         lo_phi5=None, nlo_phi5=None, full_phi5=None,
-#                         lo_x5=None, nlo_x5=None, full_x5=None,
-#                         lo_y5=None, nlo_y5=None, full_y5=None,
-#                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
 # =========================
 # Plot Numeric vs. Analytic
