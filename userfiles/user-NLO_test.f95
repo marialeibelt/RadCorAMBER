@@ -103,11 +103,9 @@ contains
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     if (isreal) then
-      if (Eph .lt. Eph_cut) then
-        event_ok = .false.
-      else
-        if (abs(th5) .gt. th5_cut) event_ok = .false.
-      endif
+      if (Eph .lt. Eph_cut) event_ok = .false.
+      if (abs(th5) .gt. th5_cut) event_ok = .false.
+    endif
        
     else
       event_ok = .true.
