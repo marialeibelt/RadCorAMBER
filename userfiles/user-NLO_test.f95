@@ -53,6 +53,7 @@ contains
     character(len=3) :: Qsq_window
     real(kind=prec) :: thmu_low, thmu_up, Emu_low
     logical :: event_ok
+    logical :: isreal
   
     call fix_mu
 
@@ -85,6 +86,7 @@ contains
 
     ! --- CUTS AUSWERTEN ---
     event_ok = .true.
+    isreal = (abs(q5(4)) > 0._prec)
 
     ! Muon Schnitte
     if (th3 .lt. thmu_low) event_ok = .false.
@@ -100,7 +102,7 @@ contains
     endif
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
-    if (Eph .ne. 0._prec) then
+    if (isreal) then
       if (Eph .lt. Eph_cut) then
         event_ok = .false.
       else

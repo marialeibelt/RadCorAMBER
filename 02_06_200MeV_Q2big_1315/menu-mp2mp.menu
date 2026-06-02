@@ -1,0 +1,31 @@
+## Generated at 13:19 on June 02 2026 by marialei
+# git version: b'main' (b'b8dc878')
+# To re-generate, run python /home/marialei/mcmule-environment/bin/pymule create \
+#      --seeds 27351 66960 36491 97209 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir 02_06_200MeV_Q2big_1315 \
+#      --mcmule mcmule \
+#      --stat 0,1000,10,10000,10,1 \
+#      --stat A,1000,10,10000,10,1 \
+#      --stat F,1000,10,10000,10,1 \
+#      --stat R,5000,10,10000,10,1
+
+conf mp2mp.toml
+mode vegas
+
+
+run 97209 1.0 mp2mp0 0
+
+
+
+run 36491 1.0 mp2mpA 0
+
+
+
+run 66960 0.1 mp2mpF 0
+
+
+
+run 27351 0.1 mp2mpR 0
+
