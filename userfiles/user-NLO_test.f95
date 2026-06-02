@@ -37,7 +37,7 @@ contains
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu < 2. mrad"
     print*, " * Emu > 70 GeV"
-    print*, " * Eph > 20 MeV"
+    print*, " * Eph > 200 MeV"
     print*, " * -12. < th_ph < 12. mrad"
     print*, " * d_detec = 30 m"
   
@@ -106,11 +106,7 @@ contains
       if (Eph .lt. Eph_cut) event_ok = .false.
       if (abs(th5) .gt. th5_cut) event_ok = .false.
     endif
-       
-    else
-      event_ok = .true.
-    endif
-
+   
     ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
     if (.not. event_ok) then
        pass_cut(:nrq) = .false.
