@@ -100,7 +100,7 @@ contains
     endif
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
-    if ( (ql5(1) .ne. 0._prec) .or. (ql5(2) .ne. 0._prec) .or. (ql5(3) .ne. 0._prec) ) then
+    if (Eph .ne. 0._prec) then
       if (Eph .lt. Eph_cut) then
         event_ok = .false.
       else
@@ -108,9 +108,6 @@ contains
       endif
        
     else
-      ! Wenn alle Impulskomponenten exakt 0 sind, ist es entweder der LO-Lauf
-      ! ODER ein Subtraktions-Gegenterm im R-Lauf, der bei Eph=0 sitzen MUSS.
-      ! In beiden Fällen darf hier NICHT gecuttet werden!
       event_ok = .true.
     endif
 
