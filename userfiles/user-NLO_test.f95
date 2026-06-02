@@ -103,10 +103,19 @@ contains
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     if (isreal) then
-      if (Eph .lt. Eph_cut) event_ok = .false.
-      if (abs(th5) .gt. th5_cut) event_ok = .false.
+      if (Eph .lt. Eph_cut) then
+        event_ok = .false.
+      endif
+
+      if (abs(th5) .gt. th5_cut) then
+        event_ok = .false.
+      endif
+
+      if (event_ok) then
+        write(*,*) 'PASS', Eph, th5*1.e3_prec
+      endif
     endif
-   
+    
     ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
     if (.not. event_ok) then
        pass_cut(:nrq) = .false.
