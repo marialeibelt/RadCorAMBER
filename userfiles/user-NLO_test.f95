@@ -98,12 +98,14 @@ contains
     if (Qsq_window .eq. 'SMA') then
       if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
     endif
-  
-    ! Photon Schnitte (Strikter IR-Cut gegen Divergenzen)
-    if (Eph .lt. Eph_cut) then
-       event_ok = .false.
-    else
-       if (abs(th5) .gt. th5_cut) event_ok = .false.
+    
+    ! Photon Schnitte (Strikter IR-Cut NUR für reelle Läufe)
+    if (is_reallastevent()) then
+       if (Eph .lt. Eph_cut) then
+          event_ok = .false.
+       else
+          if (abs(th5) .gt. th5_cut) event_ok = .false.
+       endif
     endif
 
     ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
