@@ -1,0 +1,41 @@
+Starting job mp2mpR-X0.1D0.1-S66642-O0_1780397334 at 1780397335.5596163
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [1.e-3;4.e-2] GeV²
+  * 0.3 < th_mu < 2. mrad
+  * Emu > 70 GeV
+  * Eph > 20 MeV
+  * -12. < th_ph < 12. mrad
+  * d_detec = 30 m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -2.9177603281310845E-004   2.2562029443280908E-004
+ internal avgi, sd:   -3.0629240153595162E-004   2.2540854959768512E-004
+ internal avgi, sd:   -5.5271694020612939E-004   2.2385382904970217E-004
+ internal avgi, sd:   -5.7087996531876182E-004   2.2381803202983495E-004
+ internal avgi, sd:   -5.9732332190710620E-004   2.2378257955410252E-004
+ internal avgi, sd:   -8.4289633201852074E-004   2.2343832915202875E-004
+ internal avgi, sd:   -8.4330786529409620E-004   2.2343817948463834E-004
+ internal avgi, sd:   -8.6299233297595283E-004   2.2342280983293989E-004
+
+
+Job finished, running took 225.2451410293579s

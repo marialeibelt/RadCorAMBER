@@ -53,14 +53,14 @@ contains
     character(len=3) :: Qsq_window
     real(kind=prec) :: thmu_low, thmu_up, Emu_low
     logical :: event_ok
-
+  
     call fix_mu
 
     ! Proton rest frame / lab frame
     ql1 = boost_rf(q2,q1) ! muon in
-    ! ql2 = boost_rf(q2,q2) ! proton in (ungenutzt)
+    ql2 = boost_rf(q2,q2) ! proton in (ungenutzt)
     ql3 = boost_rf(q2,q3) ! muon out
-    ! ql4 = boost_rf(q2,q4) ! proton out (ungenutzt)
+    ql4 = boost_rf(q2,q4) ! proton out (ungenutzt)
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
@@ -99,13 +99,19 @@ contains
       if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
     endif
     
-    ! Photon Schnitte (Strikter IR-Cut NUR für reelle Läufe)
-    if (is_reallastevent()) then
-       if (Eph .lt. Eph_cut) then
-          event_ok = .false.
-       else
-          if (abs(th5) .gt. th5_cut) event_ok = .false.
-       endif
+    ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
+    if ( (ql5(1) .ne. 0._prec) .or. (ql5(2) .ne. 0._prec) .or. (ql5(3) .ne. 0._prec) ) then
+      if (Eph .lt. Eph_cut) then
+        event_ok = .false.
+      else
+        if (abs(th5) .gt. th5_cut) event_ok = .false.
+      endif
+       
+    else
+      ! Wenn alle Impulskomponenten exakt 0 sind, ist es entweder der LO-Lauf
+      ! ODER ein Subtraktions-Gegenterm im R-Lauf, der bei Eph=0 sitzen MUSS.
+      ! In beiden Fällen darf hier NICHT gecuttet werden!
+      event_ok = .true.
     endif
 
     ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
@@ -127,9 +133,9 @@ contains
     quant(4) = Eph
     names(5) = 'phi5'
     quant(5) = phi5
-    names(6) = "costh3"
+    names(6) = 'costh3'
     quant(6) = costh3
-    names(7) = "Qsq"
+    names(7) = 'Qsq'
     quant(7) = Qsq
 
   end function QUANT
