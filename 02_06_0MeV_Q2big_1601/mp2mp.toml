@@ -1,10 +1,10 @@
-## Generated at 15:06 on June 02 2026 by ge93juy
-# git version: b'main' (b'6a2de95')
+## Generated at 16:01 on June 02 2026 by ge93juy
+# git version: b'main' (b'837f333')
 # To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
-#      --seeds 88060 27513 73918 19019 \
+#      --seeds 28925 75221 62772 58622 \
 #      -xi 0.1 \
 #      --genprocess mp2mp \
-#      --output-dir 02_06_200MeV_Q2big_1501 \
+#      --output-dir 02_06_0MeV_Q2big_1601 \
 #      --mcmule mcmule \
 #      --stat 0,1000,10,10000,10,1 \
 #      --stat A,1000,10,10000,10,1 \

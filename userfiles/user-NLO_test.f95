@@ -37,7 +37,7 @@ contains
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu < 2. mrad"
     print*, " * Emu > 70 GeV"
-    print*, " * Eph > 200 MeV"
+    print*, " * Eph > 0 MeV"
     print*, " * -12. < th_ph < 12. mrad"
     print*, " * d_detec = 30 m"
   
@@ -52,6 +52,7 @@ contains
     real(kind=prec) :: quant(nrq)
     character(len=3) :: Qsq_window
     real(kind=prec) :: thmu_low, thmu_up, Emu_low
+    integer, save :: nall=0, npass=0
     logical :: event_ok
     logical :: isreal
   
@@ -65,7 +66,7 @@ contains
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
-    Eph_cut    = 200._prec 
+    Eph_cut    = 0._prec 
     Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
     thmu_up    = 2.e-3_prec   
@@ -87,6 +88,7 @@ contains
     ! --- CUTS AUSWERTEN ---
     event_ok = .true.
     isreal = (abs(q5(4)) > 0._prec)
+    nall = nall + 1
 
     ! Muon Schnitte
     if (th3 .lt. thmu_low) event_ok = .false.
@@ -109,10 +111,6 @@ contains
 
       if (abs(th5) .gt. th5_cut) then
         event_ok = .false.
-      endif
-
-      if (event_ok) then
-        write(*,*) 'PASS', Eph, th5*1.e3_prec
       endif
     endif
     
