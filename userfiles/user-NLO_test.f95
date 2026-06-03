@@ -109,9 +109,9 @@ contains
         event_ok = .false.
       endif
 
-      if (abs(th5) .gt. th5_cut) then
-        event_ok = .false.
-      endif
+      !if (abs(th5) .gt. th5_cut) then
+      !  event_ok = .false.
+      !endif
     endif
     
     ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
