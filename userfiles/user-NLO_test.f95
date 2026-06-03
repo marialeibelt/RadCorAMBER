@@ -34,11 +34,11 @@ contains
 
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
-    print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    print*, " * 0.3 < th_mu < 2. mrad"
+    !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
+    !print*, " * 0.3 < th_mu < 2. mrad"
     print*, " * Emu > 70 GeV"
-    print*, " * Eph > 1 MeV"
-    print*, " * -12. < th_ph < 12. mrad"
+    print*, " * Eph > 0 MeV"
+    !print*, " * -12. < th_ph < 12. mrad"
     print*, " * d_detec = 30 m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
@@ -66,7 +66,7 @@ contains
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
-    Eph_cut    = 1._prec 
+    Eph_cut    = 0._prec 
     Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
     thmu_up    = 2.e-3_prec   
@@ -91,17 +91,17 @@ contains
     nall = nall + 1
 
     ! Muon Schnitte
-    if (th3 .lt. thmu_low) event_ok = .false.
-    if (th3 .gt. thmu_up)  event_ok = .false.
+    !if (th3 .lt. thmu_low) event_ok = .false.
+    !if (th3 .gt. thmu_up)  event_ok = .false.
     if (Emu .lt. Emu_low)  event_ok = .false.
   
     ! Q^2 Fenster Schnitte
-    if (Qsq_window .eq. 'BIG') then
-      if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) event_ok = .false.
-    endif
-    if (Qsq_window .eq. 'SMA') then
-      if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
-    endif
+    !if (Qsq_window .eq. 'BIG') then
+    !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) event_ok = .false.
+    !endif
+    !if (Qsq_window .eq. 'SMA') then
+    !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
+    !endif
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     if (isreal) then
