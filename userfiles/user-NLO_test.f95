@@ -33,7 +33,7 @@ contains
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu "!< 2. mrad"
     print*, " * Emu > 70 GeV"
-    print*, " * Eph > 200 MeV"
+    !print*, " * Eph > 200 MeV"
     print*, " * -12. < th_ph < 12. mrad"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
@@ -96,9 +96,9 @@ contains
     endif
     
     ! Photon Cuts
-    if (Eph .gt. 1._prec) then
-      if (Eph.lt.Eph_cut) pass_cut = .false.
-    endif
+    !if (Eph .gt. 1._prec) then
+    !  if (Eph.lt.Eph_cut) pass_cut = .false.
+    !endif
 
     if (abs(th5) .gt. th5_cut) then
       pass_cut = .false.
