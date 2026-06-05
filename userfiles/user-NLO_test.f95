@@ -47,7 +47,7 @@ contains
     real(kind=prec) :: th3,costh3,q3perp,Emu
     real(kind=prec) :: q5perp,th5,phi5,Eph
     real(kind=prec) :: Qsq
-    real(kind=prec) :: quant(nrq)
+    real(kind=prec) :: quant(nr_q)
     
     character(len=3) :: Qsq_window
   
