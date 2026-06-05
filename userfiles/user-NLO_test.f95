@@ -33,7 +33,7 @@ contains
     !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu "!< 2. mrad"
     print*, " * Emu > 70 GeV"
-    !print*, " * Eph > 10 MeV"
+    print*, " * Eph > 10 MeV"
     !print*, " * -12. < th_ph < 12. mrad"
     !print*, " * d_detec = 30 m"
   
@@ -63,7 +63,7 @@ contains
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
-    !Eph_cut    = 10._prec 
+    Eph_cut    = 10._prec 
     !Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
     !thmu_up    = 2.e-3_prec   
@@ -102,9 +102,9 @@ contains
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     !if (isreal) then
-    !  if (Eph .lt. Eph_cut) then
-    !    pass_cut = .false.
-    !  endif
+    if (Eph .lt. Eph_cut) then
+      pass_cut = .false.
+    endif
 
       !if (abs(th5) .gt. th5_cut) then
       !  pass_cut = .false.
