@@ -1,0 +1,40 @@
+Starting job mp2mpF-X0.1D0.1-S18453-O0_1780677576 at 1780677577.8722355
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+  * 0.3 < th_mu 
+  * Emu > 70 GeV
+  * Eph > 10 MeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -1.2907635657210300E-003   1.5691961720591801E-004
+ internal avgi, sd:   -1.2612564895413858E-003   1.9330643371740794E-005
+ internal avgi, sd:   -1.2724232936938689E-003   1.4205361489631294E-006
+ internal avgi, sd:   -1.2718690142506236E-003   5.6559934179176212E-008
+ internal avgi, sd:   -1.2718067370713197E-003   1.0982928844833323E-008
+ internal avgi, sd:   -1.2718012959327585E-003   3.8937176768729724E-009
+ internal avgi, sd:   -1.2718011930333061E-003   3.8904512661786853E-009
+ internal avgi, sd:   -1.2718011880881439E-003   3.8186014858732834E-009
+ internal avgi, sd:   -1.2718011890182201E-003   3.8186002433479327E-009
+ internal avgi, sd:   -1.2718011899815523E-003   3.8185604854011637E-009
+
+
+Job finished, running took 92.11455845832825s

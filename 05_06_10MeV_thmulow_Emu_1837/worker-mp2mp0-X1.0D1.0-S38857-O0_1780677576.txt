@@ -1,0 +1,41 @@
+Starting job mp2mp0-X1.0D1.0-S38857-O0_1780677576 at 1780677576.8650866
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+  * 0.3 < th_mu 
+  * Emu > 70 GeV
+  * Eph > 10 MeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    7.1154103948268396E-003   1.6462385617967731E-003
+ internal avgi, sd:    1.1261748462985896E-002   5.3008992489856732E-004
+ internal avgi, sd:    1.2110305787972737E-002   4.2698618337885868E-005
+ internal avgi, sd:    1.2073760543815504E-002   3.4754631323534035E-007
+ internal avgi, sd:    1.2073761810289008E-002   3.4754396800058021E-007
+ internal avgi, sd:    1.2073783315051548E-002   3.4747298423835481E-007
+ internal avgi, sd:    1.2074332402119570E-002   3.3872132841268319E-007
+ internal avgi, sd:    1.2080247724408638E-002   2.2219094554715924E-007
+ internal avgi, sd:    1.2084088451623981E-002   7.0762633910711046E-008
+ internal avgi, sd:    1.2084271786418861E-002   3.7859154867486872E-008
+ internal avgi, sd:    1.2078802835309167E-002   3.0890834217901446E-006
+
+
+Job finished, running took 93.1211667060852s

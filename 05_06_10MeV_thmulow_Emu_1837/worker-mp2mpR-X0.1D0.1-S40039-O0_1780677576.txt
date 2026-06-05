@@ -1,0 +1,36 @@
+Starting job mp2mpR-X0.1D0.1-S40039-O0_1780677576 at 1780677578.8800561
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+  * 0.3 < th_mu 
+  * Emu > 70 GeV
+  * Eph > 10 MeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -1.6285283160697093E-005   1.4888151563248199E-005
+ internal avgi, sd:   -1.6277123928925895E-005   1.4888149353811105E-005
+ internal avgi, sd:   -1.6281178876231480E-005   1.4887761129762668E-005
+ internal avgi, sd:   -1.7413262115944327E-005   1.4885416947400678E-005
+ internal avgi, sd:   -1.8188378399497709E-005   1.4884540448789884E-005
+ internal avgi, sd:   -1.8427611140854318E-005   1.4884404273784252E-005
+
+
+Job finished, running took 91.10701322555542s
