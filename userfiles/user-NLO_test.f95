@@ -101,9 +101,9 @@ contains
     !  if (Eph.lt. Eph_cut) pass_cut = .false.
     !endif
 
-      !if (abs(th5) .gt. th5_cut) then
-      !  pass_cut = .false.
-      !endif
+     if (abs(th5) .gt. th5_cut) then
+       pass_cut = .false.
+     endif
     !endif
    
 
