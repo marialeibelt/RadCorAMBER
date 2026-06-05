@@ -64,7 +64,7 @@ contains
     Eph_cut    = 10._prec 
     Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
-    !thmu_up    = 2.e-3_prec   
+    thmu_up    = 2.e-3_prec   
     Emu_low    = 70.e3_prec
     th5_cut    = 12.e-3_prec
 
@@ -85,7 +85,7 @@ contains
 
     ! Muon Schnitte
     if (th3 .lt. thmu_low) pass_cut = .false.
-    !if (th3 .gt. thmu_up)  pass_cut = .false.
+    if (th3 .gt. thmu_up)  pass_cut = .false.
     if (Emu .lt. Emu_low)  pass_cut = .false.
   
     ! Q^2 Windows
@@ -106,6 +106,7 @@ contains
      endif
     !endif
    
+    if(.not.all(pass_cut)) return
 
     ! --- OBSERVABLE SPEICHERN ---
     names(1) = 'th3'
