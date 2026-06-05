@@ -50,8 +50,6 @@ contains
     real(kind=prec) :: quant(nrq)
     
     character(len=3) :: Qsq_window
-    integer, save :: nall=0, npass=0
-    logical :: isreal
   
     call fix_mu
 
@@ -84,15 +82,13 @@ contains
 
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
-    !isreal = (abs(q5(4)) > 0._prec)
-    !nall = nall + 1
 
     ! Muon Schnitte
     if (th3 .lt. thmu_low) pass_cut = .false.
     !if (th3 .gt. thmu_up)  pass_cut = .false.
     if (Emu .lt. Emu_low)  pass_cut = .false.
   
-    ! Q^2 Fenster Schnitte
+    ! Q^2 Windows
     !if (Qsq_window .eq. 'BIG') then
     !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) pass_cut = .false.
     !endif
@@ -100,10 +96,9 @@ contains
     !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) pass_cut = .false.
     !endif
     
-    ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
-    !if (isreal) then
-    if (Eph .lt. Eph_cut) then
-      pass_cut = .false.
+    ! Photon Cuts
+    if (Eph .gt. 1.e-5_prec) then
+      if (Eph.lt. Eph_cut) pass_cut = .false.
     endif
 
       !if (abs(th5) .gt. th5_cut) then
