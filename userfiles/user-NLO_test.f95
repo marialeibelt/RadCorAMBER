@@ -97,30 +97,30 @@ contains
     
     ! Photon Cuts
     if (Eph .gt. 1._prec) then
-      if (Eph.lt. Eph_cut) pass_cut = .false.
+      if (Eph.lt.Eph_cut) pass_cut = .false.
     endif
 
-     if (abs(th5) .gt. th5_cut) then
-       pass_cut = .false.
-     endif
-    !endif
+    if (abs(th5) .gt. th5_cut) then
+      pass_cut = .false.
+    endif
+   !endif
    
 
-    ! --- OBSERVABLE SPEICHERN ---
-    names(1) = 'th3'
-    quant(1) = th3
-    names(2) = 'Emu'
-    quant(2) = Emu
-    names(3) = 'th5'
-    quant(3) = th5
-    names(4) = 'Eph'
-    quant(4) = Eph
-    names(5) = 'phi5'
-    quant(5) = phi5
-    names(6) = 'costh3'
-    quant(6) = costh3
-    names(7) = 'Qsq'
-    quant(7) = Qsq
+   ! --- OBSERVABLE SPEICHERN ---
+   names(1) = 'th3'
+   quant(1) = th3
+   names(2) = 'Emu'
+   quant(2) = Emu
+   names(3) = 'th5'
+   quant(3) = th5
+   names(4) = 'Eph'
+   quant(4) = Eph
+   names(5) = 'phi5'
+   quant(5) = phi5
+   names(6) = 'costh3'
+   quant(6) = costh3
+   names(7) = 'Qsq'
+   quant(7) = Qsq
 
   end function QUANT
 
