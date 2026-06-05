@@ -33,8 +33,8 @@ contains
     !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu "!< 2. mrad"
     print*, " * Emu > 70 GeV"
-    print*, " * Eph > 10 MeV"
-    !print*, " * -12. < th_ph < 12. mrad"
+    !print*, " * Eph > 10 MeV"
+    print*, " * -12. < th_ph < 12. mrad"
     !print*, " * d_detec = 30 m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
@@ -66,7 +66,7 @@ contains
     thmu_low   = 0.3e-3_prec 
     !thmu_up    = 2.e-3_prec   
     Emu_low    = 70.e3_prec
-    !th5_cut    = 12.e-3_prec
+    th5_cut    = 12.e-3_prec
 
     ! Kinematische Variablen berechnen
     q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
@@ -105,7 +105,6 @@ contains
        pass_cut = .false.
      endif
     !endif
-    if(.not.all(pass_cut)) return
    
 
     ! --- OBSERVABLE SPEICHERN ---
