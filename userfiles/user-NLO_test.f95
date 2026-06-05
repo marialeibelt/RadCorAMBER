@@ -1,7 +1,3 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                              MODULE USER                             !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 module user
   use mcmule
   implicit none
@@ -35,8 +31,8 @@ contains
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
     !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    !print*, " * 0.3 < th_mu < 2. mrad"
-    !print*, " * Emu > 70 GeV"
+    print*, " * 0.3 < th_mu "!< 2. mrad"
+    print*, " * Emu > 70 GeV"
     !print*, " * Eph > 10 MeV"
     !print*, " * -12. < th_ph < 12. mrad"
     !print*, " * d_detec = 30 m"
@@ -47,13 +43,14 @@ contains
   function QUANT(q1,q2,q3,q4,q5,q6,q7)
     real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
     real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4)
-    real(kind=prec) :: th3,costh3,q3perp,q5perp,th5,Emu,Eph,Eph_cut
-    real(kind=prec) :: phi5,Qsq,th5_cut
+    real(kind=prec) :: th5_cut,Eph_cut,thmu_low,thmu_up,Emu_low
+    real(kind=prec) :: th3,costh3,q3perp,Emu
+    real(kind=prec) :: q5perp,th5,phi5,Eph
+    real(kind=prec) :: Qsq
     real(kind=prec) :: quant(nrq)
+    
     character(len=3) :: Qsq_window
-    real(kind=prec) :: thmu_low, thmu_up, Emu_low
     integer, save :: nall=0, npass=0
-    logical :: event_ok
     logical :: isreal
   
     call fix_mu
@@ -68,9 +65,9 @@ contains
     ! Cut Definitionen
     !Eph_cut    = 10._prec 
     !Qsq_window = 'BIG'  
-    !thmu_low   = 0.3e-3_prec 
+    thmu_low   = 0.3e-3_prec 
     !thmu_up    = 2.e-3_prec   
-    !Emu_low    = 70.e3_prec
+    Emu_low    = 70.e3_prec
     !th5_cut    = 12.e-3_prec
 
     ! Kinematische Variablen berechnen
@@ -86,41 +83,34 @@ contains
     phi5   = atan2(ql5(2), ql5(1))
 
     ! --- CUTS AUSWERTEN ---
-    !event_ok = .true.
+    pass_cut = .true.
     !isreal = (abs(q5(4)) > 0._prec)
     !nall = nall + 1
 
     ! Muon Schnitte
-    !if (th3 .lt. thmu_low) event_ok = .false.
-    !if (th3 .gt. thmu_up)  event_ok = .false.
-    !if (Emu .lt. Emu_low)  event_ok = .false.
+    if (th3 .lt. thmu_low) pass_cut = .false.
+    !if (th3 .gt. thmu_up)  pass_cut = .false.
+    if (Emu .lt. Emu_low)  pass_cut = .false.
   
     ! Q^2 Fenster Schnitte
     !if (Qsq_window .eq. 'BIG') then
-    !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) event_ok = .false.
+    !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) pass_cut = .false.
     !endif
     !if (Qsq_window .eq. 'SMA') then
-    !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
+    !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) pass_cut = .false.
     !endif
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     !if (isreal) then
     !  if (Eph .lt. Eph_cut) then
-    !    event_ok = .false.
+    !    pass_cut = .false.
     !  endif
 
       !if (abs(th5) .gt. th5_cut) then
-      !  event_ok = .false.
+      !  pass_cut = .false.
       !endif
     !endif
-    
-    ! Wenn ein Schnitt fehlschlägt, verwerfe das Event für alle Histogramme
-    !if (.not. event_ok) then
-    !   pass_cut(:nrq) = .false.
-    !   return
-    !else
-    !   pass_cut(:nrq) = .true.
-    !endif
+   
 
     ! --- OBSERVABLE SPEICHERN ---
     names(1) = 'th3'
@@ -147,7 +137,3 @@ contains
   end subroutine USEREVENT
 
 end module user
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                             END MODULE USER                          !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
