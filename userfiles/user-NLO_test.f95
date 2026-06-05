@@ -106,7 +106,7 @@ contains
      endif
     !endif
    
-    if(.not.all(pass_cut)) return
+    !if(.not.all(pass_cut)) return
 
     ! --- OBSERVABLE SPEICHERN ---
     names(1) = 'th3'
