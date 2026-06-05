@@ -1,0 +1,29 @@
+05_06_05_06_Q2Big_thmu_th5_Emu_1920
+========================= 
+BIG -- 0.001  <  Q2 (GeV2/c2) < 0.04 
+=========================
+th3_min:     0.29671 , th3_max:     2.0032900000000002  (in mrad)
+costh3_min:  -0.998 , costh3_max:  0.998
+
+------------------------- 
+RESULTS 
+-------------------------
+LO cross section:                          [2.50565727e-01 9.82231272e-09] mb
+LO cross section Paper Big Range:           0.255 mb
+
+LO Rate:                [4.25363148e+01 1.66744667e-06] 1/s
+
+------------------------- NLO STUFF -------------------------
+Cross section real photon:  [2.07543171e-04 8.74099841e-07] mb
+Rate real photon:           [0.03523276 0.00014839] 1/s
+NLO cross section:   [2.95679857e-03 8.74099851e-07] mb
+
+sigma_full:  [2.53522525e-01 8.74155037e-07] mb
+
+-------------------------
+onlyR.value:  [0.20754317 0.0008741 ]
+sigma_total:  0.8509586347874875
+sigma_above:  0.4312085208408645
+
+Fraction of photons with Eγ > 2.0 GeV:
+50.673264623321145 %

@@ -45,21 +45,22 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_11_05_BIG","mp2mp_NLO_12_05_BIG","mp2mp_NLO_12_05_SMALL","mp2mp_NLO_12_05_TH100MeV_BIG","mp2mp_NLO_13_05_TH100MeV_SMALL",       #30-34
            "mp2mp_NLO_13_05_TH500MeV_BIG","mp2mp_NLO_13_05_TH500MeV_SMALL","20_05_Eph100MeV_SMALL","20_05_Eph200MeV_SMALL","20_05_Eph500MeV_SMALL",   #35-39
            "20_05_Eph100MeV_BIG","20_05_Eph200MeV_BIG","20_05_Eph500MeV_BIG","20_05_100MeV_large_BIG","20_05_200MeV_large_BIG",                 #40-44
-           "20_05_500MeV_large_BIG","28_05_200MeV_Q2rel_fixedcuts","02_06_0MeV_Q2big_1601"] #45-47
+           "20_05_500MeV_large_BIG","28_05_200MeV_Q2rel_fixedcuts","02_06_0MeV_Q2big_1601","05_06_Q2Big_thmu_th5_Emu_1920"] #45-48
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
              "14_04","14_04_add","20_04","21_04","22_04",       #10-14
              "24_04","28_04","29_04","4_5","5_5",               #15-19
              "7_5","8_5","11_05","12_5","13_5",                 #20-24  
-             "20_05","28_5","29_5","01_06","02_06"]             #25-29
+             "20_05","28_5","29_5","01_06","02_06",             #25-29
+             "05_06"]                                           #30
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 47
-nlo_i = 47
-savename_i = 29
+lo_i = 48
+nlo_i = 48
+savename_i = 30
 nbins = 500
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-.191;19.1]
