@@ -34,7 +34,7 @@ contains
 
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
-    !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
+    print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     !print*, " * 0.3 < th_mu < 2. mrad"
     print*, " * Emu > 70 GeV"
     print*, " * Eph > 10 MeV"
@@ -96,12 +96,12 @@ contains
     if (Emu .lt. Emu_low)  event_ok = .false.
   
     ! Q^2 Fenster Schnitte
-    !if (Qsq_window .eq. 'BIG') then
-    !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) event_ok = .false.
-    !endif
-    !if (Qsq_window .eq. 'SMA') then
-    !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
-    !endif
+    if (Qsq_window .eq. 'BIG') then
+      if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) event_ok = .false.
+    endif
+    if (Qsq_window .eq. 'SMA') then
+      if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) event_ok = .false.
+    endif
     
     ! Photon Schnitte (IR-Cut safely applied to Real emissions only)
     if (isreal) then
