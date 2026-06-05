@@ -62,7 +62,7 @@ contains
   
     ! Cut Definitionen
     Eph_cut    = 10._prec 
-    !Qsq_window = 'BIG'  
+    Qsq_window = 'BIG'  
     thmu_low   = 0.3e-3_prec 
     !thmu_up    = 2.e-3_prec   
     Emu_low    = 70.e3_prec
@@ -89,12 +89,12 @@ contains
     if (Emu .lt. Emu_low)  pass_cut = .false.
   
     ! Q^2 Windows
-    !if (Qsq_window .eq. 'BIG') then
-    !  if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) pass_cut = .false.
-    !endif
-    !if (Qsq_window .eq. 'SMA') then
-    !  if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) pass_cut = .false.
-    !endif
+    if (Qsq_window .eq. 'BIG') then
+      if ((Qsq .lt. 1.e3_prec) .or. (Qsq .gt. 4.e4_prec)) pass_cut = .false.
+    endif
+    if (Qsq_window .eq. 'SMA') then
+      if ((Qsq .lt. 5.e2_prec) .or. (Qsq .gt. 1.e3_prec)) pass_cut = .false.
+    endif
     
     ! Photon Cuts
     if (Eph .gt. 1.e-5_prec) then
