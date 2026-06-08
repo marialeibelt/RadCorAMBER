@@ -19,7 +19,7 @@
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     2.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, & 	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &								!costh3[]
-    10.e4_prec /)!,&                                                     	!Qsq in MeV^2
+    10.e4_prec /)!,&                                                    !Qsq in MeV^2
     !0.2_prec,0.2_prec, &                                    	      	! x5[m], y5[m]
     !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  ! x5_B1..x5_B10[m]
     !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  ! y5_B1..y5_B10[m]
