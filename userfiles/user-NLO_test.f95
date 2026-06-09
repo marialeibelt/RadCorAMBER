@@ -2,24 +2,24 @@ module user
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 7 !29
+  integer, parameter :: nrq = 9 !29
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	! costh3[]
-    1._prec /)!, &                                                  	! Qsq in MeV^2
-    !-0.2_prec,-0.2_prec /)!, &                                  		! x5[m], y5[m]
-    !-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
-    !-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
+    1._prec, &                                                  	! Qsq in MeV^2
+    -0.2_prec,-0.2_prec /) !, &                                  		! x5[m], y5[m]
+    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
+    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     8.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                  	! costh3[]
-    10.e4_prec /)!, &	                                             	! Qsq in MeV^2
-    !0.2_prec,0.2_prec /)!, &                                    	      	! x5[m], y5[m]
-    !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
-    !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
+    10.e4_prec, &	                                             	! Qsq in MeV^2
+    0.2_prec,0.2_prec /) !, &                                    	      	! x5[m], y5[m]
+    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
+    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
     
   integer :: userdim = 0
   integer :: namesLen = 12
@@ -38,12 +38,13 @@ contains
     print*, "Welcome to Mary's McMule userfile <3"
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * 0.3 < th_mu < 2.mrad"
+    print*, "No bands but cuts on x5 and y5"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     print*, " * Emu > 70 GeV"
     print*, " * -12. < th_ph < 12. mrad"
     print*, " * d_detector=30m"
-    !print*, " * Eph > 200 MeV"
+    print*, " * Eph > 200 MeV"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER
@@ -103,8 +104,8 @@ contains
     th5    = atan2(q5perp, ql5(3)) 
     phi5   = atan2(ql5(2), ql5(1))
     
-    !x5 = d_detec*tan(th5)*cos(phi5)
-    !y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
+    x5 = d_detec*tan(th5)*cos(phi5)
+    y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
   
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
@@ -141,8 +142,8 @@ contains
       if (abs(th5).gt.th5_cut) pass_cut = .false.
     endif
     
-    !if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
-    !if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
+    if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
+    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
    
 
     ! --- OBSERVABLE SPEICHERN ---
@@ -161,40 +162,39 @@ contains
     names(7) = 'Qsq'
     quant(7) = Qsq
     
-    !names(8) = 'x5'
-    !pass_cut(8) = (x5.gt.).and.(x5.lt.x5_up)
-    !quant(8) = x5
-    !names(9) = 'y5'
-    !pass_cut(9) = (y5.gt.y5_low).and.(y5.lt.y5_up)
-    !quant(9) = y5
+    names(8) = 'x5'
+    quant(8) = x5
+    names(9) = 'y5'
+    quant(9) = y5
     
-    !last_hist_nr = 9
-    !n_bands = 10 !must be an even number
-    ! Banded slices
-    !bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
-    !band_min = -(n_bands/2.0_prec * bin_width)
+    ! last_hist_nr = 9
+    ! n_bands = 10 !must be an even number
+
+    ! ! Banded slices
+    ! bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
+    ! band_min = -(n_bands/2.0_prec * bin_width)
     
-    ! Y slices (x5)
-    !offset_y = last_hist_nr
-    !do i=1,n_bands
+    ! ! Y slices (x5)
+    ! offset_y = last_hist_nr
+    ! do i=1,n_bands
     !  write(str_i,'(I0)') i
     !  names(offset_y+i) = 'x5_B'//trim(str_i)
     !  pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
     !                        (band_min + (i-1)*bin_width .le. y5) .and. &
     !                        (y5 .lt. band_min + i*bin_width)
     !  quant(offset_y+i) = x5
-    !end do
+    ! end do
     
-    ! X slices (y5)
-    !offset_x = offset_y + n_bands
-    !do i=1,n_bands
+    ! ! X slices (y5)
+    ! offset_x = offset_y + n_bands
+    ! do i=1,n_bands
     !  write(str_i,'(I0)') i
     !  names(offset_x+i) = 'y5_B'//trim(str_i)
     !  pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
     !                          (band_min + (i-1)*bin_width .le. x5) .and. &
     !                          (x5 .lt. band_min + i*bin_width)
     !  quant(offset_x+i) = y5
-    !end do
+    ! end do
 
   end function QUANT
 
