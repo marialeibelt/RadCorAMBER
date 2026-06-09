@@ -16,10 +16,11 @@ lo_outs = [
     "20_05_Eph100MeV_SMALL", "20_05_Eph200MeV_SMALL", "20_05_Eph500MeV_SMALL",
     "20_05_Eph100MeV_BIG",   "20_05_Eph200MeV_BIG",   "20_05_Eph500MeV_BIG",
     "20_05_100MeV_large_BIG","20_05_200MeV_large_BIG", "20_05_500MeV_large_BIG",
+    "09_06_thmunorm_noEphcut_noxycut","09_06_thmu4xsmaller_noEphcut_noxycut","09_06_thm4xbigger_noEphcut_noxycut",
 ]
 nlo_outs = lo_outs
 
-savename_base = "27_05"
+savename_base = "09_06"
 table_file_cs = outdir_vals + f"{savename_base}_CS.txt"
 table_file_r  = outdir_vals + f"{savename_base}_Rate.txt"
 

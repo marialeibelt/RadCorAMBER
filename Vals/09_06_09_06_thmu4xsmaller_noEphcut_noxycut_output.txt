@@ -1,0 +1,29 @@
+09_06_09_06_thmu4xsmaller_noEphcut_noxycut
+========================= 
+BIG -- 0.001  <  Q2 (GeV2/c2) < 0.04 
+=========================
+th3_min:     0.29671 , th3_max:     2.0032900000000002  (in mrad)
+costh3_min:  -0.998 , costh3_max:  0.998
+
+------------------------- 
+RESULTS 
+-------------------------
+LO cross section:                          [1.53017824e-01 6.87433970e-09] mb
+LO cross section Paper Big Range:           0.255 mb
+
+LO Rate:                [2.59764749e+01 1.16699551e-06] 1/s
+
+------------------------- NLO STUFF -------------------------
+Cross section real photon:  [1.41262231e-04 5.36305824e-07] mb
+Rate real photon:           [2.39808325e-02 9.10438696e-05] 1/s
+NLO cross section:   [1.76902284e-03 5.36305828e-07] mb
+
+sigma_full:  [1.54786846e-01 5.36349883e-07] mb
+
+-------------------------
+onlyR.value:  [0.14126223 0.00053631]
+sigma_total:  0.13011863903141194
+sigma_above:  0.19062466515167653
+
+Fraction of photons with Eγ > 2.0 GeV:
+146.5006601442072 %
