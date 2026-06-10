@@ -28,7 +28,7 @@ module user
   integer :: nbins = nrbins
   integer :: bin_kind = 0       !! 0 for d\sigma/dQ; +1 for Q d\sigma/dQ;
 
-contains
+  contains
 
   subroutine FIX_MU
     musq = mM**2
@@ -133,7 +133,7 @@ contains
         Qsq_up  = 1.e3_prec
     end select
 
-    if ((Qsq .lt. Qsq_low) .or. (Qsq .gt. Qsq_up)) pass_cut = .false.
+    if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false.
     if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false.
     if (Emu.lt.Emu_low) pass_cut = .false.
     
@@ -143,7 +143,7 @@ contains
     endif
     
     if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
-    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
+    !if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
    
 
     ! --- OBSERVABLE SPEICHERN ---
