@@ -2,24 +2,24 @@ module user
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 29
+  integer, parameter :: nrq = 9
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	! costh3[]
     1._prec, &                                                  	! Qsq in MeV^2
-    -0.2_prec,-0.2_prec, &                                  		! x5[m], y5[m]
-    -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
-    -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
+    -0.2_prec,-0.2_prec /)!, &                                  		! x5[m], y5[m]
+    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
+    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     8.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                  	! costh3[]
     10.e4_prec, &	                                             	! Qsq in MeV^2
-    0.2_prec,0.2_prec, &                                    	      	! x5[m], y5[m]
-    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
-    0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
+    0.2_prec,0.2_prec /)!, &                                    	      	! x5[m], y5[m]
+    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
+    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
     
   integer :: userdim = 0
   integer :: namesLen = 12
@@ -142,8 +142,8 @@ module user
       if (abs(th5).gt.th5_cut) pass_cut = .false.
     endif
     
-    if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
-    !if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
+    !if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
+    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
    
 
     ! --- OBSERVABLE SPEICHERN ---
@@ -167,34 +167,34 @@ module user
     names(9) = 'y5'
     quant(9) = y5
     
-    last_hist_nr = 9
-    n_bands = 10 !must be an even number
+    ! last_hist_nr = 9
+    ! n_bands = 10 !must be an even number
 
-    ! Banded slices
-    bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
-    band_min = -(n_bands/2.0_prec * bin_width)
+    ! ! Banded slices
+    ! bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
+    ! band_min = -(n_bands/2.0_prec * bin_width)
     
-    ! Y slices (x5)
-    offset_y = last_hist_nr
-    do i=1,n_bands
-     write(str_i,'(I0)') i
-     names(offset_y+i) = 'x5_B'//trim(str_i)
-     pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
-                           (band_min + (i-1)*bin_width .le. y5) .and. &
-                           (y5 .lt. band_min + i*bin_width)
-     quant(offset_y+i) = x5
-    end do
+    ! ! Y slices (x5)
+    ! offset_y = last_hist_nr
+    ! do i=1,n_bands
+    !  write(str_i,'(I0)') i
+    !  names(offset_y+i) = 'x5_B'//trim(str_i)
+    !  pass_cut(offset_y+i) = (ql5(4) .gt. Eph_cut) .and. &
+    !                        (band_min + (i-1)*bin_width .le. y5) .and. &
+    !                        (y5 .lt. band_min + i*bin_width)
+    !  quant(offset_y+i) = x5
+    ! end do
     
-    ! X slices (y5)
-    offset_x = offset_y + n_bands
-    do i=1,n_bands
-     write(str_i,'(I0)') i
-     names(offset_x+i) = 'y5_B'//trim(str_i)
-     pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
-                             (band_min + (i-1)*bin_width .le. x5) .and. &
-                             (x5 .lt. band_min + i*bin_width)
-     quant(offset_x+i) = y5
-    end do
+    ! ! X slices (y5)
+    ! offset_x = offset_y + n_bands
+    ! do i=1,n_bands
+    !  write(str_i,'(I0)') i
+    !  names(offset_x+i) = 'y5_B'//trim(str_i)
+    !  pass_cut(offset_x+i) = (ql5(4) .gt. Eph_cut) .and. &
+    !                          (band_min + (i-1)*bin_width .le. x5) .and. &
+    !                          (x5 .lt. band_min + i*bin_width)
+    !  quant(offset_x+i) = y5
+    ! end do
 
   end function QUANT
 
