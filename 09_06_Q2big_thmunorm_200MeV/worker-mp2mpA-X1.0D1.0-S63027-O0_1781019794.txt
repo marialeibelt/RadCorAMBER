@@ -47,3 +47,21 @@ Starting job mp2mpA-X1.0D1.0-S63027-O0_1781019794 at 1781019797.6145167
  internal avgi, sd:    1.9441501651241498E-002   5.3864417594127110E-008
  internal avgi, sd:    1.9441360215858572E-002   1.2824486491179051E-008
  internal avgi, sd:    1.9441379881135278E-002   7.4935376791714258E-009
+ internal avgi, sd:    1.9441380408127682E-002   5.3030798649119755E-009
+ internal avgi, sd:    1.9441380430530862E-002   5.3030398104735184E-009
+ internal avgi, sd:    1.9441380461961155E-002   5.3017665028950661E-009
+ internal avgi, sd:    1.9441381268656441E-002   5.2275335017015774E-009
+ internal avgi, sd:    1.9441381008674832E-002   4.4061209416950268E-009
+ internal avgi, sd:    1.9441377497037154E-002   3.6529030485228538E-009
+ points:    15*  2M +  10* 10M         random seed:      63027
+ part: mp2mpA                       xicut: 1.00000    delcut: 1.00000
+ points on phase space   88496258 thereof fucked up          0
+         
+         
+         
+ result, error:  {  1.94414E-02,  3.65290E-09 };   chisq:  1.71
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 1812.8545625209808s
