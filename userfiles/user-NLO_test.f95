@@ -37,14 +37,17 @@ module user
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    print*, " * 0.3 < th_mu < 2.mrad"
-    print*, "No bands but cuts on x5 and y5"
+    !print*, "Q2 released"
+    !print*, "no thmu cut"
+    !print*, " * 0.3 < th_mu < 2.mrad"
+    !print*, "No bands but cuts on x5 and y5"
+    !print*, "No bands AND no cuts on x5 and y5"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     print*, " * Emu > 70 GeV"
-    print*, " * -12. < th_ph < 12. mrad"
-    print*, " * d_detector=30m"
-    print*, " * Eph > 200 MeV"
+    !print*, " * -12. < th_ph < 12. mrad"
+    !print*, " * Eph > 200 MeV"
+    !print*, " * d_detector=30m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER
@@ -75,6 +78,7 @@ module user
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
+    !Qsq_window = 'REL'  
     Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
     !Qsq_window = 'SMA'  
     thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
@@ -106,6 +110,10 @@ module user
     
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
+
+    if (abs(x5) > 1.d10) then
+      print*, "BAD X5", th5, phi5, x5
+    endif
   
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
@@ -133,17 +141,17 @@ module user
         Qsq_up  = 1.e3_prec
     end select
 
-    if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false.
-    if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false.
-    if (Emu.lt.Emu_low) pass_cut = .false.
+    if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
     if (Eph.gt.Eph_cut) then
       if (abs(th5).gt.th5_cut) pass_cut = .false.
     endif
     
-    !if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false.
-    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false.
+    !if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
    
 
     ! --- OBSERVABLE SPEICHERN ---

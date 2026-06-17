@@ -1,0 +1,33 @@
+Starting job mp2mpF-X0.1D0.1-S77476-O0_1781527588 at 1781528245.5743666
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+  * Emu > 70 GeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -3.7121054003678984E-003   1.2280113762811770E-003
+ internal avgi, sd:   -4.1234281339096292E-003   4.6479646616251122E-004
+ internal avgi, sd:   -4.7255497063375361E-003   3.5124169790442741E-004
+ internal avgi, sd:   -5.5103976984894618E-003   2.7325359057974271E-004
+ internal avgi, sd:   -5.5097616959421652E-003   2.7325282506312376E-004
+
+
+Job finished, running took 248.2723867893219s

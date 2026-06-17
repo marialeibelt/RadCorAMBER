@@ -1,0 +1,39 @@
+Starting job mp2mpF-X0.1D0.1-S78253-O0_1781527588 at 1781527592.8653693
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+  * Emu > 70 GeV
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:   -3.3307361602677942E-003   1.2207305248252206E-003
+ internal avgi, sd:   -4.1254384957278047E-003   8.3681133273333320E-004
+ internal avgi, sd:   -4.7292011605578940E-003   7.4168093568980752E-004
+ internal avgi, sd:   -5.1219555921723269E-003   7.1079650477691675E-004
+ internal avgi, sd:   -6.8357983790202645E-003   3.5845406601948910E-004
+ internal avgi, sd:   -6.8301026024296984E-003   3.5833711223683167E-004
+ internal avgi, sd:   -6.8300885204374100E-003   3.5833711199666647E-004
+ internal avgi, sd:   -6.8300879238200052E-003   3.5833711199401977E-004
+ internal avgi, sd:   -6.8300950614446970E-003   3.5833711198963737E-004
+ internal avgi, sd:   -6.8306436863030447E-003   3.5833711169383194E-004
+ internal avgi, sd:   -323.18465094850700       0.13292099497850934     
+
+
+Job finished, running took 900.9803476333618s
