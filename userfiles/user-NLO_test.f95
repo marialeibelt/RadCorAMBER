@@ -39,15 +39,15 @@ module user
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     !print*, "Q2 released"
     !print*, "no thmu cut"
-    !print*, " * 0.3 < th_mu < 2.mrad"
-    !print*, "No bands but cuts on x5 and y5"
+    print*, " * 0.3 < th_mu < 2.mrad"
+    print*, "No bands but cuts on x5 and y5"
     !print*, "No bands AND no cuts on x5 and y5"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     print*, " * Emu > 70 GeV"
-    !print*, " * -12. < th_ph < 12. mrad"
-    !print*, " * Eph > 200 MeV"
-    !print*, " * d_detector=30m"
+    print*, " * -12. < th_ph < 12. mrad"
+    print*, " * Eph > 200 MeV"
+    print*, " * d_detector=30m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER
@@ -142,16 +142,16 @@ module user
     end select
 
     if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
     if (Eph.gt.Eph_cut) then
       if (abs(th5).gt.th5_cut) pass_cut = .false.
     endif
     
-    !if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
    
 
     ! --- OBSERVABLE SPEICHERN ---

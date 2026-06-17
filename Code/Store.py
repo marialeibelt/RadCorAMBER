@@ -6,6 +6,7 @@ from theo_calc import *
 # =========================
 # Paths
 # =========================
+#homedir = "/home/marialei/AMBER_RadCor/" # Laptop
 homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"
 outdir_vals = homedir + "Vals/"
 
