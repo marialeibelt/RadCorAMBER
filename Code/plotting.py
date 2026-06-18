@@ -65,7 +65,7 @@ def create_figure(nrows=1, ncols=1, figsize=(8,5), font_size=7, sharex=False, gr
     plt.rcParams.update({
         "font.size": font_size,
         "font.family": "serif",
-        "text.usetex": False,
+        "text.usetex": True,
     })
 
     fig, axes = plt.subplots(nrows, ncols, figsize=figsize, sharex=sharex, gridspec_kw=gridspec_kw)
@@ -276,6 +276,7 @@ def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist,
     draw_observable_and_k( ax_main, ax_k, lo_hist=lo_hist, nlo_hist=nlo_hist, full_hist=full_hist,
                            scale_factor=scale_factor, x_label_main=None, x_label_k=x_label, y_label_main= y_label, main_title=main_title, 
                            xlim=xlim,ylim=ylim, main_yscale=main_yscale, force_main_linear=force_main_linear, colors=colors, ) 
+    mulify(fig, delx=4.5, dely=1.)
     save_figure(fig, savename, outdir=outdir) 
     plt.close(fig) 
 
@@ -344,6 +345,7 @@ def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, nbins, th3_min,th3_m
 
     ax_k.set_xlim(ax_main.get_xlim())
 
+    mulify(fig_main, delx=4.5, dely=1.)
     save_figure(fig_main, savename, outdir=outdir)
     plt.close(fig_main)
 
@@ -423,7 +425,7 @@ def plot_Q2_with_analytic(lo_hist, nlo_hist, full_hist,nbins,ylow_diff,yup_diff,
     plot_K(ax_k, K, colors["K"], r"$Q^2\ (\mathrm{GeV}^2)$")
     
     ax_k.set_xlim(ax_main.get_xlim())
-
+    mulify(fig_main, delx=4.5, dely=1.) 
     save_figure(fig_main, savename, outdir=outdir)
     plt.close(fig_main)
 
