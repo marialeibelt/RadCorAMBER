@@ -28,6 +28,11 @@ module user
   integer :: nbins = nrbins
   integer :: bin_kind = 0       !! 0 for d\sigma/dQ; +1 for Q d\sigma/dQ;
 
+  integer :: n_total = 0
+  integer :: n_pass_x = 0
+  integer :: n_pass_y = 0
+  integer :: n_pass_xy = 0
+
   contains
 
   subroutine FIX_MU
@@ -110,6 +115,35 @@ module user
     
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
+
+
+
+    ! Event zählen
+    n_total = n_total + 1
+
+    ! x-Cut separat prüfen
+    if ((x5 >= x5_low) .and. (x5 <= x5_up)) then
+      n_pass_x = n_pass_x + 1
+    endif
+
+    ! y-Cut separat prüfen
+    if ((y5 >= y5_low) .and. (y5 <= y5_up)) then
+      n_pass_y = n_pass_y + 1
+    endif
+
+    if ((x5 >= x5_low) .and. (x5 <= x5_up) .and. (y5 >= y5_low) .and. (y5 <= y5_up)) then
+      n_pass_xy = n_pass_xy + 1
+    endif
+
+    if (mod(n_total,100) == 0) then
+      print *, "Events:", n_total
+      print *, "x cut :", n_pass_x, 100.d0*n_pass_x/n_total, "%"
+      print *, "y cut :", n_pass_y, 100.d0*n_pass_y/n_total, "%"
+      print *, "x+y   :", n_pass_xy, 100.d0*n_pass_xy/n_total, "%"
+    endif
+
+
+
 
     if (abs(x5) > 1.d10) then
       print*, "BAD X5", th5, phi5, x5
