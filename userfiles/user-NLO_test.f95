@@ -179,7 +179,7 @@ module user
     ! n_bands = 10 !must be an even number
 
     ! ! Banded slices
-    ! bin_width = 0.0382_prec !ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
+    ! bin_width = 0.0382_prec !ECal2 with 10x10 cells with 38.2 mm x 38.2 mm ->active area x&y: [-19.1;19.1]
     ! band_min = -(n_bands/2.0_prec * bin_width)
     
     ! ! Y slices (x5)

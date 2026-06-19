@@ -57,3 +57,22 @@ Starting job mp2mpF-X0.01D0.01-S39113-O0_1781768726 at 1781768737.7936835
  internal avgi, sd:   -3.0196695521070445E-003   8.8750333752615666E-011
  internal avgi, sd:   -3.0196696573090960E-003   8.8212246017714398E-011
  internal avgi, sd:   -3.0196696576522400E-003   8.8212083404416866E-011
+ internal avgi, sd:   -3.0196696576536789E-003   8.8212083376967976E-011
+ internal avgi, sd:   -3.0196696576631618E-003   8.8212082950881012E-011
+ internal avgi, sd:   -3.0196696578142033E-003   8.8212047286362261E-011
+ internal avgi, sd:   -3.0196696585687607E-003   8.8204302473447737E-011
+ internal avgi, sd:   -3.0196696832571353E-003   8.8053035421236437E-011
+ internal avgi, sd:   -3.0196701265617272E-003   8.5665870979940354E-011
+ internal avgi, sd:   -3.0196710704414043E-003   8.0671902714423310E-011
+ points:    15* 20M +  20* 50M         random seed:      39113
+ part: mp2mpF                       xicut: 0.01000    delcut: 0.01000
+ points on phase space  817438177 thereof fucked up          0
+         
+         
+         
+ result, error:  { -3.01967E-03,  8.06719E-11 };   chisq:  ****
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 17119.476857185364s
