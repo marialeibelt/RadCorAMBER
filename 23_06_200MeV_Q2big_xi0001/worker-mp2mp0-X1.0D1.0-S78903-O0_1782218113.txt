@@ -1,0 +1,78 @@
+Starting job mp2mp0-X1.0D1.0-S78903-O0_1782218113 at 1782218113.337356
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [1.e-3;4.e-2] GeV²
+  * 0.3 < th_mu < 2.mrad
+ No bands but cuts on x5 and y5
+  * Emu > 70 GeV
+  * -12. < th_ph < 12. mrad
+  * Eph > 200 MeV
+  * d_detector=30m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    1.2874997228945913E-002   1.0107251593574193E-003
+ internal avgi, sd:    1.2010557172036218E-002   1.2658582508898701E-004
+ internal avgi, sd:    1.2083917400818081E-002   5.1267477093172203E-006
+ internal avgi, sd:    1.2081959957596129E-002   4.0976487944753449E-006
+ internal avgi, sd:    1.2086061296951668E-002   2.1000235311009737E-006
+ internal avgi, sd:    1.2083977755565785E-002   3.3946274886460016E-007
+ internal avgi, sd:    1.2084291493902163E-002   4.1205348277460242E-008
+ internal avgi, sd:    1.2084262308788523E-002   8.4325840511663849E-009
+ internal avgi, sd:    1.2084259438339372E-002   4.6978464908719643E-009
+ internal avgi, sd:    1.2084258379467592E-002   3.2290510390547702E-009
+ internal avgi, sd:    1.2084258441183828E-002   3.2285274227416226E-009
+ internal avgi, sd:    1.2084258441653367E-002   3.2285273037195187E-009
+ internal avgi, sd:    1.2084258447190927E-002   3.2285230749517448E-009
+ internal avgi, sd:    1.2084258440575583E-002   3.2284016804048691E-009
+ internal avgi, sd:    1.2084258411808138E-002   3.2279842430491938E-009
+ internal avgi, sd:    1.2084260359155184E-002   4.0147707933181066E-009
+ internal avgi, sd:    1.2084265917354554E-002   1.1931628029803290E-009
+ internal avgi, sd:    1.2084265278259804E-002   5.7332889230455852E-010
+ internal avgi, sd:    1.2084265042761553E-002   3.8723113724419720E-010
+ internal avgi, sd:    1.2084265043153740E-002   3.8723022820378320E-010
+ internal avgi, sd:    1.2084265042818029E-002   3.8722979537994720E-010
+ internal avgi, sd:    1.2084265048922373E-002   3.8702954868930111E-010
+ internal avgi, sd:    1.2084264995262049E-002   3.7615216194295120E-010
+ internal avgi, sd:    1.2084265017462702E-002   3.4421667572148441E-010
+ internal avgi, sd:    1.2084265134559418E-002   3.0405576165813241E-010
+ internal avgi, sd:    1.2084265290588909E-002   2.6365020593473813E-010
+ internal avgi, sd:    1.2084265290888092E-002   2.6365000084506272E-010
+ internal avgi, sd:    1.2084265290506357E-002   2.6364978358757529E-010
+ internal avgi, sd:    1.2084265287864627E-002   2.6352365003240295E-010
+ internal avgi, sd:    1.2084265260766338E-002   2.6029099398407929E-010
+ internal avgi, sd:    1.2084265239178294E-002   2.4486264832035025E-010
+ internal avgi, sd:    1.2084265273631413E-002   2.2347424993026137E-010
+ internal avgi, sd:    1.2084240021005692E-002   2.0111360258850741E-010
+ internal avgi, sd:    1.2084240021008649E-002   2.0111360245058186E-010
+ internal avgi, sd:    1.2084240021005881E-002   2.0111359922493265E-010
+ points:    15* 10M +  20* 80M         random seed:      78903
+ part: mp2mp0                       xicut: 1.00000    delcut: 1.00000
+ points on phase space 1244313791 thereof fucked up          0
+         
+         
+         
+ result, error:  {  1.20842E-02,  2.01114E-10 };   chisq:  ****
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 6667.914956331253s

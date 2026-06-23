@@ -1,0 +1,29 @@
+23_06_23_06_200MeV_Q2big_xi01
+========================= 
+BIG -- 0.001  <  Q2 (GeV2/c2) < 0.04 
+=========================
+th3_min:     0.077935 , th3_max:     7.997064999999999  (in mrad)
+costh3_min:  -0.998 , costh3_max:  0.998
+
+------------------------- 
+RESULTS 
+-------------------------
+LO cross section:                          [2.50566699e-01 2.66677991e-09] mb
+LO cross section Paper Big Range:           0.255 mb
+
+LO Rate:                [4.25364799e+01 4.52715507e-07] 1/s
+
+------------------------- NLO STUFF -------------------------
+Cross section real photon:  [2.25124338e-04 1.19058845e-07] mb
+Rate real photon:           [3.82173565e-02 2.02115611e-05] 1/s
+NLO cross section:   [2.97435349e-03 1.19058849e-07] mb
+
+sigma_full:  [2.53541053e-01 1.19088711e-07] mb
+
+-------------------------
+onlyR.value:  [2.25124338e-01 1.19058845e-04]
+sigma_above:  0.4198447885279799
+
+Fraction of photons with Eγ > 2.0 GeV:
+[1.86494625e+02 3.52636370e+05] % (normalized with onlyR.value)
+187.81618062112685 % (normalized with sigma_total)

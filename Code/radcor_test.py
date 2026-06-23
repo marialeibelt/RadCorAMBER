@@ -46,7 +46,8 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "mp2mp_NLO_13_05_TH500MeV_BIG","mp2mp_NLO_13_05_TH500MeV_SMALL","20_05_Eph100MeV_SMALL","20_05_Eph200MeV_SMALL","20_05_Eph500MeV_SMALL",   #35-39
            "20_05_Eph100MeV_BIG","20_05_Eph200MeV_BIG","20_05_Eph500MeV_BIG","20_05_100MeV_large_BIG","20_05_200MeV_large_BIG",                       #40-44
            "20_05_500MeV_large_BIG","28_05_200MeV_Q2rel_fixedcuts","02_06_0MeV_Q2big_1601","05_06_Q2Big_thmu_th5_Emu_1920","08_06_thmu4xsmaller_noEphcut", #45-49
-           "08_06_thmu4xbigger_noEphcut","09_06_thmunorm_noEphcut_noxycut","09_06_thmu4xsmaller_noEphcut_noxycut","09_06_thm4xbigger_noEphcut_noxycut","17_06_200MeV_Q2big_xi01_LARGE"]    #50-54
+           "08_06_thmu4xbigger_noEphcut","09_06_thmunorm_noEphcut_noxycut","09_06_thmu4xsmaller_noEphcut_noxycut","09_06_thm4xbigger_noEphcut_noxycut","17_06_200MeV_Q2big_xi01_LARGE",  #50-54
+           "23_06_200MeV_Q2big_xi0001","23_06_200MeV_Q2big_xi001","23_06_200MeV_Q2big_xi01","23_06_200MeV_Q2big_xi1"] #55-58
 nlo_outs = lo_outs
 savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_03", "25_03","26_03","27_03","13_04",          #5-9
@@ -54,14 +55,14 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",    #0-4
              "24_04","28_04","29_04","4_5","5_5",               #15-19
              "7_5","8_5","11_05","12_5","13_5",                 #20-24  
              "20_05","28_5","29_5","01_06","02_06",             #25-29
-             "05_06","09_06","18_06"]                           #30-32
+             "05_06","09_06","18_06","23_06"]                   #30-33
 
 # =========================
 # Dataset choice/ Has to be checked each time!
 # =========================
-lo_i = 54
-nlo_i = 54
-savename_i = 32
+lo_i = 58
+nlo_i = 58
+savename_i = 33
 nbins = 500
 
 bin_width = 0.0382 #ECal2 with 10x cells with 38.2 mm x 38.2 mm ->active area x&y: [-.191;19.1]
@@ -94,6 +95,7 @@ nlo = (mergefks(sigma("mp2mpR"), sigma("mp2mpF"), anyxi=sigma("mp2mpA")) * alpha
 full = lo + nlo
 onlyR = (mergefks(sigma("mp2mpR")) * alpha**3 * conv)
 
+
 #print("nlo.chi2a: ", nlo.chi2a)
 #print("full.chi2a: ", full.chi2a)
 #print("onlyR.chi2a: ", onlyR.chi2a)
@@ -108,6 +110,10 @@ lo_Eph, nlo_Eph, full_Eph = lo["Eph"], nlo["Eph"], full["Eph"]
 lo_phi5, nlo_phi5, full_phi5 = lo["phi5"], nlo["phi5"], full["phi5"]
 lo_costh3, nlo_costh3, full_costh3 = lo["costh3"], nlo["costh3"], full["costh3"]
 lo_Q2, nlo_Q2, full_Q2 = lo["Qsq"], nlo["Qsq"], full["Qsq"]
+
+#print(onlyR["Eph"].shape)
+#print(onlyR["Eph"][:5])
+#exit()
 
 
 # =========================
@@ -379,15 +385,18 @@ sigma_total = np.sum(bin_values * bin_width)
 mask = bin_centers > E_cut
 sigma_above = np.sum(bin_values[mask] * bin_width)
 
-fraction = sigma_above / sigma_total
+fraction = sigma_above / onlyR.value
+fraction2 = sigma_above / sigma_total
 percent = fraction * 100
+percent2 = fraction2 * 100
 
 print("\n-------------------------")
 print("onlyR.value: ",onlyR.value)
-print("sigma_total: ",sigma_total)
+#print("sigma_total: ",sigma_total)
 print("sigma_above: ",sigma_above)
 print(f"\nFraction of photons with Eγ > {E_cut/1000} GeV:")
-print(percent, "%")
+print(percent, "% (normalized with onlyR.value)")
+print(percent2, "% (normalized with sigma_total)")
 
 
 

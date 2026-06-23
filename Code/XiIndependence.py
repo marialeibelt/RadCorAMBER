@@ -11,9 +11,9 @@ from theo_calc import *
 #plt.rcParams['text.usetex'] = True
 
 homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"
-out_folder = ["out","18_06_out_noxy"]
+out_folder = ["out","18_06_out_noxy","23_06_out"]
 
-i = 0
+i = 2
 
 out_folder = out_folder[i]
 
