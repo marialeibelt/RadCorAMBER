@@ -135,12 +135,12 @@ module user
       n_pass_xy = n_pass_xy + 1
     endif
 
-    if (mod(n_total,100) == 0) then
-      print *, "Events:", n_total
-      print *, "x cut :", n_pass_x, 100.d0*n_pass_x/n_total, "%"
-      print *, "y cut :", n_pass_y, 100.d0*n_pass_y/n_total, "%"
-      print *, "x+y   :", n_pass_xy, 100.d0*n_pass_xy/n_total, "%"
-    endif
+    ! if (mod(n_total,8000) == 0) then
+    !   print *, "Events:", n_total
+    !   print *, "x cut :", n_pass_x, 100.d0*n_pass_x/n_total, "%"
+    !   print *, "y cut :", n_pass_y, 100.d0*n_pass_y/n_total, "%"
+    !   print *, "x+y   :", n_pass_xy, 100.d0*n_pass_xy/n_total, "%"
+    ! endif
 
 
 
@@ -181,11 +181,11 @@ module user
     
     ! Photon Cuts
     if (Eph.gt.Eph_cut) then
-      if (abs(th5).gt.th5_cut) pass_cut = .false.
+      if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
+      if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+      if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     endif
     
-    if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
    
 
     ! --- OBSERVABLE SPEICHERN ---
