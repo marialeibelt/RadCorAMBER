@@ -1,0 +1,37 @@
+Starting job mp2mp0-X1.0D1.0-S80490-O0_1782227082 at 1782227082.5452337
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 026401b
+  Git  SHA: f47f986
+  Git branch: HEAD
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [1.e-3;4.e-2] GeV²
+ No bands but cuts on x5 and y5
+  * 1.2 < th_mu < 8.0 mrad
+  * Emu > 70 GeV
+  * -12. < th_ph < 12. mrad
+  * Eph > 200 MeV
+  * d_detector=30m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    5.2816819049451066E-004   1.5138514010091346E-005
+ internal avgi, sd:    5.1395462697250674E-004   1.0672707922776071E-006
+ internal avgi, sd:    5.1350878823778947E-004   3.1515210042602133E-008
+ internal avgi, sd:    5.1355334481219858E-004   1.5573183944175053E-009
+ internal avgi, sd:    5.1355488108574814E-004   4.3911762349389048E-010
+ internal avgi, sd:    5.1355472891936697E-004   1.4974692035855080E-010

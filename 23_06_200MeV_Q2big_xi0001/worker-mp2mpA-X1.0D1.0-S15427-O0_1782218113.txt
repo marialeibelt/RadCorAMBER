@@ -63,3 +63,16 @@ Starting job mp2mpA-X1.0D1.0-S15427-O0_1782218113 at 1782218118.3738596
  internal avgi, sd:    1.9441106076247470E-002   4.0187019704857102E-010
  internal avgi, sd:    1.9441106092345277E-002   4.0186079335684513E-010
  internal avgi, sd:    1.9441106866550619E-002   4.0128909262353013E-010
+ internal avgi, sd:    1.9441115422489517E-002   3.9496828075216600E-010
+ points:    15* 10M +  20* 80M         random seed:      15427
+ part: mp2mpA                       xicut: 1.00000    delcut: 1.00000
+ points on phase space 1172681306 thereof fucked up          0
+         
+         
+         
+ result, error:  {  1.94411E-02,  3.94968E-10 };   chisq:  ****
+         
+   - * - * - * - * - * - * - * -     
+
+
+Job finished, running took 8320.614787578583s

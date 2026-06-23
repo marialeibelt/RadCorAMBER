@@ -9,17 +9,17 @@ module user
     0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	! costh3[]
     1._prec, &                                                  	! Qsq in MeV^2
-    -0.2_prec,-0.2_prec /)!, &                                  		! x5[m], y5[m]
-    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
-    ! -0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
+    -0.2_prec,-0.2_prec /)! , &    !                             		! x5[m], y5[m]
+    !-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec, & 	! x5_B1..x5_B10[m]
+    !-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     8.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                  	! costh3[]
     10.e4_prec, &	                                             	! Qsq in MeV^2
-    0.2_prec,0.2_prec /)!, &                                    	      	! x5[m], y5[m]
-    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
-    ! 0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
+    0.2_prec,0.2_prec /)! , &  !/)!                                  	      	! x5[m], y5[m]
+    !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
+    !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
     
   integer :: userdim = 0
   integer :: namesLen = 12
@@ -44,11 +44,12 @@ module user
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     !print*, "Q2 released"
     !print*, "no thmu cut"
-    print*, " * 0.3 < th_mu < 2.mrad"
+    !print*, " * 0.3 < th_mu < 2.mrad"
     print*, "No bands but cuts on x5 and y5"
+    !print*, "bands and cuts on x5 and y5"
     !print*, "No bands AND no cuts on x5 and y5"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
-    !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
+    print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     print*, " * Emu > 70 GeV"
     print*, " * -12. < th_ph < 12. mrad"
     print*, " * Eph > 200 MeV"
@@ -86,9 +87,9 @@ module user
     !Qsq_window = 'REL'  
     Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
     !Qsq_window = 'SMA'  
-    thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
+    !thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
-    !thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
+    thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
     Emu_low    = 70.e3_prec
     
     th5_cut    = 12.e-3_prec
@@ -133,20 +134,6 @@ module user
 
     if ((x5 >= x5_low) .and. (x5 <= x5_up) .and. (y5 >= y5_low) .and. (y5 <= y5_up)) then
       n_pass_xy = n_pass_xy + 1
-    endif
-
-    ! if (mod(n_total,8000) == 0) then
-    !   print *, "Events:", n_total
-    !   print *, "x cut :", n_pass_x, 100.d0*n_pass_x/n_total, "%"
-    !   print *, "y cut :", n_pass_y, 100.d0*n_pass_y/n_total, "%"
-    !   print *, "x+y   :", n_pass_xy, 100.d0*n_pass_xy/n_total, "%"
-    ! endif
-
-
-
-
-    if (abs(x5) > 1.d10) then
-      print*, "BAD X5", th5, phi5, x5
     endif
   
     ! --- CUTS AUSWERTEN ---
