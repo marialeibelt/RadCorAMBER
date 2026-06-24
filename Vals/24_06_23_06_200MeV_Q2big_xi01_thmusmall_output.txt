@@ -1,0 +1,24 @@
+=======================================================================
+        Analysed file:  24_06_23_06_200MeV_Q2big_xi01_thmusmall
+=======================================================================
+th3_min:     0.077935 , th3_max:    0.506425 (mrad)
+costh3_min:  0.998 , costh3_max:  0.998
+
+------------------------- 
+RESULTS 
+-------------------------
+LO cross section:             0.15463889264866407 mb
+LO cross section Paper (Big): 0.255 mb
+
+LO Rate:                      26.25166938894913 1/s
+
+------------------------- NLO STUFF -------------------------
+Real photon cross section:    0.0001403480737267394 mb
+NLO cross section:            0.0017692366969184086 mb
+Full cross section:           0.15640812934558246 mb
+
+Rate real photon:             0.023825644168450077 1/s
+
+-------------------------------------------------------------
+Photon cross section with Eγ > 2.0 GeV:  1.925942e-04 mb
+Photon fraction with Eγ > 2.0 GeV:       137.23 %
