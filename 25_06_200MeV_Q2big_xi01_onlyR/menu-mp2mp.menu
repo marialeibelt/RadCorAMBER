@@ -1,0 +1,20 @@
+## Generated at 14:05 on June 25 2026 by ge93juy
+# git version: b'main' (b'5b3a55f')
+# To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
+#      --seeds 85615 47474 24401 94726 58321 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir 25_06_200MeV_Q2big_xi01_onlyR \
+#      --mcmule mcmule \
+#      --stat R,10000,15,80000,20,5
+
+conf mp2mp.toml
+mode vegas
+
+
+run 58321 0.1 mp2mpR 0
+run 94726 0.1 mp2mpR 0
+run 24401 0.1 mp2mpR 0
+run 47474 0.1 mp2mpR 0
+run 85615 0.1 mp2mpR 0
+

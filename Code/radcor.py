@@ -66,16 +66,6 @@ lo_i = 59
 nlo_i = 59
 savename_i = 34
 nbins = 500
-# HAS_BANDS = True
-HAS_BANDS = False
-HAS_XY = True
-
-bin_width = 0.0382  # ECal2 with 10x cells with 38.2 mm x 38.2 mm -> active area x&y: [-.191;.191]
-n_bands = 10
-band_min = -(n_bands / 2 * bin_width)
-band_max =   n_bands / 2 * bin_width
-Y5_RANGE = (band_min, band_max)
-X5_RANGE = (band_min, band_max)
 
 savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]
 
@@ -107,22 +97,6 @@ lo_Eph,   nlo_Eph,   full_Eph   = lo["Eph"],   nlo["Eph"],   full["Eph"]
 lo_phi5,  nlo_phi5,  full_phi5  = lo["phi5"],  nlo["phi5"],  full["phi5"]
 lo_costh3,nlo_costh3,full_costh3= lo["costh3"],nlo["costh3"],full["costh3"]
 lo_Q2,    nlo_Q2,    full_Q2    = lo["Qsq"],   nlo["Qsq"],   full["Qsq"]
-
-if HAS_XY:
-    lo_x5,  nlo_x5,  full_x5  = lo["x5"],  nlo["x5"],  full["x5"]
-    lo_y5,  nlo_y5,  full_y5  = lo["y5"],  nlo["y5"],  full["y5"]
-
-if HAS_BANDS:
-    x5_bands_nlo, y5_bands_nlo = {}, {}
-    for i in range(1, n_bands + 1):
-        try:
-            x5_bands_nlo[i] = nlo[f"x5_B{i}"]
-        except KeyError:
-            pass
-        try:
-            y5_bands_nlo[i] = nlo[f"y5_B{i}"]
-        except KeyError:
-            pass
 
 # =========================
 # Colors
@@ -156,8 +130,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
                              lo_phi5, nlo_phi5, full_phi5,
                              lo_costh3, nlo_costh3, full_costh3,
                              lo_Q2, nlo_Q2, full_Q2,
-                             lo_x5=None, nlo_x5=None, full_x5=None,
-                             lo_y5=None, nlo_y5=None, full_y5=None,
                              outdir, outdir_vals, colors):
     savename = f"{savename_base}_{tag}"
 
@@ -172,8 +144,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
         ("phi5",  True,  False),
         ("costh3",False, True),
         ("Q2",    False, True),
-        ("x5",    True,  False),
-        ("y5",    True,  False),
     ]
 
     data_map = {
@@ -184,8 +154,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
         "phi5":   {"lo": lo_phi5,   "nlo": nlo_phi5,   "full": full_phi5},
         "costh3": {"lo": lo_costh3, "nlo": nlo_costh3, "full": full_costh3},
         "Q2":     {"lo": lo_Q2,     "nlo": nlo_Q2,     "full": full_Q2},
-        "x5":     {"lo": lo_x5,     "nlo": nlo_x5,     "full": full_x5},
-        "y5":     {"lo": lo_y5,     "nlo": nlo_y5,     "full": full_y5},
     }
 
     for var, photon_only, lab_only in variables:
@@ -201,8 +169,7 @@ def make_plots_and_kfactors(*, tag, savename_base,
     # =========================
     # Combined figure
     # =========================
-    has_xy = (lo_x5 is not None and nlo_x5 is not None and full_x5 is not None)
-    nrows = 8 if has_xy else 6
+    nrows = 6
     height_ratios = [3, 1] * (nrows // 2)
 
     fig, axes = create_figure(nrows=nrows, ncols=2, figsize=(16, 6 + nrows * 2), font_size=12,
@@ -221,12 +188,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
     ax_K_Eph.sharex(ax_Eph)
     ax_K_phi5.sharex(ax_phi5)
     ax_K_Q2.sharex(ax_Q2)
-
-    if has_xy:
-        ax_x5,   ax_y5   = axes[6]
-        ax_K_x5, ax_K_y5 = axes[7]
-        ax_K_x5.sharex(ax_x5)
-        ax_K_y5.sharex(ax_y5)
 
     draw_observable_and_k(ax_th3, ax_K_th3,
         lo_hist=lo_th3, nlo_hist=nlo_th3, full_hist=full_th3,
@@ -263,19 +224,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
         scale_factor=1.e6, x_label_main=r"$Q^2$", x_label_k=r"$Q^2$",
         y_label_main=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
         main_title=f"Momentum Transfer ({tag})", force_main_linear=True, colors=colors)
-
-    if has_xy:
-        draw_observable_and_k(ax_x5, ax_K_x5,
-            lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5,
-            scale_factor=1., x_label_main=r"$x_5$ (m)", x_label_k=r"$x_5$ (m)",
-            y_label_main=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-            main_title=f"Photon x ({tag})", xlim=(-0.2, 0.2), colors=colors)
-
-        draw_observable_and_k(ax_y5, ax_K_y5,
-            lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5,
-            scale_factor=1., x_label_main=r"$y_5$ (m)", x_label_k=r"$y_5$ (m)",
-            y_label_main=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-            main_title=f"Photon y ({tag})", xlim=(-0.2, 0.2), colors=colors)
 
     save_figure(fig, savename, outdir=outdir)
     plt.close(fig)
@@ -326,85 +274,6 @@ def make_plots_and_kfactors(*, tag, savename_base,
         y_label=r"$\frac{d\sigma}{dQ^2}\ (\mu\mathrm{barn})$",
         main_title=f"$Q^2$ ({tag})", force_main_linear=False, colors=colors, outdir=outdir)
 
-    if has_xy:
-        save_single_pair_plot(savename=f"{savename}_x5_pair",
-            lo_hist=lo_x5, nlo_hist=nlo_x5, full_hist=full_x5,
-            scale_factor=1., x_label=r"$x_5\ (\mathrm{m})$",
-            y_label=r"$\frac{d\sigma}{dx_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-            main_title=f"Photon X Hit ({tag})", colors=colors, outdir=outdir)
-
-        save_single_pair_plot(savename=f"{savename}_y5_pair",
-            lo_hist=lo_y5, nlo_hist=nlo_y5, full_hist=full_y5,
-            scale_factor=1., x_label=r"$y_5\ (\mathrm{m})$",
-            y_label=r"$\frac{d\sigma}{dy_5}\ (\mu\mathrm{barn}/\mathrm{m})$",
-            main_title=f"Photon Y Hit ({tag})", colors=colors, outdir=outdir)
-
-
-def make_band_plots(*, tag, savename_base,
-                    x5_bands_nlo, y5_bands_nlo,
-                    n_bands, bin_width,
-                    X5_RANGE, Y5_RANGE,
-                    outdir, colors):
-    """Band-Plots und 2D ECAL-Verteilung. Nur aufrufen wenn der Run x5/y5-Bands enthält."""
-    savename = f"{savename_base}_{tag}"
-
-    # x5 in y5-Slices
-    plot_bands(x5_bands_nlo,
-               xlabel=r"$x_5\ (\mathrm{m})$",
-               ylabel=r"$\frac{d\sigma}{dx_5} (\mu\mathrm{barn}/\mathrm{m})$",
-               title=f"x5 distribution in y5-slices ({tag})",
-               savename=f"{savename}_x5_allbands",
-               outdir=outdir, colors=colors,
-               slice_name="y5", slice_range=Y5_RANGE, yscale="log")
-
-    # y5 in x5-Slices
-    plot_bands(y5_bands_nlo,
-               xlabel=r"$y_5\ (\mathrm{m})$",
-               ylabel=r"$\frac{d\sigma}{dy_5} (\mu\mathrm{barn}/\mathrm{m})$",
-               title=f"y5 distribution in x5-slices ({tag})",
-               savename=f"{savename}_y5_allbands",
-               outdir=outdir, colors=colors,
-               slice_name="x5", slice_range=X5_RANGE, yscale="log")
-
-    # 2D ECAL-Verteilung
-    keys = sorted(x5_bands_nlo.keys())
-    rows = []
-    for i in keys:
-        band = np.array(x5_bands_nlo[i])
-        if band is not None and len(band) > 0:
-            vals = band[:, 1]
-            n_rebin = len(vals) // n_bands
-            vals_rebinned = vals[:n_bands * n_rebin].reshape(n_bands, n_rebin).mean(axis=1)
-            rows.append(vals_rebinned * bin_width)
-
-    Z = np.array(rows)
-    sigma_photons_2D = np.sum(Z)
-    print("\nPhoton cross section from 2D distribution: ", sigma_photons_2D * 1e-3, " mb")
-    print("Photon rate from 2D distribution:          ", calculate_rate(sigma_photons_2D * 1e-3), " 1/s")
-
-    band_min = -(n_bands / 2 * bin_width)
-    band_max =   n_bands / 2 * bin_width
-
-    fig, ax = plt.subplots(figsize=(6, 5))
-    im = ax.imshow(Z, extent=[band_min, band_max, band_min, band_max],
-                   origin="lower", aspect="auto", cmap="viridis", norm=LogNorm())
-    grid_ticks = np.round(np.arange(band_min, band_max + bin_width, bin_width), 6)
-    for t in grid_ticks:
-        ax.axvline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
-        ax.axhline(t, linestyle="--", linewidth=0.4, alpha=0.5, color="white")
-    ax.set_xticks(grid_ticks, minor=True)
-    ax.set_yticks(grid_ticks, minor=True)
-    ax.grid(which="minor", linestyle="--", linewidth=0.4, alpha=0.5)
-    cbar = plt.colorbar(im, ax=ax)
-    cbar.set_label(r"$\Delta\sigma\ \text{per ECAL cell}\ (\mu\mathrm{barn})$")
-    ax.set_xlabel(r"$x_5\ (\mathrm{m})$")
-    ax.set_ylabel(r"$y_5\ (\mathrm{m})$")
-    ax.set_title(f"2D ECAL cell distribution ({tag})")
-    ax.set_xlim(-0.2, 0.2)
-    ax.set_ylim(-0.2, 0.2)
-    save_figure(fig, f"{savename}_x5y5_2D", outdir=outdir)
-    plt.close(fig)
-
 
 # =========================
 # Run for LAB
@@ -417,20 +286,8 @@ make_plots_and_kfactors(tag="lab", savename_base=savename_base,
                         lo_phi5=lo_phi5, nlo_phi5=nlo_phi5, full_phi5=full_phi5,
                         lo_costh3=lo_costh3, nlo_costh3=nlo_costh3, full_costh3=full_costh3,
                         lo_Q2=lo_Q2, nlo_Q2=nlo_Q2, full_Q2=full_Q2,
-                        lo_x5=lo_x5   if HAS_XY else None,
-                        nlo_x5=nlo_x5 if HAS_XY else None,
-                        full_x5=full_x5 if HAS_XY else None,
-                        lo_y5=lo_y5   if HAS_XY else None,
-                        nlo_y5=nlo_y5 if HAS_XY else None,
-                        full_y5=full_y5 if HAS_XY else None,
                         outdir=outdir, outdir_vals=outdir_vals, colors=colors)
 
-if HAS_BANDS:
-    make_band_plots(tag="lab", savename_base=savename_base,
-                    x5_bands_nlo=x5_bands_nlo, y5_bands_nlo=y5_bands_nlo,
-                    n_bands=n_bands, bin_width=bin_width,
-                    X5_RANGE=X5_RANGE, Y5_RANGE=Y5_RANGE,
-                    outdir=outdir, colors=colors)
 
 # =========================
 # Plot Numeric vs. Analytic
@@ -455,60 +312,25 @@ plot_Q2_with_analytic(lo_hist=lo_Q2,
                       outdir=outdir,
                       outdir_vals=outdir_vals)
 
+
 # =========================
 # Calculate total cross section
 # =========================
-sigma_lo    = lo.value
-sigma_nlo   = nlo.value
-sigma_full  = full.value
-sigma_Rph   = onlyR.value
 sigma_lo_mb   = lo.value[0]    / 1000
 sigma_nlo_mb  = nlo.value[0]   / 1000
 sigma_full_mb = full.value[0]  / 1000
-sigma_Rph_mb  = onlyR.value[0] / 1000
-
-# =========================
-# Calculate Rate
-# =========================
 Rate     = calculate_rate(sigma_lo_mb)
-Rate_Rph = calculate_rate(sigma_Rph_mb)
+Rate_nlo  = calculate_rate(sigma_nlo_mb)
 
-print("\n-------------------------", "\nRESULTS", "\n-------------------------")
+print("\n-------------------------------------------------------------")
 print("LO cross section:            ", sigma_lo_mb, "mb")
 print("LO cross section Paper (Big): 0.255 mb")
-print("\nLO Rate:                     ", Rate, "1/s")
-
-print("\n------------------------- NLO STUFF -------------------------")
-print("Real photon cross section:   ", sigma_Rph_mb, "mb")
 print("NLO cross section:           ", sigma_nlo_mb, "mb")
 print("Full cross section:          ", sigma_full_mb, "mb")
-print("\nRate real photon:            ", Rate_Rph, "1/s")
+print("LO Rate:                     ", Rate, "1/s")
+print("NLO Rate:                    ", Rate_nlo, "1/s")
 print("\n-------------------------------------------------------------")
 
-# =========================
-# Fraction of photons with E_gamma > E_cut
-# =========================
-E_cut = 2000  # MeV
-onlyR_Eph = onlyR["Eph"]
-Eph_finite = finite_bins(onlyR_Eph)
-
-bin_centers = Eph_finite[:, 0]
-bin_values  = Eph_finite[:, 1]
-bin_width_Eph = np.mean(np.diff(bin_centers))  # local var, doesn't overwrite ECAL bin_width
-
-mask        = bin_centers > E_cut
-sigma_above = np.sum(bin_values[mask] * bin_width_Eph)
-sigma_above_mb = sigma_above / 1000
-onlyR_mb       = onlyR.value[0] / 1000
-
-percent  = sigma_above_mb / onlyR_mb * 100   # = sigma_above / onlyR.value[0] * 100, mb kürzen sich weg
-
-if percent > 100 or percent < 0:
-    print(f"Photon fraction with Eγ > {E_cut/1000} GeV:       unreliable (FKS bin artefacts)")
-    print(f"Photon cross section with Eγ > {E_cut/1000} GeV:  unreliable (FKS bin artefacts)")
-else:
-    print(f"Photon cross section with Eγ > {E_cut/1000} GeV:  {sigma_above_mb:.6e} mb")
-    print(f"Photon fraction with Eγ > {E_cut/1000} GeV:       {percent:.2f} %")
 
 sys.stdout.close()
 sys.stdout = sys.stdout.terminal  # restore normal stdout

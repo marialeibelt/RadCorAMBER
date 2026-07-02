@@ -44,12 +44,12 @@ module user
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     !print*, "Q2 released"
     !print*, "no thmu cut"
-    !print*, " * 0.3 < th_mu < 2.mrad"
+    print*, " * 0.3 < th_mu < 2.mrad"
     print*, "No bands but cuts on x5 and y5"
     !print*, "bands and cuts on x5 and y5"
     !print*, "No bands AND no cuts on x5 and y5"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
-    print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
+    !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     print*, " * Emu > 70 GeV"
     print*, " * -12. < th_ph < 12. mrad"
     print*, " * Eph > 200 MeV"
@@ -87,9 +87,9 @@ module user
     !Qsq_window = 'REL'  
     Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
     !Qsq_window = 'SMA'  
-    !thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
+    thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
-    thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
+    !thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
     Emu_low    = 70.e3_prec
     
     th5_cut    = 12.e-3_prec
@@ -167,11 +167,11 @@ module user
     if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
-    if (Eph.gt.Eph_cut) then
-      if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
-      if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-      if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    endif
+    ! if (Eph.gt.Eph_cut) then
+    !   if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
+    !   if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !   if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! endif
     
    
 

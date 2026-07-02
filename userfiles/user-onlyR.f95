@@ -168,9 +168,9 @@ module user
     
     ! Photon Cuts
     if (Eph.lt.Eph_cut) pass_cut = .false. !Hard cut on Photon
-    if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
-    if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
+    ! if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
    
 

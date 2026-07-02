@@ -1,0 +1,1 @@
+gfortran -fPIC -I /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-release --shared -o user.so /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/userfiles/user-onlyR.f95 

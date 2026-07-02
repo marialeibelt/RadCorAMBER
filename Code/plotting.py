@@ -263,6 +263,41 @@ def draw_observable_and_k(ax_main, ax_k, *, lo_hist, nlo_hist, full_hist,
     ax_k.tick_params(axis="x", labelbottom=True)
     return lo_s, nlo_s, full_s, K    
 
+def draw_observable_onlyR(ax, *, onlyR_hist,
+                          scale_factor, x_label, y_label,
+                          title, xlim=None, ylim=None,
+                          yscale="log", force_linear=False,
+                          colors=None):
+
+    # Keine Daten → Achse ausblenden
+    if onlyR_hist is None:
+        ax.set_visible(False)
+        return None
+
+    # Histogramm skalieren
+    onlyR_s = scaleplot(onlyR_hist, scale_factor)
+
+    # Farbe
+    plot_color = colors.get("onlyR", colors.get("full", "black")) if colors else "black"
+
+    # Plot
+    plot_errorband(ax, onlyR_s, plot_color)
+
+    # y-Skalierung
+    yscale_to_use = "linear" if force_linear else yscale
+    if not force_linear and np.all(onlyR_s[:, 1] <= 0):
+        yscale_to_use = "linear"
+
+    style_sci_x(ax, x_label, y_label, title, yscale=yscale_to_use)
+
+    if xlim is not None:
+        ax.set_xlim(*xlim)
+
+    if ylim is not None:
+        ax.set_ylim(*ylim)
+
+    return onlyR_s
+
 
 def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist, 
                           scale_factor, x_label, y_label, main_title, 
@@ -280,6 +315,27 @@ def save_single_pair_plot( *, savename, lo_hist, nlo_hist, full_hist,
     save_figure(fig, savename, outdir=outdir) 
     plt.close(fig) 
 
+def save_single_plot_onlyR( *, savename, onlyR_hist, 
+                          scale_factor, x_label, y_label, title, 
+                          xlim=None, ylim=None, yscale="log", force_linear=False, 
+                          colors=None, outdir=None, ): 
+    # Da kein K-Faktor mehr geplottet wird, reicht 1 Zeile (nrows=1)
+    fig, axes = create_figure( nrows=1, ncols=1, figsize=(7, 4.5), 
+                              font_size=12,
+                              ) 
+    # Je nachdem, wie create_figure Achsen zurückgibt (2D-Array oder einzelne Achse bei nrows=1):
+    # Wenn create_figure bei 1x1 ein 2D-Array liefert: axes[0, 0]. Wenn es ein einzelnes Ax-Objekt liefert: axes.
+    # Hier wird angenommen, dass es wie bei subplots ein einzelnes Objekt ist, falls nicht, wieder axes[0, 0] nutzen.
+    ax = axes[0, 0] if hasattr(axes, "shape") else axes
+    
+    # Aufruf der neuen Version von draw_observable_and_k
+    draw_observable_onlyR( ax, onlyR_hist=onlyR_hist,
+                           scale_factor=scale_factor, x_label=x_label, y_label=y_label, title=title, 
+                           xlim=xlim, ylim=ylim, yscale=yscale, force_linear=force_linear, colors=colors)
+    
+    mulify(fig, delx=4.5, dely=1.)
+    save_figure(fig, savename, outdir=outdir) 
+    plt.close(fig)
 
 def plot_costh3_with_analytic(lo_hist, nlo_hist, full_hist, nbins, th3_min,th3_max,colors, savename, outdir, outdir_vals):
 
