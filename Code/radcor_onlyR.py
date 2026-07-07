@@ -35,15 +35,16 @@ outdir_vals = homedir + "Vals/"
 # =========================
 # Input definitions
 # =========================
-outs = ["25_06_200MeV_Q2big_xi01_onlyR","26_06_200MeV_Q2big_xi1_onlyR","26_06_200MeV_Q2big_xi001_onlyR","26_06_200MeV_Q2big_xi0001_onlyR"] #0-3
+outs = ["25_06_200MeV_Q2big_xi01_onlyR","26_06_200MeV_Q2big_xi1_onlyR","26_06_200MeV_Q2big_xi001_onlyR","26_06_200MeV_Q2big_xi0001_onlyR","02_07_200MeV_Q2big_xi01_onlyR_Mehran_noEmucut_correct", #0-4
+        "01_07_100MeV_Q2big_xi01_onlyR","01_07_500MeV_Q2big_xi01_onlyR"] #5-6
 
-savenames = ["26_06", "29_06","01_07"]            #0-2
+savenames = ["26_06", "29_06","01_07","03_07","07_07"]            #0-4
 
 # =========================
 # Dataset choice / Has to be checked each time!
 # =========================
-outs_i = 2
-savename_i = 2
+outs_i = 6
+savename_i = 4
 nbins = 500
 # HAS_BANDS = True
 HAS_BANDS = False
