@@ -1,0 +1,110 @@
+Starting job mp2mp0-X1.0D1.0-S51157-O0_1783428475 at 1783428475.6533158
+
+   - * - * - * - * - * - * - * -     
+        Version information          
+  Full SHA: 505f37a
+  Git  SHA: 86b2556
+  Git branch: event-generator
+   - * - * - * - * - * - * - * -     
+ Welcome to Mary's McMule userfile <3
+ Big Q2 range [1.e-3;4.e-2] GeV²
+ No bands but cuts on x5 and y5
+  * 0.3 < th_mu < 2.mrad
+  * -12. < th_ph < 12. mrad
+  * Eph > 200 MeV
+  * d_detector=30m
+                                                            
+         *******************************************        
+         *              C O L L I E R              *        
+         *                                         *        
+         *        Complex One-Loop Library         *        
+         *      In Extended Regularizations        *        
+         *                                         *        
+         *    by A.Denner, S.Dittmaier, L.Hofer    *        
+         *                                         *        
+         *              version 1.2.7              *        
+         *                                         *        
+         *******************************************        
+                                                            
+ #####################################################################
+ #        ___                                           version beta #
+ #       /   \ ___  ____  _  _  |     __   __  ___   __    ___       #
+ #       |   | |__| |__   |\ |  |    /  \ /  \ |__| /__    __/       #
+ #       \___/ |    |___  | \|  |___ \__/ \__/ |    __/   /__        #
+ #                                                                   #
+ #####################################################################
+ #       You are using OpenLoops 2 to evaluate loop amplitudes       #
+ #                             Authors:                              #
+ #       F. Buccioni, J.-N. Lang, J. Lindert, P. Maierhoefer,        #
+ #                S. Pozzorini, M. Zoller, H. Zhang                  #
+ #                                                                   #
+ #         Please cite Eur.Phys.J. C79 (2019) no.10, 866             #
+ #                     Phys. Rev. Lett. 108 (2012) 111601            #
+ #                     Eur.Phys.J. C78 (2018) no.1, 70               #
+ #                                                                   #
+ #####################################################################
+
+########################################################################
+#                                                                      #
+#                        You are using OneLOop                         #
+#                                                                      #
+# for the evaluation of 1-loop scalar 1-, 2-, 3- and 4-point functions #
+#                                                                      #
+# author: Andreas van Hameren <hamerenREMOVETHIS@ifj.edu.pl>           #
+#   date: 2018-06-13                                                   #
+#                                                                      #
+# Please cite                                                          #
+#    A. van Hameren,                                                   #
+#      Comput.Phys.Commun. 182 (2011) 2427-2438, arXiv:1007.4716       #
+#    A. van Hameren, C.G. Papadopoulos and R. Pittau,                  #
+#      JHEP 0909:106,2009, arXiv:0903.4665                             #
+# in publications with results obtained with the help of this program. #
+#                                                                      #
+########################################################################
+   - * - * - * - * - * - * - * -     
+         
+ internal avgi, sd:    5.8081663818088814E-007   1.4120896133366340E-007
+ internal avgi, sd:    6.9310578310378630E-007   3.2895362886511373E-008
+ internal avgi, sd:    6.4578882996235590E-007   2.3497138442997720E-009
+ internal avgi, sd:    6.4293305135296250E-007   4.4184924994549819E-011
+ internal avgi, sd:    6.4004576778514672E-007   9.4757382555231508E-012
+ internal avgi, sd:    6.3973150326267055E-007   3.0359466022774300E-012
+ internal avgi, sd:    6.3958404428152127E-007   1.6744662718225239E-012
+ internal avgi, sd:    6.3958404476410389E-007   1.6744661683224109E-012
+ internal avgi, sd:    6.3958404901207206E-007   1.6744648890062922E-012
+ internal avgi, sd:    6.3958483474221868E-007   1.6743010538522823E-012
+ internal avgi, sd:    6.3965224997704911E-007   1.6598219117555518E-012
+ internal avgi, sd:    6.4016557166881665E-007   1.5452269839082014E-012
+ internal avgi, sd:    6.4099929932836924E-007   1.3387142607785863E-012
+ internal avgi, sd:    6.4175925500196389E-007   1.1174301900851110E-012
+ internal avgi, sd:    6.4175934254042824E-007   1.1174029325587247E-012
+ internal avgi, sd:    6.4399149781689569E-007   3.2877953190243021E-010
+ internal avgi, sd:    6.4352325904931166E-007   1.0203066274467568E-011
+ internal avgi, sd:    6.4350633633927573E-007   1.5353259239612461E-012
+ internal avgi, sd:    6.4350328008479117E-007   4.8934979819310131E-013
+ internal avgi, sd:    6.4350322392409569E-007   2.8180468212421515E-013
+ internal avgi, sd:    6.4350343894927061E-007   2.4807946192467294E-013
+ internal avgi, sd:    6.4350362326379758E-007   2.0255454936878958E-013
+ internal avgi, sd:    6.4350350565343941E-007   1.8775550749223591E-013
+ internal avgi, sd:    6.4350347909498032E-007   1.6681893690894576E-013
+ internal avgi, sd:    6.4350347900551776E-007   1.6681879769323978E-013
+ internal avgi, sd:    6.4350347914574873E-007   1.6681861657350232E-013
+ internal avgi, sd:    6.4350348104022420E-007   1.6678317328971701E-013
+ internal avgi, sd:    6.4350350141224485E-007   1.6489374356599309E-013
+ internal avgi, sd:    6.4350356152121777E-007   1.6102723537188725E-013
+ internal avgi, sd:    6.4350363993228578E-007   1.5162227972935541E-013
+ internal avgi, sd:    6.4350371928940374E-007   1.3408088632461823E-013
+ internal avgi, sd:    6.4348833075436286E-007   1.1847637722047815E-013
+ internal avgi, sd:    6.4348833072378529E-007   1.1847637492372568E-013
+ internal avgi, sd:    6.4348833074884021E-007   1.1847637046213211E-013
+ internal avgi, sd:    6.4348833068370983E-007   1.1847559640466384E-013
+ points:   15*  1.0M + 20*  8.0M         random seed: 51157
+ part: mp2mp0                       xi1: 1.00000    xi2:  1.00000
+ points on phase space 123588153 thereof fucked up 0, 123588153 evaluations
+
+
+
+ result, error:  {  6.43488E-07,   1.18476E-13 };   chi2:  ****
+
+
+Job finished, running took 875.1826884746552s

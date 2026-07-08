@@ -1,0 +1,22 @@
+## Generated at 12:55 on July 07 2026 by ge93juy
+# git version: b'main' (b'4e10aa6')
+# To re-generate, run python /nfs/mnemosyne/user/ge93juy/private/.local/bin/pymule create \
+#      --seeds 57704 17929 94683 \
+#      -xi 0.1 \
+#      --genprocess mp2mp \
+#      --output-dir 07_07_200MeV_Q2big_xi01_evtgentest \
+#      --mcmule mcmule \
+#      --stat 0,1000,15,8000,20,1 \
+#      --stat NLO0,1000,15,8000,20,1 \
+#      --stat R,1000,15,8000,20,1
+[McMule]
+
+# specify the program to run relative to `pwd`
+mcmule = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-release/mcmule"
+# Specify the variables nenter_ad, itmx_ad, nenter and itmx
+# for each piece you want to run.
+
+[McMule.statistics.vegas]
+mp2mp0 = { ncall_pre = 1000, itmx_pre = 15, ncall = 8000, itmx = 20 }
+mp2mpNLO0 = { ncall_pre = 1000, itmx_pre = 15, ncall = 8000, itmx = 20 }
+mp2mpR = { ncall_pre = 1000, itmx_pre = 15, ncall = 8000, itmx = 20 }

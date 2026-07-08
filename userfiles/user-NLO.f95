@@ -28,11 +28,6 @@ module user
   integer :: nbins = nrbins
   integer :: bin_kind = 0       !! 0 for d\sigma/dQ; +1 for Q d\sigma/dQ;
 
-  integer :: n_total = 0
-  integer :: n_pass_x = 0
-  integer :: n_pass_y = 0
-  integer :: n_pass_xy = 0
-
   contains
 
   subroutine FIX_MU
@@ -43,11 +38,9 @@ module user
     print*, "Welcome to Mary's McMule userfile <3"
     print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     !print*, "Q2 released"
-    !print*, "no thmu cut"
-    print*, " * 0.3 < th_mu < 2.mrad"
     print*, "No bands but cuts on x5 and y5"
     !print*, "bands and cuts on x5 and y5"
-    !print*, "No bands AND no cuts on x5 and y5"
+    print*, " * 0.3 < th_mu < 2.mrad"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     !print*, " * Emu > 70 GeV"
@@ -90,7 +83,7 @@ module user
     thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
     !thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
-    !Emu_low    = 70.e3_prec
+    Emu_low    = 70.e3_prec
     
     th5_cut    = 12.e-3_prec
     Eph_cut    = 200._prec 
@@ -116,25 +109,6 @@ module user
     
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
-
-
-
-    ! Event zählen
-    n_total = n_total + 1
-
-    ! x-Cut separat prüfen
-    if ((x5 >= x5_low) .and. (x5 <= x5_up)) then
-      n_pass_x = n_pass_x + 1
-    endif
-
-    ! y-Cut separat prüfen
-    if ((y5 >= y5_low) .and. (y5 <= y5_up)) then
-      n_pass_y = n_pass_y + 1
-    endif
-
-    if ((x5 >= x5_low) .and. (x5 <= x5_up) .and. (y5 >= y5_low) .and. (y5 <= y5_up)) then
-      n_pass_xy = n_pass_xy + 1
-    endif
   
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
@@ -164,14 +138,14 @@ module user
 
     if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
-    ! if (Eph.gt.Eph_cut) then
-    !   if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
-    !   if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !   if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    ! endif
+    if (Eph.gt.Eph_cut) then
+      if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
+      if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+      if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    endif
     
    
 
@@ -232,5 +206,29 @@ module user
     real(kind=prec) :: x(ndim)
     userweight = 1._prec
   end subroutine USEREVENT
+
+  FUNCTION EVENT_DISTANCE(Q1,Q2,Q3,Q4,Q5,Q6,Q7, P1,P2,P3,P4,P5,P6,P7)
+  real (kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4), q5(4),q6(4),q7(4)
+  real (kind=prec), intent(in) :: p1(4),p2(4),p3(4),p4(4), p5(4),p6(4),p7(4)
+  real (kind=prec) :: event_distance, Ediff, Thdiff, th3_q, th3_p, Ethresh, Ththresh
+  real (kind=prec) :: q3perp, p3perp
+  real (kind=prec) :: Q3lab(4), P3lab(4)
+
+  q3lab = boost_rf(q2,q3)  ! outgoing lepton
+  p3lab = boost_rf(p2,p3)  ! outgoing lepton
+  q3perp = sqrt(q3lab(1)**2 + q3lab(2)**2)
+  p3perp = sqrt(p3lab(1)**2 + p3lab(2)**2)
+
+  th3_q = atan2(q3perp, q3lab(3))
+  th3_p = atan2(p3perp, p3lab(3))
+
+  Ediff = abs(q3lab(4)-p3lab(4))
+  Thdiff = abs(th3_q - th3_p) *1000 ! in mrad     !!!!!!!!!!!!!!!!!!check again!!!!!!!!!!!!!!!!
+  Ethresh = 5._prec
+  Ththresh = 15._prec
+  
+  event_distance = sqrt((Ediff/Ethresh)**2 + (Thdiff/Ththresh)**2)
+
+  END FUNCTION
 
 end module user
