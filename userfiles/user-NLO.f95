@@ -36,17 +36,17 @@ module user
 
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
-    print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    !print*, "Q2 released"
-    print*, "No bands but cuts on x5 and y5"
+    !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
+    print*, "Q2 released"
+    !print*, "No bands but cuts on x5 and y5"
     !print*, "bands and cuts on x5 and y5"
-    print*, " * 0.3 < th_mu < 2.mrad"
+    print*, " * 0.316 < th_mu < 2.mrad"
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     !print*, " * Emu > 70 GeV"
-    print*, " * -12. < th_ph < 12. mrad"
-    print*, " * Eph > 200 MeV"
-    print*, " * d_detector=30m"
+    ! print*, " * -12. < th_ph < 12. mrad"
+    ! print*, " * 200 < Eph < 70000 MeV"
+    ! print*, " * d_detector=30m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER
@@ -54,7 +54,7 @@ module user
   function QUANT(q1,q2,q3,q4,q5,q6,q7)
     real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
     real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4)
-    real(kind=prec) :: th5_cut,Eph_cut,thmu_low,thmu_up,Emu_low
+    real(kind=prec) :: th5_cut,Eph_up,Eph_low,thmu_low,thmu_up,Emu_low
     real(kind=prec) :: th3,costh3,q3perp,Emu
     real(kind=prec) :: q5perp,th5,phi5,Eph
     real(kind=prec) :: Qsq,Qsq_low,Qsq_up
@@ -86,7 +86,8 @@ module user
     Emu_low    = 70.e3_prec
     
     th5_cut    = 12.e-3_prec
-    Eph_cut    = 200._prec 
+    Eph_low    = 200._prec 
+    Eph_up      = 70.e3._prec
     
     
     x5_low = -0.191_prec
@@ -116,8 +117,8 @@ module user
     ! Muon Windows
     select case (thmu_window)
       case ('NOR')
-        thmu_low = 0.3e-3_prec
-        thmu_up  = 2.e-3_prec
+        thmu_low = 0.316e-3_prec
+        thmu_up  = 2.000e-3_prec
       case ('BIG')
         thmu_low = 1.2e-3_prec
         thmu_up  = 8.e-3_prec
@@ -136,16 +137,17 @@ module user
         Qsq_up  = 1.e3_prec
     end select
 
-    if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
-    if (Eph.gt.Eph_cut) then
-      if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
-      if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-      if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    endif
+    ! if (Eph.gt.Eph_low) then
+    !   if (Eph.lt.Eph_up) pass_cut = .false. !Hard cut on Photon
+    !   if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
+    !   if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    !   if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! endif
     
    
 
@@ -223,7 +225,7 @@ module user
   th3_p = atan2(p3perp, p3lab(3))
 
   Ediff = abs(q3lab(4)-p3lab(4))
-  Thdiff = abs(th3_q - th3_p) *1000 ! in mrad     !!!!!!!!!!!!!!!!!!check again!!!!!!!!!!!!!!!!
+  Thdiff = abs(th3_q - th3_p) *1e6! in μrad
   Ethresh = 5._prec
   Ththresh = 15._prec
   

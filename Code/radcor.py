@@ -48,7 +48,7 @@ lo_outs = ["mp2mp_NLO_19_01", "mp2mp_NLO_01_02", "mp2mp_NLO_24_02","mp2mp_NLO_15
            "08_06_thmu4xbigger_noEphcut","09_06_thmunorm_noEphcut_noxycut","09_06_thmu4xsmaller_noEphcut_noxycut","09_06_thm4xbigger_noEphcut_noxycut","17_06_200MeV_Q2big_xi01_LARGE", #50-54
            "23_06_200MeV_Q2big_xi0001","23_06_200MeV_Q2big_xi001","23_06_200MeV_Q2big_xi01","23_06_200MeV_Q2big_xi1","23_06_200MeV_Q2big_xi01_withbands",  #55-59
            "23_06_200MeV_Q2big_xi01_thmusmall","23_06_200MeV_Q2big_xi01_thmubig","02_07_200MeV_Q2big_xi01_Mehran_noEmucut","01_07_100MeV_Q2big_xi01","01_07_200MeV_Q2big_xi01",  #60-64
-           "01_07_500MeV_Q2big_xi01"]  #65
+           "01_07_500MeV_Q2big_xi01","08_07_200MeV_Q2big_xi01_Mehran_precthmurange","09_07_xi01_Mehran"]  #65-67
 
 nlo_outs = lo_outs
 
@@ -59,13 +59,13 @@ savenames = ["combined", "15_03", "17_03", "18_03", "23_03",     #0-4
              "7_5","8_5","11_05","12_5","13_5",                  #20-24
              "20_05","28_5","29_5","01_06","02_06",              #25-29
              "05_06","09_06","18_06","23_06","24_06",            #30-34
-             "03_07","07_07"]                       #35-36        
+             "03_07","07_07","09_07","14_07"]                       #35-38       
 # =========================
 # Dataset choice / Has to be checked each time!
 # =========================
-lo_i = 65
+lo_i = 67
 nlo_i = lo_i
-savename_i = 36
+savename_i = 38
 nbins = 500
 
 savename_base = savenames[savename_i] + "_" + nlo_outs[nlo_i]

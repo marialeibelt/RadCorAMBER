@@ -1,9 +1,24 @@
 #!/bin/bash
+basefolder="/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor"
+
+# ---------------change this each time you want to run a new analysis---------------
+anafolder="08_07_200MeV_Q2big_xi01_gentest_1444"
+
+mcmule0="mp2mp0_mu-p_S0000085728X1.00000D1.00000_ITMX020x008.0M.mcmule"
+
+mcmuleNLO0_xi01="mp2mpNLO0_mu-p_S0000044063X0.10000D0.10000_ITMX020x008.0M.mcmule"
+mcmuleR_xi01="mp2mpR_mu-p_S0000040361X0.10000D0.10000_ITMX020x008.0M.mcmule"
+
+mcmuleNLO0_xi10="mp2mpNLO0_blabla.mcmule"
+mcmuleR_xi10="mp2mpR_blabla.mcmule"
+# ----------------------------------------------------------------------------------
+
 build_piece () {
     for i in $@ ; do
-        echo /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/07_07_200MeV_Q2big_xi01_gen_1442/input/$i
+        echo "$basefolder/$anafolder/input/$i"
     done
 }
+mkdir -p "$basefolder/$anafolder/log"
 generate() {
     order="$1"
     flag="$2"
@@ -14,24 +29,26 @@ generate() {
 
     if [[ "$order" == 0 ]] ; then
         npieces=1
-        pieces=$(build_piece mp2mp0_mu-p_S0000051157X1.00000D1.00000_ITMX020x008.0M.mcmule) #put here correct File for order 0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        nenter=5000
-        itmx=50
+        pieces=$(build_piece "$mcmule0")
+        nenter=900
+        itmx=12
         tgteff=-1
+
     elif [[ "$order" == 1 ]] ; then
         npieces=2
-        nenter=5000
-        itmx=50
+        nenter=900
+        itmx=12
         nsub=30
 
         if [[ "$xi" == "01" ]] ; then
             pieces=$(build_piece \
-                mp2mpNLO0_mu-p_S0000019559X0.10000D0.10000_ITMX020x008.0M.mcmule \
-                mp2mpR_mu-p_S0000069163X0.10000D0.10000_ITMX020x008.0M.mcmule)     #put here correct File for order 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                "$mcmuleNLO0_xi01" \
+                "$mcmuleR_xi01")
+
         elif [[ "$xi" == "10" ]] ; then
             pieces=$(build_piece \
-                mp2mpNLO0_blabla.mcmule \
-                mp2mpR_blabla.mcmule) #put here correct File for order 1!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                "$mcmuleNLO0_xi10" \
+                "$mcmuleR_xi10")
         fi
     fi
 
@@ -48,10 +65,8 @@ generate() {
     elif [[ "$flag" == "SU" ]] ; then
         features="VCSU\n$dmax\n$nsub\n$tgteff"
     fi
-    runcard="$nenter\n$itmx\n$seed\n$npieces\nout/gen-$flag-$order-$xi-$seed.lhef\n$features\n$pieces"
-    echo "===== RUNCARD ====="
+    runcard="$nenter\n$itmx\n$seed\n$npieces\nout/gen-$flag-$order-$xi-$seed.lhe\n$features\n$pieces"
+    echo "===== RUNCARD <3 ====="
     echo -e "$runcard"
-    echo "==================="
-    echo -e "$runcard" | /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule --gen /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/07_07_200MeV_Q2big_xi01_gen_1442/user.so
-    #echo -e "$runcard" | time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule --gen /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/07_07_200MeV_Q2big_xi01_gen_1442/user.so | tee log/gen-$flag-$order-$xi-$seed.txt
+    echo "===== RUNNING <3 ====="echo -e "$runcard" | time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule --gen "$basefolder/$anafolder/user.so" | tee "$basefolder/$anafolder/log/gen-$flag-$order-$xi-$seed.txt"
 }

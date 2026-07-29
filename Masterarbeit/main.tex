@@ -1,0 +1,50 @@
+\RequirePackage[l2tabu,orthodox]{nag}
+\documentclass[headsepline,footsepline,footinclude=false,oneside,fontsize=11pt,paper=a4,listof=totoc,bibliography=totoc,DIV=12]{scrbook} % one-sided
+
+\input{settings}
+
+% TODO: change thesis information
+\newcommand*{\getUniversity}{Technical University of Munich}
+\newcommand*{\getFaculty}{Department of Physics}
+\newcommand*{\getTitle}{Simulation of Radiative Effects for the AMBER Proton Radius Measurement with McMule}
+\newcommand*{\getTitleGer}{}
+\newcommand*{\getAuthor}{Maria Leibelt}
+\newcommand*{\getDoctype}{Master's Thesis}
+\newcommand*{\getSupervisor}{Prof. Dr. J. Friedrich}
+\newcommand*{\getAdvisor}{Prof. Dr. J. Friedrich}
+\newcommand*{\getZweitpruefer}{}
+\newcommand*{\getSubmissionDate}{03.03.2027}
+\newcommand*{\getSubmissionLocation}{Munich}
+
+\begin{document}
+
+\selectlanguage{english}
+\pagenumbering{alph}
+\frontmatter{}
+\input{pages/title}
+\input{pages/abstract}
+\input{pages/Preface}
+\microtypesetup{protrusion=false}
+\tableofcontents{}
+\microtypesetup{protrusion=true}
+
+\mainmatter{}
+
+\input{chapters/Introduction.tex}
+\input{chapters/The AMBER Experiment.tex}
+\input{chapters/Theoretical Background.tex}
+\input{chapters/Simulation with McMule.tex}
+\input{chapters/Event Generation with McMule.tex}
+\input{chapters/Results.tex}
+\input{chapters/Discussion.tex}
+\input{chapters/Conclusion.tex}
+\input{pages/Acronyms}
+
+%\input{pages/appendix}
+
+%\microtypesetup{protrusion=false}
+%\microtypesetup{protrusion=true}
+
+\printbibliography{}
+
+\end{document}

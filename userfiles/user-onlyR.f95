@@ -41,19 +41,19 @@ module user
 
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
-    print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    !print*, "Q2 released"
+    !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
+    print*, " * Q2 released"
     !print*, "no thmu cut"
-    print*, " * 0.3 < th_mu < 2.mrad"
-    print*, "No bands but cuts on x5 and y5"
-    !print*, "bands and cuts on x5 and y5"
-    !print*, "No bands AND no cuts on x5 and y5"
+    print*, " * 0.316 < th_mu < 2.000 mrad"!normal
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
+    !print*, "No bands but cuts on x5 and y5"
+    !print*, "bands and cuts on x5 and y5"
+    !print*, "No bands AND no cuts on x5 and y5"
     !print*, " * Emu > 70 GeV"
-    print*, " * -12. < th_ph < 12. mrad"
-    print*, " * Eph > 200 MeV"
-    print*, " * d_detector=30m"
+    !print*, " * -12. < th_ph < 12. mrad"
+    print*, " * 200 < Eph < 70000 MeV"
+    !print*, " * d_detector=30m"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER
@@ -61,7 +61,7 @@ module user
   function QUANT(q1,q2,q3,q4,q5,q6,q7)
     real(kind=prec), intent(in) :: q1(4),q2(4),q3(4),q4(4),q5(4),q6(4),q7(4)
     real(kind=prec) :: ql1(4),ql2(4),ql3(4),ql4(4), ql5(4)
-    real(kind=prec) :: th5_cut,Eph_cut,thmu_low,thmu_up,Emu_low
+    real(kind=prec) :: th5_cut,Eph_up,Eph_low,thmu_low,thmu_up,Emu_low
     real(kind=prec) :: th3,costh3,q3perp,Emu
     real(kind=prec) :: q5perp,th5,phi5,Eph
     real(kind=prec) :: Qsq,Qsq_low,Qsq_up
@@ -90,10 +90,11 @@ module user
     thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
     !thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
-    !Emu_low    = 70.e3_prec
+    Emu_low    = 70.e3_prec
     
     th5_cut    = 12.e-3_prec
-    Eph_cut    = 200._prec 
+    Eph_low    = 200._prec 
+    Eph_up      = 70.e3_prec
     
     
     x5_low = -0.191_prec
@@ -117,24 +118,6 @@ module user
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
 
-
-
-    ! Event zählen
-    n_total = n_total + 1
-
-    ! x-Cut separat prüfen
-    if ((x5 >= x5_low) .and. (x5 <= x5_up)) then
-      n_pass_x = n_pass_x + 1
-    endif
-
-    ! y-Cut separat prüfen
-    if ((y5 >= y5_low) .and. (y5 <= y5_up)) then
-      n_pass_y = n_pass_y + 1
-    endif
-
-    if ((x5 >= x5_low) .and. (x5 <= x5_up) .and. (y5 >= y5_low) .and. (y5 <= y5_up)) then
-      n_pass_xy = n_pass_xy + 1
-    endif
   
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
@@ -142,8 +125,8 @@ module user
     ! Muon Windows
     select case (thmu_window)
       case ('NOR')
-        thmu_low = 0.3e-3_prec
-        thmu_up  = 2.e-3_prec
+        thmu_low = 0.316e-3_prec
+        thmu_up  = 2.000e-3_prec
       case ('BIG')
         thmu_low = 1.2e-3_prec
         thmu_up  = 8.e-3_prec
@@ -162,12 +145,13 @@ module user
         Qsq_up  = 1.e3_prec
     end select
 
-    if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! if ((Qsq.lt.Qsq_low) .or. (Qsq.gt.Qsq_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     if ((th3.lt.thmu_low) .or. (th3.gt.thmu_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
-    !if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
+    ! if (Emu.lt.Emu_low) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     
     ! Photon Cuts
-    if (Eph.lt.Eph_cut) pass_cut = .false. !Hard cut on Photon
+    if (Eph.lt.Eph_low) pass_cut = .false. !Hard cut on Photon
+    if (Eph.gt.Eph_up) pass_cut = .false. !Hard cut on Photon
     ! if (abs(th5).gt.th5_cut) pass_cut = .false. !probably unnecessary, because of x5/y5 cut
     ! if ((x5.lt.x5_low).or.(x5.gt.x5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT
     ! if ((y5.lt.y5_low).or.(y5.gt.y5_up)) pass_cut = .false. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! WATCH OUT

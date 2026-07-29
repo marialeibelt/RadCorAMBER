@@ -16,10 +16,11 @@ outdir_vals = homedir + "Vals/"
 outs = [
     "26_06_200MeV_Q2big_xi001_onlyR","26_06_200MeV_Q2big_xi0001_onlyR",
     "01_07_200MeV_Q2big_xi01_onlyR_thmubig","01_07_200MeV_Q2big_xi01_onlyR_thmusmall",
-    "01_07_100MeV_Q2big_xi01_onlyR","25_06_200MeV_Q2big_xi01_onlyR","01_07_500MeV_Q2big_xi01_onlyR" 
+    "01_07_100MeV_Q2big_xi01_onlyR","25_06_200MeV_Q2big_xi01_onlyR","01_07_500MeV_Q2big_xi01_onlyR","08_07_200MeV_Q2big_xi01_onlyR_Mehran_precthmurange","09_07_200MeV_xi01_onlyR_Mehran",
+    "14_07_02to70GeV_xi01_onlyR_Mehran" 
 ]
 
-savename_base = "07_07"
+savename_base = "14_07"
 table_file_cs_R = outdir_vals + f"{savename_base}_CS_R.txt"
 
 # =========================

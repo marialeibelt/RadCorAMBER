@@ -14,11 +14,12 @@ outdir_vals = homedir + "Vals/"
 # Input definitions
 # =========================
 lo_outs = [
-    "02_07_200MeV_Q2big_xi01_Mehran_noEmucut","01_07_100MeV_Q2big_xi01","01_07_200MeV_Q2big_xi01","01_07_500MeV_Q2big_xi01"
+    "01_07_100MeV_Q2big_xi01","01_07_200MeV_Q2big_xi01","01_07_500MeV_Q2big_xi01","08_07_200MeV_Q2big_xi01_Mehran_precthmurange",
+    "09_07_xi01_Mehran"
 ]
 nlo_outs = lo_outs
 
-savename_base = "07_07"
+savename_base = "14_07"
 table_file_cs = outdir_vals + f"{savename_base}_CS.txt"
 table_file_r  = outdir_vals + f"{savename_base}_Rate.txt"
 

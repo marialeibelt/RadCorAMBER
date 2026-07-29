@@ -13,6 +13,32 @@
 
 * python3 radcor.py
 
+## To Evtgen
+* create NLO0,R,0 normally
+* go in newly created folder
+* give gen-mcmule-path in .toml file
+* correct xi cut in .menu file for NLO0
+* compile with: . ../compileandrun_gen_command
+* create folder called "input"
+* copy all .mcmule from /out folder to /input folder
+* gen.sh:
+  * change path to newly created folder
+  * change names NLO,0,R .mcmule files
+  * check correct xi cut value
+  * check that npieces is correct
+* rungen.sh:
+  * put correct xi values
+  * change random seeds
+* run: chmod +x ../eventgen/rungen.sh
+       nohup ../eventgen/rungen.sh &
+
+* after source code change you need to rebuild:
+  * go into mcmule-event-generator folder 
+  * ninja -C build
+
+## LATEX
+* Bereinigen und neu kompilieren: latexmk -C
+  
 ## To Know
 * nautilus . &
 * kill process in terminal: kill -9 PID
@@ -23,6 +49,9 @@
 * tail worker* (check status worker files; if more lines needed: -n numberoflines)
 * head worker* (analogous to above but beginning)
 * ctrl + / (mehrere Zeilen kommentiern)
+* check storage: df -h
+* check storage of specific  loc: df -h /nfs/freenas/tuph/e18/project/prm/mleibelt/
+
 
 ## SERVER:
 * ssh -XY ge93juy@login.e18.ph.tum.de -p 22222

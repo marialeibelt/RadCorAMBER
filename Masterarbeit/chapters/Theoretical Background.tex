@@ -1,0 +1,144 @@
+\chapter{Theoretical Background}\label{chap:chapter 2}
+\acresetall
+\section{Elastic Muon-Proton Scattering}
+\subsection{From transition rates to scattering cross sections}
+
+The transition rate of a quantum mechanical process is described by Fermi's golden rule. It relates the probability of a transition between an initial state and a final state to the interaction matrix element and the available phase space:
+
+\begin{equation}
+    \Gamma_{i\rightarrow f}
+    =
+    \frac{2\pi}{\hbar}
+    \left|\mathcal{M}_{fi}\right|^2
+    \rho(E_f),
+\end{equation}
+
+where \(\mathcal{M}_{fi}\) is the matrix element of the interaction and contains all information about the dynamics of the process. It is calculated from the corresponding Feynman diagrams. The factor \(\rho(E_f)\) describes the density of accessible final states and contains only kinematic information. It depends on the masses, energies, and momenta of the particles involved. A larger available phase space increases the number of possible final states and therefore enhances the transition probability.
+
+For relativistic processes, the phase space is expressed in a Lorentz-invariant form. For a process with \(n\) particles in the final state, the differential transition rate is given by
+
+\begin{equation}
+    d\Gamma
+    =
+    \frac{(2\pi)^4}{2E_1}
+    |\mathcal{M}|^2
+    \delta^{(4)}
+    \left(
+        p_1-\sum_f p_f
+    \right)
+    d\Phi_n ,
+\end{equation}
+
+where the Lorentz-invariant phase space element is defined as
+
+\begin{equation}
+    d\Phi_n
+    =
+    \prod_f
+    \frac{d^3\mathbf{p}_f}{(2\pi)^3 2E_f}.
+\end{equation}
+
+The four-dimensional delta function ensures conservation of energy and momentum. In scattering processes, the relevant observable is not the transition rate but the cross section. It is obtained by normalizing the transition rate to the incident particle flux,
+
+\begin{equation}
+    d\sigma
+    =
+    \frac{d\Gamma}{\text{flux}}.
+\end{equation}
+The flux factor accounts for the relative motion of the incoming particles and normalizes the transition rate to the number of possible collisions. For a general \(2\rightarrow n\) scattering process, this results in the Lorentz-invariant expression
+
+\begin{equation}
+    d\sigma
+    =
+    \frac{(2\pi)^4|\mathcal{M}|^2}
+    {4\sqrt{(p_1\cdot p_2)^2-m_1^2m_2^2}}
+    \delta^{(4)}
+    \left(
+        p_1+p_2-\sum_f p_f
+    \right)
+    d\Phi_n .
+\end{equation}
+
+\subsection{Kinematics}
+
+In this thesis, only elastic muon-proton scattering is considered,
+
+\begin{equation}
+    p(p_1)+\mu(p_2)\rightarrow p(p_3)+\mu(p_4).
+\end{equation}
+
+The proton is initially at rest, therefore the incoming four-momenta are given by
+
+\begin{equation}
+    p_1=(m_p,\mathbf{0}),
+    \qquad
+    p_2=(E_\mu,\mathbf{p}_\mu),
+\end{equation}
+
+where \(m_p\) is the proton mass and \(E_\mu\) is the energy of the incoming muon. The outgoing proton and muon are described by
+
+\begin{equation}
+    p_3=(E'_p,\mathbf{p}'_p),
+    \qquad
+    p_4=(E'_\mu,\mathbf{p}'_\mu).
+\end{equation}
+
+Energy and momentum conservation require
+
+\begin{equation}
+    p_1+p_2=p_3+p_4.
+\end{equation}
+
+The interaction is mediated by the exchange of a virtual photon with four-momentum
+
+\begin{equation}
+    q=p_2-p_4=p_3-p_1 .
+\end{equation}
+
+The invariant momentum transfer is defined as
+
+\begin{equation}
+    Q^2=-q^2,
+\end{equation}
+
+where the positive sign convention for \(Q^2\) is commonly used in scattering experiments. The value of \(Q^2\) determines the resolution scale of the interaction: larger values of \(Q^2\) correspond to a smaller distance scale probed inside the proton.
+
+To describe relativistic scattering processes, it is convenient to use the Lorentz-invariant Mandelstam variables. Since they are independent of the reference frame, they provide a compact and universal way to express scattering kinematics and cross sections. For a \(2\rightarrow2\) scattering process, the kinematics can be described by
+\[
+s=(p_1+p_2)^2=(p_3+p_4)^2=m_p^2+2m_pE_2+m_{\mu}^2,
+\]
+\[
+t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE_3=-Q^2,
+\]
+\[
+u=(p_1-p_4)^2=(p_2-p_3)^2=m_p^2-2m_pE_4+m_{\mu}^2.
+\]
+They satisfy
+\[
+s+t+u=2m_p^2+2m_\mu^2.
+\]
+
+\section{Differential Cross Section for Elastic Muon-Proton Scattering}
+The differential cross section for elastic muon-proton scattering can be expressed in terms of the Mandelstam variables and the matrix element of the interaction. The general form of the differential cross section is given by
+\[
+\frac{d\sigma}{dt}=\frac{1}{64\pi s}\frac{1}{|\mathbf{p}_{1cm}|^2}|\mathcal{M}|^2,
+\]
+Here, \(|\mathbf{p}_{1cm}|\) is the magnitude of the incoming particle's momentum in the center-of-mass frame. To write it in the laboratory frame, we can use the Källén function 
+\[
+\lambda(s,m_\mu^2,m_p^2)=s^2+m_\mu^4+m_p^4-2s(m_\mu^2+m_p^2)-m_\mu^2m_p^2
+\] 
+to express the momentum in terms of the Mandelstam variable \(s\). It holds that \(\frac{1}{16\pi \lambda}=\frac{1}{64\pi s |\mathbf{p}_{1cm}|^2}\). Therefore, the differential cross section can be rewritten as
+\[
+\frac{d\sigma}{dt}=\frac{1}{16\pi \lambda(s,m_\mu^2,m_p^2)}|\mathcal{M}|^2.
+\]
+
+
+
+
+s
+
+
+
+\section{Born Cross Section}
+\section{Radiactive Corrections in QED}
+\footnote{For a point-like proton, the form factor would be \(G_E(Q^2)=1\) for all \(Q^2\).}
