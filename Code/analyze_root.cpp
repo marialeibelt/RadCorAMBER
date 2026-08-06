@@ -3,6 +3,7 @@
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TCanvas.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ int main()
     vector<double>* scatteredMomentumX = nullptr;
     vector<double>* scatteredMomentumY = nullptr;
     vector<double>* scatteredMomentumZ = nullptr;
+
+    double weight;
 
 
     tree->SetBranchAddress(
@@ -47,9 +50,22 @@ int main()
         &scatteredMomentumZ
     );
 
+    tree->SetBranchAddress(
+        "weight",
+        &weight
+    );
 
+
+    // Plot weight distribution
+    TCanvas *c = new TCanvas("c", "Weight distribution", 800, 600);
+
+    tree->Draw("weight");
+
+    c->SaveAs("weights.pdf");
+
+
+    // Optional: print first event
     tree->GetEntry(0);
-
 
     cout << "Number of scattered particles: "
          << scatteredPID->size()
