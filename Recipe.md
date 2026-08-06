@@ -36,6 +36,26 @@
   * go into mcmule-event-generator folder 
   * ninja -C build
 
+* output anschauen:
+  * head -n 200 yyy.lhe 
+  * tail -n 200 yyy.lhe 
+
+## .lhe parsing
+* python3 /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/lhe_to_root.py xxx/out/yyy.lhe -o xxx/out/xxx.root
+* python3 /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/lhe_to_root.py 05_08_evtgen/out/gen-C-1-01-67187.lhe -o 05_08_evtgen/out/05_08_evtgen.root
+
+## Analyze ROOT
+* g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/analyze_root.cpp $(root-config --cflags --libs) -o analyze_root
+* ./analyze_root
+
+
+* Compile: g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/lhe_to_root.cpp \
+$(root-config --cflags --libs) \
+-o lhe_to_root
+* Run: ./lhe_to_root \
+05_08_evtgen/out/gen-C-1-01-67187.lhe \
+05_08_evtgen/out/05_08_evtgen.root
+
 ## LATEX
 * Bereinigen und neu kompilieren: latexmk -C
   
