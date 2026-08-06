@@ -41,9 +41,11 @@ module user
     !print*, "No bands but cuts on x5 and y5"
     !print*, "bands and cuts on x5 and y5"
     print*, " * 0.316 < th_mu < 2.mrad"
-    !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
-    !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
-    !print*, " * Emu > 70 GeV"
+    print*, " * no photon angle cut"
+    print*, " * no photon energy cut"
+    ! print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
+    ! print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
+    ! print*, " * Emu > 70 GeV"
     ! print*, " * -12. < th_ph < 12. mrad"
     ! print*, " * 200 < Eph < 70000 MeV"
     ! print*, " * d_detector=30m"
@@ -77,8 +79,8 @@ module user
     ql5 = boost_rf(q2,q5) ! photon
   
     ! Cut Definitionen
-    !Qsq_window = 'REL'  
-    Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
+    Qsq_window = 'REL'  
+    !Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
     !Qsq_window = 'SMA'  
     thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
@@ -87,7 +89,7 @@ module user
     
     th5_cut    = 12.e-3_prec
     Eph_low    = 200._prec 
-    Eph_up      = 70.e3._prec
+    Eph_up      = 70.e3_prec
     
     
     x5_low = -0.191_prec
