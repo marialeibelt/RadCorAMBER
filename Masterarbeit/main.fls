@@ -1,8 +1,8 @@
-PWD /nfs/mnemosyne/user/ge93juy/private/Downloads/Masterarbeit
+PWD /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Masterarbeit
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf.cnf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/web2c/texmf.cnf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /nfs/mnemosyne/user/ge93juy/private/Downloads/Masterarbeit/main.tex
+INPUT /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Masterarbeit/main.tex
 OUTPUT main.log
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/tex/latex/nag/nag.sty
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/tex/latex/nag/nag.sty
@@ -748,6 +748,8 @@ INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/pa
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplr9t.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/mathpazo/fplmr.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr8r.tfm
+INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplri9e.tfm
+INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplri9e.vf
 INPUT ./chapters/Introduction.tex
 INPUT ./chapters/Introduction.tex
 INPUT chapters/Introduction.tex
@@ -773,8 +775,6 @@ INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/c
 INPUT ./chapters/The AMBER Experiment.tex
 INPUT ./chapters/The AMBER Experiment.tex
 INPUT chapters/The AMBER Experiment.tex
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplri9e.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplri9e.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecsx1440.tfm
 INPUT ./figures/Cern-accelerator-complex.pdf
 INPUT ./figures/Cern-accelerator-complex.pdf
@@ -807,6 +807,8 @@ INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/public/ma
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/mathpazo/fplmb.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplb8r.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
+INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplb9e.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr9t.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr9t.tfm
@@ -833,17 +835,11 @@ INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/a
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
-INPUT ./chapters/Simulation with McMule.tex
-INPUT ./chapters/Simulation with McMule.tex
-INPUT chapters/Simulation with McMule.tex
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/public/mathpazo/zplmb7t.vf
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/mathpazo/fplmb.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplb8r.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/public/mathpazo/zplmr7m.vf
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/mathpazo/fplmri.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplri8r.tfm
+INPUT ./figures/Processes_Mehran.pdf
+INPUT ./figures/Processes_Mehran.pdf
+INPUT ./figures/Processes_Mehran.pdf
+INPUT ./figures/Processes_Mehran.pdf
+INPUT ./figures/Processes_Mehran.pdf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplr9e.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplr9e.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplr8r.tfm
@@ -863,6 +859,9 @@ INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/public/ma
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplr9t.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplr9t.vf
+INPUT ./chapters/Simulation with McMule.tex
+INPUT ./chapters/Simulation with McMule.tex
+INPUT chapters/Simulation with McMule.tex
 INPUT ./chapters/Event Generation with McMule.tex
 INPUT ./chapters/Event Generation with McMule.tex
 INPUT chapters/Event Generation with McMule.tex
@@ -903,8 +902,6 @@ INPUT ./pages/Acronyms.tex
 INPUT ./pages/Acronyms.tex
 INPUT ./pages/Acronyms.tex
 INPUT pages/Acronyms.tex
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
-INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplb9e.vf
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/adobe/palatino/pplrc9e.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ectt1095.tfm
 INPUT /cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/vf/adobe/palatino/pplrc9e.vf

@@ -105,13 +105,13 @@ where the positive sign convention for \(Q^2\) is commonly used in scattering ex
 
 To describe relativistic scattering processes, it is convenient to use the Lorentz-invariant Mandelstam variables. Since they are independent of the reference frame, they provide a compact and universal way to express scattering kinematics and cross sections. For a \(2\rightarrow2\) scattering process, the kinematics can be described by
 \[
-s=(p_1+p_2)^2=(p_3+p_4)^2=m_p^2+2m_pE_2+m_{\mu}^2,
+s=(p_1+p_2)^2=(p_3+p_4)^2=m_p^2+2m_pE_{\mu}+m_{\mu}^2,
 \]
 \[
-t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE_3=-Q^2,
+t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE'_p=-Q^2,
 \]
 \[
-u=(p_1-p_4)^2=(p_2-p_3)^2=m_p^2-2m_pE_4+m_{\mu}^2.
+u=(p_1-p_4)^2=(p_2-p_3)^2=m_p^2-2m_pE'_{\mu}+m_{\mu}^2.
 \]
 They satisfy
 \[
@@ -119,26 +119,254 @@ s+t+u=2m_p^2+2m_\mu^2.
 \]
 
 \section{Differential Cross Section for Elastic Muon-Proton Scattering}
-The differential cross section for elastic muon-proton scattering can be expressed in terms of the Mandelstam variables and the matrix element of the interaction. The general form of the differential cross section is given by
+
+The differential cross section for elastic muon-proton scattering can be
+expressed in terms of the Mandelstam variables and the matrix element of the
+interaction. The general expression for a two-particle scattering process is
+given by
+
 \[
-\frac{d\sigma}{dt}=\frac{1}{64\pi s}\frac{1}{|\mathbf{p}_{1cm}|^2}|\mathcal{M}|^2,
+\frac{d\sigma}{dt}
+=
+\frac{1}{64\pi s}
+\frac{1}{|\mathbf{p}_{1,\mathrm{cm}}|^2}
+|\mathcal{M}|^2,
 \]
-Here, \(|\mathbf{p}_{1cm}|\) is the magnitude of the incoming particle's momentum in the center-of-mass frame. To write it in the laboratory frame, we can use the Källén function 
+
+where $|\mathbf{p}_{1,\mathrm{cm}}|$ is the magnitude of the incoming
+particle momentum in the center-of-mass frame. To express the momentum in
+terms of the Mandelstam variable $s$, the Källén function is introduced:
+
 \[
-\lambda(s,m_\mu^2,m_p^2)=s^2+m_\mu^4+m_p^4-2s(m_\mu^2+m_p^2)-m_\mu^2m_p^2
-\] 
-to express the momentum in terms of the Mandelstam variable \(s\). It holds that \(\frac{1}{16\pi \lambda}=\frac{1}{64\pi s |\mathbf{p}_{1cm}|^2}\). Therefore, the differential cross section can be rewritten as
-\[
-\frac{d\sigma}{dt}=\frac{1}{16\pi \lambda(s,m_\mu^2,m_p^2)}|\mathcal{M}|^2.
+\lambda(s,m_\mu^2,m_p^2)
+=
+s^2+m_\mu^4+m_p^4
+-2s(m_\mu^2+m_p^2)
+-2m_\mu^2m_p^2 .
 \]
 
+The center-of-mass momentum is related to the Källén function by
+
+\[
+|\mathbf{p}_{1,\mathrm{cm}}|^2
+=
+\frac{\lambda(s,m_\mu^2,m_p^2)}{4s}.
+\]
+
+Therefore, the differential cross section can be rewritten as
+
+\[
+\frac{d\sigma}{dt}
+=
+\frac{1}{16\pi\lambda(s,m_\mu^2,m_p^2)}
+|\mathcal{M}|^2 .
+\]
+
+This expression is written in a Lorentz-invariant form and can therefore be
+evaluated in any reference frame, including the laboratory frame used in the
+AMBER experiment.
+
+However, the experimentally measured quantity is not directly
+$d\sigma/dt$. The detector measures the kinematic properties of the outgoing
+muon, in particular its scattering angle and energy. Therefore, the
+differential cross section is usually expressed as a function of the
+scattering angle:
+
+\[
+\frac{d\sigma}{d\Omega}
+=
+\frac{d\sigma}{dt}
+\left|
+\frac{dt}{d\Omega}
+\right|.
+\]
+
+Since the momentum transfer is defined as
+
+\[
+t=-Q^2,
+\]
+
+(see \autoref{eq:t}), the transformation factor can be written as
+
+\[
+\frac{dt}{d\Omega}
+=
+-\frac{dQ^2}{d\Omega}.
+\]
+
+For elastic muon-proton scattering in the laboratory frame, where the proton
+is initially at rest, the momentum transfer is given by
+
+\[
+Q^2
+=
+\frac{4E_\mu^2\sin^2(\theta_\mu/2)}
+{1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)},
+\]
+
+where $\theta_\mu$ denotes the scattering angle of the outgoing muon. Using
+
+\[
+d\Omega = 2\pi\sin\theta_\mu d\theta_\mu ,
+\]
+
+the transformation between the two differential cross sections becomes
+
+\[
+\frac{dQ^2}{d\Omega}
+=
+\frac{1}{2\pi\sin\theta_\mu}
+\left|
+\frac{dQ^2}{d\theta_\mu}
+\right|.
+\]
+
+The derivative of $Q^2$ with respect to the scattering angle can be calculated as
+\[
+\frac{dQ^2}{d\theta_\mu} = \frac{2E_\mu^2\sin(\theta_\mu)}{[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}.
+\]
+
+which leads to the final expression for the transformation factor:
+\[
+\frac{dQ^2}{d\Omega}
+=
+\frac{E_\mu^2}{\pi[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}.
+\]
+
+Finally we have an expression for the differential cross section:
+\[
+\frac{d\sigma}{d\Omega} = \frac{E_\mu^2}{16\pi^2\lambda(s,m_\mu^2,m_p^2)[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}|\mathcal{M}|^2.
+\]
+The remaining task is to determine the matrix element
+$\mathcal{M}$ describing the electromagnetic interaction.
+
+\section{How to Calculate Matrix Elements???}
+
+\section{Born Approximation}
+At leading order in quantum electrodynamics (Born approximation), the interaction is described by
+the exchange of a single virtual photon.
+
+For a point-like charged particle, the resulting cross section reduces to
+the Mott cross section. It describes the elastic scattering of a charged
+lepton from a structureless charged target. In the ultrarelativistic limit,
+it is given by
+
+\begin{equation}
+    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
+    =
+    \frac{\alpha^2 \cos^2(\theta/2)}
+    {4E^2\sin^4(\theta/2)},
+    \label{eq:mott_cross_section}
+\end{equation}
+
+where $E$ is the incoming lepton energy, $\theta$ the scattering angle, and
+$\alpha$ the electromagnetic coupling constant.
+
+The Mott cross section, however, assumes a point-like target and therefore
+does not describe the scattering from a real proton. The proton has an
+internal structure arising from its quark and gluon constituents, which
+modifies its electromagnetic interaction vertex. This structure is
+parametrized by the electric and magnetic Sachs form factors
+$G_E(Q^2)$ and $G_M(Q^2)$.
+
+Including these form factors, the Born-level cross section for elastic
+lepton-proton scattering can be written in the Rosenbluth form:
+
+\begin{equation}
+    \frac{d\sigma_{\mathrm{Born}}}{d\Omega}
+    =
+    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
+    \frac{\tau}{\epsilon(1+\tau)}
+    \left(
+        G_M^2(Q^2)
+        +
+        \frac{\epsilon}{\tau}G_E^2(Q^2)
+    \right),
+    \label{eq:born_cross_section}
+\end{equation}
+
+where
+
+\begin{equation}
+    \tau = \frac{Q^2}{4m_p^2}
+    \label{eq:tau}
+\end{equation}
+
+and
+
+\begin{equation}
+    \epsilon
+    =
+    \left(
+        1+2(1+\tau)\tan^2\frac{\theta}{2}
+    \right)^{-1}
+    \label{eq:epsilon}
+\end{equation}
+
+is the virtual photon polarization parameter.
+
+The internal structure of the proton is described by the electric and
+magnetic Sachs form factors. In the low-$Q^2$ region relevant for proton
+radius measurements, these form factors can be approximated by the empirical
+dipole parametrization
+
+\begin{equation}
+    G_D(Q^2)
+    =
+    \left(
+        1+\frac{Q^2}{\Lambda^2}
+    \right)^{-2},
+    \label{eq:dipole_form_factor}
+\end{equation}
+
+where the dipole mass parameter is
+
+\begin{equation}
+    \Lambda^2 = 0.71\,\mathrm{GeV}^2.
+\end{equation}
+
+The electric and magnetic form factors are then expressed as
+
+\begin{equation}
+    G_E(Q^2)
+    =
+    G_D(Q^2)
+    =
+    \left(
+        1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
+    \right)^{-2},\footnote{For a point-like proton, the form factor would be \(G_E(Q^2)=1\) for all \(Q^2\).}
+    \label{eq:GE_dipole}
+\end{equation}
+
+and
+
+\begin{equation}
+    G_M(Q^2)
+    =
+    \mu_p G_D(Q^2)
+    =
+    \mu_p
+    \left(
+        1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
+    \right)^{-2},
+    \label{eq:GM_dipole}
+\end{equation}
+
+where $\mu_p = 2.792847$ is the dimensionless proton magnetic moment in
+units of the nuclear magneton $\mu_N$. It defines the normalization of the
+magnetic form factor, such that $G_M(0)=\mu_p$.
 
 
+\section{Radiative Corrections}
+Relevant for this thesis are radiative corrections to next to leading order (NLO). These include processes with an additional photon.
+The corresponding Feynman diagrams are shown in \autoref{fig:radcor_diagrams}. The radiative corrections can be divided into two categories: virtual corrections and real photon emission. 
+The virtual corrections arise from loop diagrams, where a virtual photon is emitted and reabsorbed by the charged particles. 
+These diagrams modify the interaction vertex and the propagators of the particles involved. The real photon emission corresponds to processes where an additional photon is emitted in the final state.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.\textwidth]{figures/Processes_Mehran.pdf}
+    \caption{LO and NLO processes. Figure taken from Mehran Depour.}
+    \label{fig:processes}
+\end{figure}
 
-s
-
-
-
-\section{Born Cross Section}
-\section{Radiactive Corrections in QED}
-\footnote{For a point-like proton, the form factor would be \(G_E(Q^2)=1\) for all \(Q^2\).}

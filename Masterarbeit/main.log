@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.6.30)  24 JUL 2026 10:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.6.30)  12 AUG 2026 15:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/nfs/mnemosyne/user/ge93juy/private/Downloads/Masterarbeit/main.tex
-(/nfs/mnemosyne/user/ge93juy/private/Downloads/Masterarbeit/main.tex
+**/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Masterarbeit/main.tex
+(/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Masterarbeit/main.tex
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-06-09>
 (/cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/tex/latex/nag/nag.sty
@@ -2070,7 +2070,11 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 28.
 
 
 
-] (./chapters/Introduction.tex
+]
+
+LaTeX Font Info:    Font shape `T1/pplx/m/sl' in size <10.95> not available
+(Font)              Font shape `T1/pplx/m/it' tried instead on input line 31.
+[5] (./chapters/Introduction.tex
 chapter 1.
 Package acronym Info: Label `acro:QED' newly defined as it shall be overridden
 although it is yet undefined on input line 13.
@@ -2082,11 +2086,9 @@ although it is yet undefined on input line 13.
 
 ]) (./chapters/The AMBER Experiment.tex
 
-LaTeX Font Info:    Font shape `T1/pplx/m/sl' in size <10.95> not available
-(Font)              Font shape `T1/pplx/m/it' tried instead on input line 1.
 [2]
 chapter 2.
-<figures/Cern-accelerator-complex.pdf, id=125, 1049.69754pt x 683.32425pt>
+<figures/Cern-accelerator-complex.pdf, id=132, 1049.69754pt x 683.32425pt>
 File: figures/Cern-accelerator-complex.pdf Graphic file (type pdf)
 <use figures/Cern-accelerator-complex.pdf>
 Package pdftex.def Info: figures/Cern-accelerator-complex.pdf  used on input line 10.
@@ -2101,7 +2103,7 @@ although it is yet undefined on input line 15.
  <./figures/Cern-accelerator-complex.pdf>]
 Package acronym Info: Label `acro:TPC' newly defined as it shall be overridden
 although it is yet undefined on input line 20.
-<figures/setup.pdf, id=182, 554.66891pt x 205.91904pt>
+<figures/setup.pdf, id=189, 554.66891pt x 205.91904pt>
 File: figures/setup.pdf Graphic file (type pdf)
 <use figures/setup.pdf>
 Package pdftex.def Info: figures/setup.pdf  used on input line 28.
@@ -2143,32 +2145,51 @@ chapter 3.
 ]
 
 [8]
-LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 144.
-LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 144.
-LaTeX Font Info:    Font shape `U/msa/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 144.
-LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 9.37807pt on input line 144.
-LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 7.29405pt on input line 144.
-LaTeX Font Info:    Font shape `U/msb/m/n' will be
-(Font)              scaled to size 5.21004pt on input line 144.
-) (./chapters/Simulation with McMule.tex
+
+LaTeX Warning: Reference `eq:t' on page 9 undefined on input line 190.
+
+
 
 [9]
+
+[10]
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 338.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 338.
+LaTeX Font Info:    Font shape `U/msa/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 338.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 9.37807pt on input line 338.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 7.29405pt on input line 338.
+LaTeX Font Info:    Font shape `U/msb/m/n' will be
+(Font)              scaled to size 5.21004pt on input line 338.
+
+
+LaTeX Warning: Reference `fig:radcor_diagrams' on page 11 undefined on input line 363.
+
+<figures/Processes_Mehran.pdf, id=276, 378.42131pt x 163.2111pt>
+File: figures/Processes_Mehran.pdf Graphic file (type pdf)
+<use figures/Processes_Mehran.pdf>
+Package pdftex.def Info: figures/Processes_Mehran.pdf  used on input line 368.
+(pdftex.def)             Requested size: 448.13095pt x 193.28224pt.
+
+
+[11]) (./chapters/Simulation with McMule.tex
+
+[12 <./figures/Processes_Mehran.pdf>]
 chapter 4.
 ) (./chapters/Event Generation with McMule.tex
 
-[10
+[13
 
 
 ]
 chapter 5.
 ) (./chapters/Results.tex
 
-[11
+[14
 
 
 ]
@@ -2195,26 +2216,26 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 ) (./chapters/Discussion.tex
 
-[12
+[15
 
 
 ]
 chapter 7.
 ) (./chapters/Conclusion.tex
 
-[13
+[16
 
 
 ]
 chapter 8.
 ) (./pages/Acronyms.tex
 
-[14
+[17
 
 
 ])
 
-[15
+[18
 
 
 ]
@@ -2229,7 +2250,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 No complaints by nag.
 
 
-[16
+[19
 
 
 ] (./main.aux)
@@ -2242,6 +2263,9 @@ L3 programming layer <2020/03/25>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
 Package logreq Info: Writing requests to 'main.run.xml'.
@@ -2249,21 +2273,21 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 69946 strings out of 467888
- 1609243 string characters out of 5423126
- 2800267 words of memory out of 5000000
- 96947 multiletter control sequences out of 15000+600000
- 717345 words of font info for 409 fonts, out of 8000000 for 9000
+ 69992 strings out of 467888
+ 1610033 string characters out of 5423126
+ 2800697 words of memory out of 5000000
+ 96965 multiletter control sequences out of 15000+600000
+ 716006 words of font info for 418 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
- 111i,9n,115p,10958b,2461s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 111i,9n,115p,10979b,2461s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
 </cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cbfonts/grmn1095.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></cvmfs/sft.cern.ch/lcg/external/texlive/2025/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (20 pages, 1486743 bytes).
+Output written on main.pdf (24 pages, 1645983 bytes).
 PDF statistics:
- 480 PDF objects out of 1000 (max. 8388607)
- 383 compressed objects within 4 object streams
- 82 named destinations out of 1000 (max. 500000)
- 113409 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 518 PDF objects out of 1000 (max. 8388607)
+ 414 compressed objects within 5 object streams
+ 96 named destinations out of 1000 (max. 500000)
+ 113422 words of extra memory for PDF output out of 128383 (max. 10000000)
 

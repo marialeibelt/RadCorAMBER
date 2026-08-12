@@ -3,11 +3,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iomanip>
+#include <random>
+#include <algorithm>
+#include <cmath>
 
 #include "TFile.h"
 #include "TTree.h"
-
 
 struct Particle {
 
@@ -152,7 +153,7 @@ bool readEvent(
 
         if(
             p.status==-1 &&
-            abs(p.pid)==13
+            std::abs(p.pid)==13
         ) {
 
             beamPID=p.pid;
@@ -196,49 +197,108 @@ bool readEvent(
 }
 
 
-
-
-int main(int argc,char **argv)
+double findMaxWeight(
+    const std::string &inputFile,
+    long long &totalEvents,
+    long long &negativeEvents
+)
 {
+    std::ifstream file(inputFile);
+
+    if (!file.is_open()) {
+        std::cerr << "Cannot open " << inputFile << "\n";
+        return 0.0;
+    }
+
+    double maxWeight = 0.0;
+    double weight;
+
+    int beamPID;
+    double beamEnergy;
+    double beamMomentumX, beamMomentumY, beamMomentumZ;
+
+    std::vector<int> scatteredPID;
+    std::vector<double> scatteredEnergy;
+    std::vector<double> scatteredMomentumX;
+    std::vector<double> scatteredMomentumY;
+    std::vector<double> scatteredMomentumZ;
+
+    totalEvents = 0;
+    negativeEvents = 0;
+
+    while (readEvent(
+        file, weight,
+        beamPID, beamEnergy,
+        beamMomentumX, beamMomentumY, beamMomentumZ,
+        scatteredPID, scatteredEnergy,
+        scatteredMomentumX, scatteredMomentumY, scatteredMomentumZ
+    )) {
+        totalEvents++;
+
+        if (weight < 0.0) {
+            negativeEvents++;
+            continue;
+        }
+
+        maxWeight = std::max(maxWeight, weight);
+    }
+
+    return maxWeight;
+}
+
+int main(int argc, char **argv)
+{
+    if (argc != 3) {
+        std::cout << "Usage: ./lhe_to_root input.lhe output.root\n";
+        return 1;
+    }
+
+    std::string inputFile = argv[1];
+    std::string outputFile = argv[2];
 
     std::ofstream logFile("lhe_to_root.log");
 
-    if(!logFile.is_open()) {
-
+    if (!logFile.is_open()) {
         std::cerr << "Cannot open log file\n";
         return 1;
     }
 
+    // Random number generator
+    std::random_device rd;
+    std::mt19937_64 rng(rd());
 
+    // First pass: find maximum positive weight
+    long long totalEvents;
+    long long negativeEvents;
 
-    if(argc!=3) {
+    double maxWeight = findMaxWeight(
+        inputFile,
+        totalEvents,
+        negativeEvents
+    );
+    
+    std::cout << "Total events: "
+              << totalEvents << std::endl;
 
-        std::cout
-        << "Usage: ./lhe_to_root input.lhe output.root\n";
+    std::cout << "Negative events: "
+              << negativeEvents << std::endl;
 
+    std::cout << "Maximum positive weight: "
+              << maxWeight << std::endl;
+
+    if (maxWeight <= 0.0) {
+        std::cerr << "Error: no positive event weights found.\n";
         return 1;
     }
 
-
-
-    std::string inputFile=argv[1];
-    std::string outputFile=argv[2];
-
-
-
+    // Second pass: read events and perform accept/reject
     std::ifstream lhe(inputFile);
 
-
-    if(!lhe.is_open()) {
-
-        std::cerr
-        << "Cannot open "
-        << inputFile
-        << "\n";
-
+    if (!lhe.is_open()) {
+        std::cerr << "Cannot open "
+                  << inputFile << "\n";
         return 1;
     }
-
 
 
     TFile outfile(
@@ -246,163 +306,99 @@ int main(int argc,char **argv)
         "RECREATE"
     );
 
-
     TTree tree(
         "Output",
         "McMule events"
     );
 
 
-
     double weight;
 
-
-    double vertexX=0.0;
-    double vertexY=0.0;
-    double vertexZ=-3200.0;
-
-
+    double vertexX = 0.0;
+    double vertexY = 0.0;
+    double vertexZ = -3200.0;
 
     int beamPID;
-
     double beamEnergy;
-
     double beamMomentumX;
     double beamMomentumY;
     double beamMomentumZ;
 
-
-
     std::vector<int> scatteredPID;
-
     std::vector<double> scatteredEnergy;
-
     std::vector<double> scatteredMomentumX;
     std::vector<double> scatteredMomentumY;
     std::vector<double> scatteredMomentumZ;
 
 
+    // ROOT branches
+    tree.Branch("weight", &weight);
 
-    tree.Branch(
-        "weight",
-        &weight
-    );
+    tree.Branch("vertexX", &vertexX);
+    tree.Branch("vertexY", &vertexY);
+    tree.Branch("vertexZ", &vertexZ);
 
+    tree.Branch("beamPID", &beamPID);
+    tree.Branch("beamEnergy", &beamEnergy);
+    tree.Branch("beamMomentumX", &beamMomentumX);
+    tree.Branch("beamMomentumY", &beamMomentumY);
+    tree.Branch("beamMomentumZ", &beamMomentumZ);
 
-    tree.Branch("vertexX",&vertexX);
-    tree.Branch("vertexY",&vertexY);
-    tree.Branch("vertexZ",&vertexZ);
-
-
-    tree.Branch(
-        "beamPID",
-        &beamPID
-    );
-
-
-    tree.Branch(
-        "beamEnergy",
-        &beamEnergy
-    );
+    tree.Branch("scatteredPID", &scatteredPID);
+    tree.Branch("scatteredEnergy", &scatteredEnergy);
+    tree.Branch("scatteredMomentumX", &scatteredMomentumX);
+    tree.Branch("scatteredMomentumY", &scatteredMomentumY);
+    tree.Branch("scatteredMomentumZ", &scatteredMomentumZ);
 
 
-    tree.Branch(
-        "beamMomentumX",
-        &beamMomentumX
-    );
-
-    tree.Branch(
-        "beamMomentumY",
-        &beamMomentumY
-    );
-
-    tree.Branch(
-        "beamMomentumZ",
-        &beamMomentumZ
-    );
+    long long acceptedEvents = 0;
 
 
+    while (readEvent(
+        lhe, weight,
+        beamPID, beamEnergy,
+        beamMomentumX, beamMomentumY, beamMomentumZ,
+        scatteredPID, scatteredEnergy,
+        scatteredMomentumX, scatteredMomentumY, scatteredMomentumZ
+    )) {
 
-    tree.Branch(
-        "scatteredPID",
-        &scatteredPID
-    );
-
-    tree.Branch(
-        "scatteredEnergy",
-        &scatteredEnergy
-    );
-
-    tree.Branch(
-        "scatteredMomentumX",
-        &scatteredMomentumX
-    );
-
-    tree.Branch(
-        "scatteredMomentumY",
-        &scatteredMomentumY
-    );
-
-    tree.Branch(
-        "scatteredMomentumZ",
-        &scatteredMomentumZ
-    );
+        // Ignore negative-weight events
+        if (weight < 0.0)
+            continue;
 
 
+        // Accept-Reject
+        double probability = weight / maxWeight;
 
-    int counter=0;
+        double randomNumber =
+            std::generate_canonical<double, 53>(rng);
 
+        if (randomNumber < probability) {
 
-    while(
-        readEvent(
-            lhe,
+            weight = 1.0;
 
-            weight,
+            tree.Fill();
+            acceptedEvents++;
 
-            beamPID,
-            beamEnergy,
-
-            beamMomentumX,
-            beamMomentumY,
-            beamMomentumZ,
-
-            scatteredPID,
-            scatteredEnergy,
-
-            scatteredMomentumX,
-            scatteredMomentumY,
-            scatteredMomentumZ
-        )
-    ) {
-
-
-        tree.Fill();
-
-        counter++;
-
-
-        if(counter%10000==0)
-            logFile
-            << counter
-            << " events processed\n";
-
+            if (acceptedEvents % 100000 == 0)
+                logFile << acceptedEvents
+                        << " unweighted events written\n";
+        }
     }
 
 
-
     outfile.Write();
-
     outfile.Close();
 
 
-
     logFile
-    << "Finished. Events written: "
-    << counter
-    << "\n";
+        << "Finished.\n"
+        << "Total events processed: " << totalEvents << "\n"
+        << "Negative events: " << negativeEvents << "\n"
+        << "Maximum positive weight: " << maxWeight << "\n"
+        << "Unweighted events written: " << acceptedEvents << "\n";
 
     logFile.close();
-
 
     return 0;
 }

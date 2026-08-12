@@ -16,20 +16,21 @@
 \contentsline {subsection}{\numberline {3.1.1}From transition rates to scattering cross sections}{7}{subsection.3.1.1}%
 \contentsline {subsection}{\numberline {3.1.2}Kinematics}{8}{subsection.3.1.2}%
 \contentsline {section}{\numberline {3.2}Differential Cross Section for Elastic Muon-Proton Scattering}{9}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Born Cross Section}{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Radiactive Corrections in QED}{9}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Simulation with McMule}{10}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview of McMule}{10}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Simulation Setup and Implementation of the ECal2 Detector}{10}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Event Generation with McMule}{11}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Results}{12}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Comparison of $Q^2$ distribution with Analytical solution}{12}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Impact of radiative corrections}{12}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Influence of Analysis Cuts}{12}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}The Scattered Muon Angle Range}{12}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}The Photon Energy Threshold}{12}{subsection.6.3.2}%
-\contentsline {chapter}{\numberline {7}Discussion}{13}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{14}{chapter.8}%
-\contentsline {chapter}{Acronyms}{14}{chapter.8}%
-\contentsline {chapter}{\nonumberline Bibliography}{16}{chapter*.20}%
+\contentsline {section}{\numberline {3.3}How to Calculate Matrix Elements???}{10}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Born Approximation}{10}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Radiative Corrections}{11}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Simulation with McMule}{13}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview of McMule}{13}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Simulation Setup and Implementation of the ECal2 Detector}{13}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Event Generation with McMule}{14}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Results}{15}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Comparison of $Q^2$ distribution with Analytical solution}{15}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Impact of radiative corrections}{15}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Influence of Analysis Cuts}{15}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}The Scattered Muon Angle Range}{15}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}The Photon Energy Threshold}{15}{subsection.6.3.2}%
+\contentsline {chapter}{\numberline {7}Discussion}{16}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{17}{chapter.8}%
+\contentsline {chapter}{Acronyms}{17}{chapter.8}%
+\contentsline {chapter}{\nonumberline Bibliography}{19}{chapter*.21}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
