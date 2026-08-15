@@ -241,37 +241,257 @@ Finally we have an expression for the differential cross section:
 The remaining task is to determine the matrix element
 $\mathcal{M}$ describing the electromagnetic interaction.
 
-\section{How to Calculate Matrix Elements???}
+
 
 \section{Born Approximation}
+The starting point for calculating the scattering amplitude is the interaction part of the QED Lagrangian.
 At leading order in quantum electrodynamics (Born approximation), the interaction is described by
 the exchange of a single virtual photon.
+\[
+\mathcal{L}_{\mathrm{int}} = -e\overline{\psi}\gamma^\mu\psi A_\mu,
+\]
+where $\psi$ is the Dirac spinor field representing the charged fermion, $A_\mu$ is the electromagnetic four-potential,
+$\gamma^\mu$ are the Dirac gamma matrices, and $e$ is the electric charge of the fermion.
+The interaction Lagrangian can therefore be written in terms of the electromagnetic current $j^\mu_{\mathrm{em}} = \overline{\psi}\gamma^\mu\psi$ as
+\[
+\mathcal{L}_{\mathrm{int}} = -e j^\mu_{\mathrm{em}} A_\mu.
+\]
+This form makes the physical interpretation particularly transparent: the electromagnetic current couples to the electromagnetic field.
+In a scattering process, this coupling is represented diagrammatically by a vertex. The vertex therefore describes the interaction between a charged fermion and a photon.
+For a point-like fermion such as the muon, the electromagnetic vertex follows directly from the QED interaction Lagrangian. The corresponding Feynman rule is
+\[
+-ie\gamma^\mu,
+\]
+and, written in terms of the incoming and outgoing muon spinors, the vertex factor is
+\[
+\overline{u}(p_4)(-ie\gamma^\mu)u(p_2),
+\]
+where $u(p_2)$ and $\overline{u}(p_4)$ are the Dirac spinors for the incoming and outgoing muon, respectively.
 
-For a point-like charged particle, the resulting cross section reduces to
-the Mott cross section. It describes the elastic scattering of a charged
-lepton from a structureless charged target. In the ultrarelativistic limit,
-it is given by
+For a composite particle like the proton, the electromagnetic vertex is modified by the internal structure of the particle.
+This modification is described by the electromagnetic form factors, which encode information about the spatial distribution of charge
+and magnetization within the proton. The vertex factor for the proton can be expressed as
+\[
+\overline{u}(p_3)(-ie\Gamma^\nu(q^2))u(p_1),
+\]
+where $u(p_1)$ and $\overline{u}(p_3)$ are the Dirac spinors for the incoming and outgoing proton, and $\Gamma^\nu(q^2)$ is the electromagnetic vertex function. It depends on the momentum transfer $q^2$ and can be expressed in terms of the Dirac and Pauli form factors $F_1(q^2)$ and $F_2(q^2)$:
+\[
+\Gamma^\nu(q^2) = F_1(q^2)\gamma^\nu + \frac{i\sigma^{\nu\rho}q_\rho}{2m_p}F_2(q^2),
+\]
+where $\sigma^{\nu\rho} = \frac{i}{2}[\gamma^\nu,\gamma^\rho]$ is the antisymmetric tensor constructed from the gamma matrices, and $m_p$ is the mass of the proton.
+The Dirac form factor $F_1(q^2)$ describes the charge distribution, while the Pauli form factor $F_2(q^2)$ describes the anomalous magnetic moment of the proton.
+The Sachs form factors are related to the Dirac and Pauli form factors by
+\[
+G_E(Q^2) = F_1(Q^2) - \frac{Q^2}{4m_p^2}F_2(Q^2)
+\]
+and
+\[
+G_M(Q^2) = F_1(Q^2) + F_2(Q^2).
+\]
 
-\begin{equation}
-    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
-    =
-    \frac{\alpha^2 \cos^2(\theta/2)}
-    {4E^2\sin^4(\theta/2)},
-    \label{eq:mott_cross_section}
-\end{equation}
+The exchanged photon connects the muon and proton vertices. Since this photon is virtual, it is described by a photon propagator rather than by an external photon wave function. In Feynman gauge, the propagator is
+\[
+\frac{-ig_{\mu\nu}}{q^2},
+\]
+where $g_{\mu\nu}$ is the metric tensor and $q^2$ is the four-momentum squared of the virtual photon. 
+The muon vertex carries a free Lorentz index $\mu$, while the proton vertex carries a free Lorentz index $\nu$. Initially, these two indices are independent because they originate from two separate spinor chains, namely the lepton line and the hadron line. The two spinor chains cannot be multiplied directly; instead, they are connected by the virtual-photon propagator. The propagator carries exactly two Lorentz indices, one associated with each side of the propagator, and the metric tensor $g_{\mu\nu}$ contracts these indices according to the Einstein summation convention.
 
-where $E$ is the incoming lepton energy, $\theta$ the scattering angle, and
-$\alpha$ the electromagnetic coupling constant.
+Written with both Lorentz indices explicitly, the matrix element is
+\[
+\mathcal{M}
+=
+\left[
+\overline{u}(p_4)(-ie\gamma^\mu)u(p_2)
+\right]
+\frac{-ig_{\mu\nu}}{q^2}
+\left[
+\overline{u}(p_3)(-ie\Gamma^\nu(q^2))u(p_1)
+\right].
+\]
 
-The Mott cross section, however, assumes a point-like target and therefore
-does not describe the scattering from a real proton. The proton has an
-internal structure arising from its quark and gluon constituents, which
-modifies its electromagnetic interaction vertex. This structure is
-parametrized by the electric and magnetic Sachs form factors
-$G_E(Q^2)$ and $G_M(Q^2)$.
+The contraction with the metric tensor identifies the two Lorentz indices. In particular,
+\[
+g_{\mu\nu}\Gamma^\nu(q^2)=\Gamma_\mu(q^2),
+\]
+where the index is lowered according to the metric. Thus, the propagator effectively connects the Lorentz index of the leptonic current to that of the hadronic current. The matrix element can therefore be written as
+\[
+\mathcal{M}
+=
+\frac{e^2}{q^2}
+\,
+\overline{u}(p_4)\gamma^\mu u(p_2)
+\,
+\overline{u}(p_3)\Gamma_\mu(q^2)u(p_1).
+\]
 
-Including these form factors, the Born-level cross section for elastic
-lepton-proton scattering can be written in the Rosenbluth form:
+This expression is the starting point for calculating the cross section.
+However, the matrix element itself is not yet the observable quantity.
+The differential cross section is proportional to the squared modulus of the
+matrix element, summed over the unobserved final-state spins and averaged
+over the initial-state spins.
+
+For unpolarized scattering, the spin-averaged squared matrix element is
+defined as
+\[
+\overline{|\mathcal{M}|^2}
+=
+\frac{1}{4}
+\sum_{s_1,s_2,s_3,s_4}
+|\mathcal{M}|^2,
+\]
+where the factor \(1/4\) averages over the two possible initial spin states
+of the muon and the two possible initial spin states of the proton.
+
+Writing the spin labels explicitly, the matrix element is
+\[
+\mathcal{M}
+=
+\frac{e^2}{q^2}
+\left[
+\overline{u}(p_4,s_4)\gamma^\mu u(p_2,s_2)
+\right]
+\left[
+\overline{u}(p_3,s_3)\Gamma_\mu(q^2)u(p_1,s_1)
+\right].
+\]
+
+Its complex conjugate is
+\[
+\mathcal{M}^*
+=
+\frac{e^2}{q^2}
+\left[
+\overline{u}(p_2,s_2)\gamma^\nu u(p_4,s_4)
+\right]
+\left[
+\overline{u}(p_1,s_1)\overline{\Gamma}_\nu(q^2)u(p_3,s_3)
+\right],
+\]
+where
+\[
+\overline{\Gamma}_\nu
+=
+\gamma^0
+\Gamma_\nu^\dagger
+\gamma^0.
+\]
+
+Therefore,
+\[
+|\mathcal{M}|^2
+=
+\frac{e^4}{(q^2)^2}
+\left[
+\overline{u}(p_4)\gamma^\mu u(p_2)
+\right]
+\left[
+\overline{u}(p_2)\gamma^\nu u(p_4)
+\right]
+\left[
+\overline{u}(p_3)\Gamma_\mu u(p_1)
+\right]
+\left[
+\overline{u}(p_1)\overline{\Gamma}_\nu u(p_3)
+\right].
+\]
+
+To evaluate the spin sums, the completeness relation for Dirac spinors is
+used:
+\[
+\sum_s u(p,s)\overline{u}(p,s)
+=
+\not{p}+m,
+\]
+where
+\[
+\not{p}
+=
+\gamma^\mu p_\mu.
+\]
+
+This relation allows the products of spinors to be converted into traces
+over products of gamma matrices. The spin-averaged squared matrix element
+can consequently be written as
+\[
+\overline{|\mathcal{M}|^2}
+=
+\frac{e^4}{4(q^2)^2}
+L^{\mu\nu}H_{\mu\nu},
+\]
+where the leptonic tensor is
+\[
+L^{\mu\nu}
+=
+\operatorname{Tr}
+\left[
+(\not{p}_4+m_\mu)
+\gamma^\mu
+(\not{p}_2+m_\mu)
+\gamma^\nu
+\right],
+\]
+and the hadronic tensor is
+\[
+H_{\mu\nu}
+=
+\operatorname{Tr}
+\left[
+(\not{p}_3+m_p)
+\Gamma_\mu(q^2)
+(\not{p}_1+m_p)
+\overline{\Gamma}_\nu(q^2)
+\right].
+\]
+
+The factorization into a leptonic and a hadronic tensor separates the two
+physical contributions. The leptonic tensor describes the coupling of the
+virtual photon to the muon, while the hadronic tensor contains the proton
+electromagnetic structure through the form factors.
+
+For the point-like muon, the leptonic tensor can be evaluated using the
+standard gamma-matrix trace identities. In the limit where the muon mass
+can be neglected, this gives
+\[
+L^{\mu\nu}
+=
+4
+\left(
+p_4^\mu p_2^\nu
++
+p_4^\nu p_2^\mu
+-
+g^{\mu\nu}p_4\cdot p_2
+\right).
+\]
+
+The hadronic tensor contains the proton vertex
+\(\Gamma^\mu(q^2)\) and therefore the form factors \(F_1\) and \(F_2\).
+Evaluating the hadronic trace and contracting it with the leptonic tensor
+gives the spin-averaged squared matrix element in terms of the kinematic
+variables and the proton form factors.
+
+The resulting quantity is then inserted into the general expression for the
+differential cross section:
+\[
+\frac{d\sigma}{d\Omega}
+=
+\frac{E_\mu^2}
+{16\pi^2
+\lambda(s,m_\mu^2,m_p^2)
+\left[
+1+
+\left(\frac{2E_\mu}{m_p}\right)
+\sin^2\left(\frac{\theta_\mu}{2}\right)
+\right]^2}
+\,
+\overline{|\mathcal{M}|^2}.
+\]
+
+The remaining algebra can be simplified by expressing the proton structure
+in terms of the Sachs form factors \(G_E\) and \(G_M\). Evaluating the
+leptonic and hadronic tensors and performing the contraction
+\(L^{\mu\nu}H_{\mu\nu}\) then leads to the Rosenbluth form of the elastic
+Born cross section.
 
 \begin{equation}
     \frac{d\sigma_{\mathrm{Born}}}{d\Omega}
@@ -286,8 +506,19 @@ lepton-proton scattering can be written in the Rosenbluth form:
     \label{eq:born_cross_section}
 \end{equation}
 
-where
+where the Mott cross section which describes the elastic scattering of a charged
+lepton from a structureless charged target. In the ultrarelativistic limit,
+it is given by
 
+\begin{equation}
+    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
+    =
+    \frac{\alpha^2 \cos^2(\theta/2)}
+    {4E^2\sin^4(\theta/2)}.
+    \label{eq:mott_cross_section}
+\end{equation}
+
+Moreover,
 \begin{equation}
     \tau = \frac{Q^2}{4m_p^2}
     \label{eq:tau}
