@@ -1,5 +1,7 @@
+100000 unweighted events written
+200000 unweighted events written
 Finished.
-Total events processed: 3285011
-Negative events: 27436
-Maximum positive weight: 0.00216137
-Unweighted events written: 1001
+Total events processed: 2483226
+Negative events: 0
+Maximum positive weight: 6.3994e-06
+Unweighted events written: 249340

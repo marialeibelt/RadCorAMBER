@@ -7,17 +7,23 @@
 #include "TTree.h"
 #include "TCanvas.h"
 #include "TH1D.h"
+#include "TLegend.h"
 
 using namespace std;
 
 
 // ============================================================
-// Function for plotting and saving a histogram
+// Function for plotting a single histogram
 // ============================================================
 
-void saveHistogram(TH1D *hist,const string &xTitle,const string &yTitle,const string &outputFile,bool logY = true)
+void saveHistogram(
+    TH1D *hist,
+    const string &xTitle,
+    const string &yTitle,
+    const string &outputFile,
+    bool logY = true)
 {
-    TCanvas canvas("canvas",hist->GetTitle(),800,600);
+    TCanvas canvas("canvas", hist->GetTitle(), 800, 600);
 
     if (logY)
         canvas.SetLogy();
@@ -29,7 +35,55 @@ void saveHistogram(TH1D *hist,const string &xTitle,const string &yTitle,const st
 
     canvas.SaveAs(outputFile.c_str());
 
-    cout << "Histogram created: "<< outputFile << endl;
+    cout << "Histogram created: " << outputFile << endl;
+}
+
+
+// ============================================================
+// Function for comparing LO and NLO
+// Each histogram is normalized individually to integral = 1
+// ============================================================
+
+void saveComparison(
+    TH1D *hLO,
+    TH1D *hNLO,
+    const string &xTitle,
+    const string &outputFile,
+    bool logY = true)
+{
+    // Normalize each histogram separately
+    if (hLO->Integral() > 0)
+        hLO->Scale(1.0 / hLO->Integral());
+
+    if (hNLO->Integral() > 0)
+        hNLO->Scale(1.0 / hNLO->Integral());
+
+    hLO->SetFillColor(kGreen+2);
+    hLO->SetLineColor(kGreen+2);
+    hLO->SetFillStyle(3004);
+
+    hNLO->SetLineColor(kPink+10);
+    hNLO->SetLineWidth(2);
+
+    hLO->GetXaxis()->SetTitle(xTitle.c_str());
+    hLO->GetYaxis()->SetTitle("Normalized entries");
+
+    TCanvas canvas("canvas", "LO vs NLO", 800, 600);
+
+    if (logY)
+        canvas.SetLogy();
+
+    hLO->Draw("HIST");
+    hNLO->Draw("HIST SAME");
+
+    TLegend legend(0.70, 0.75, 0.88, 0.88);
+    legend.AddEntry(hLO, "LO", "f");
+    legend.AddEntry(hNLO, "NLO", "l");
+    legend.Draw();
+
+    canvas.SaveAs(outputFile.c_str());
+
+    cout << "Comparison created: " << outputFile << endl;
 }
 
 
@@ -37,283 +91,682 @@ void saveHistogram(TH1D *hist,const string &xTitle,const string &yTitle,const st
 // Main
 // ============================================================
 
-int main()
+int main(int argc, char* argv[])
 {
-    string inputfile ="05_08_evtgen/out/05_08_evtgen.root";
-    string outputFolder = "analysis_output_05_08_unweighted";
-    filesystem::create_directories(outputFolder);
-    cout << "Output folder: "<< outputFolder << endl;
+    // ========================================================
+    // Command-line arguments
+    // ========================================================
 
-    cout << "Opening ROOT file: "<< inputfile << endl;
-
-    TFile *f = TFile::Open(inputfile.c_str());
-
-    if (!f || f->IsZombie()) {
-        cerr << "Error: could not open ROOT file!" << endl;
+    if (argc != 4) {
+        cerr << "Usage: " << argv[0]
+             << " <LO_input.root> <NLO_input.root> <output_folder>"
+             << endl;
         return 1;
     }
 
-    TTree *tree =(TTree*)f->Get("Output");
+    string loInputfile  = argv[1];
+    string nloInputfile = argv[2];
+    string outputFolder = argv[3];
 
-    if (!tree) {
-        cerr << "Error: TTree 'Output' not found!"<< endl;
+
+    // ========================================================
+    // Output folders
+    // ========================================================
+
+    string loFolder   = outputFolder + "/LO";
+    string nloFolder  = outputFolder + "/NLO";
+    string compFolder = outputFolder + "/comparison";
+
+    filesystem::create_directories(loFolder);
+    filesystem::create_directories(nloFolder);
+    filesystem::create_directories(compFolder);
+
+    cout << "LO input file:  " << loInputfile << endl;
+    cout << "NLO input file: " << nloInputfile << endl;
+    cout << "Output folder:  " << outputFolder << endl;
+
+
+    // ========================================================
+    // Open ROOT files
+    // ========================================================
+
+    cout << "Opening LO ROOT file: " << loInputfile << endl;
+
+    TFile *fLO = TFile::Open(loInputfile.c_str());
+
+    if (!fLO || fLO->IsZombie()) {
+        cerr << "Error: could not open LO ROOT file!" << endl;
         return 1;
     }
 
 
-    // ========================================================
-    // Branches
-    // ========================================================
+    cout << "Opening NLO ROOT file: " << nloInputfile << endl;
 
-    vector<int>* scatteredPID = nullptr;
+    TFile *fNLO = TFile::Open(nloInputfile.c_str());
 
-    vector<double>* scatteredEnergy = nullptr;
-
-    vector<double>* scatteredMomentumX = nullptr;
-    vector<double>* scatteredMomentumY = nullptr;
-    vector<double>* scatteredMomentumZ = nullptr;
-
-    double weight;
-
-
-    tree->SetBranchAddress("scatteredPID",&scatteredPID);
-    tree->SetBranchAddress("scatteredEnergy",&scatteredEnergy);
-    tree->SetBranchAddress("scatteredMomentumX",&scatteredMomentumX);
-    tree->SetBranchAddress("scatteredMomentumY",&scatteredMomentumY);
-    tree->SetBranchAddress("scatteredMomentumZ",&scatteredMomentumZ);
-    tree->SetBranchAddress("weight",&weight);
-
-    Long64_t nEvents = tree->GetEntries();
-
-    cout << "Number of events: "<< nEvents << endl;
-
-
-    // ========================================================
-    // 1. Weight distribution
-    // ========================================================
-
-    TH1D *hWeight =new TH1D("hWeight","Weight distribution",500,0,1.1);
-
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        hWeight->Fill(weight);
+    if (!fNLO || fNLO->IsZombie()) {
+        cerr << "Error: could not open NLO ROOT file!" << endl;
+        fLO->Close();
+        return 1;
     }
 
-    saveHistogram(hWeight,"Weight","Entries",outputFolder + "/weights.pdf");
+    // ========================================================
+    // Trees
+    // ========================================================
+
+    TTree *treeLO = (TTree*)fLO->Get("Output");
+    TTree *treeNLO = (TTree*)fNLO->Get("Output");
+
+    if (!treeLO) {
+        cerr << "Error: TTree 'Output' not found in LO file!" << endl;
+        return 1;
+    }
+
+    if (!treeNLO) {
+        cerr << "Error: TTree 'Output' not found in NLO file!" << endl;
+        return 1;
+    }
+
+
+    Long64_t nEventsLO = treeLO->GetEntries();
+    Long64_t nEventsNLO = treeNLO->GetEntries();
+
+    cout << "Number of LO events:  " << nEventsLO << endl;
+    cout << "Number of NLO events: " << nEventsNLO << endl;
+
+
+    // ========================================================
+    // Branch pointers
+    // ========================================================
+
+    vector<int>* scatteredPIDLO = nullptr;
+
+    vector<double>* scatteredEnergyLO = nullptr;
+    vector<double>* scatteredMomentumXLO = nullptr;
+    vector<double>* scatteredMomentumYLO = nullptr;
+    vector<double>* scatteredMomentumZLO = nullptr;
+
+    double weightLO;
+
+
+    vector<int>* scatteredPIDNLO = nullptr;
+
+    vector<double>* scatteredEnergyNLO = nullptr;
+    vector<double>* scatteredMomentumXNLO = nullptr;
+    vector<double>* scatteredMomentumYNLO = nullptr;
+    vector<double>* scatteredMomentumZNLO = nullptr;
+
+    double weightNLO;
+
+
+    // ========================================================
+    // Set branch addresses - LO
+    // ========================================================
+
+    treeLO->SetBranchAddress("scatteredPID", &scatteredPIDLO);
+    treeLO->SetBranchAddress("scatteredEnergy", &scatteredEnergyLO);
+    treeLO->SetBranchAddress("scatteredMomentumX", &scatteredMomentumXLO);
+    treeLO->SetBranchAddress("scatteredMomentumY", &scatteredMomentumYLO);
+    treeLO->SetBranchAddress("scatteredMomentumZ", &scatteredMomentumZLO);
+    treeLO->SetBranchAddress("weight", &weightLO);
+
+
+    // ========================================================
+    // Set branch addresses - NLO
+    // ========================================================
+
+    treeNLO->SetBranchAddress("scatteredPID", &scatteredPIDNLO);
+    treeNLO->SetBranchAddress("scatteredEnergy", &scatteredEnergyNLO);
+    treeNLO->SetBranchAddress("scatteredMomentumX", &scatteredMomentumXNLO);
+    treeNLO->SetBranchAddress("scatteredMomentumY", &scatteredMomentumYNLO);
+    treeNLO->SetBranchAddress("scatteredMomentumZ", &scatteredMomentumZNLO);
+    treeNLO->SetBranchAddress("weight", &weightNLO);
+
+
+    // ========================================================
+    // Constants
+    // ========================================================
+
+    const double beamEnergyLab = 100.0;
+    const double protonMass = 0.938272088;
+    const double muonMass = 0.105658375;
+
+    const double EbeamCMS = 6.833951293;
+    const double pBeamCMS =
+        sqrt(EbeamCMS * EbeamCMS - muonMass * muonMass);
+
+    const double initialMuonEnergy = 6.833951293;
+    const double initialProtonEnergy = 6.897251706;
+    const double initialTotalEnergy =
+        initialMuonEnergy + initialProtonEnergy;
+
+    // CMS -> LAB boost
+    double beta =
+        beamEnergyLab / (beamEnergyLab + protonMass);
+
+    double gamma =
+        1.0 / sqrt(1.0 - beta * beta);
+
+
+    // ========================================================
+    // 1. Weight distributions
+    // ========================================================
+
+    TH1D *hWeightLO =
+        new TH1D("hWeightLO",
+                 "LO Weight distribution",
+                 500, 0, 1.1);
+
+    TH1D *hWeightNLO =
+        new TH1D("hWeightNLO",
+                 "NLO Weight distribution",
+                 500, 0, 1.1);
+
+
+    for (Long64_t i = 0; i < nEventsLO; i++) {
+
+        treeLO->GetEntry(i);
+
+        hWeightLO->Fill(weightLO);
+    }
+
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        hWeightNLO->Fill(weightNLO);
+    }
+
+
+    saveHistogram(
+        hWeightLO,
+        "Weight",
+        "Entries",
+        loFolder + "/weights.pdf");
+
+    saveHistogram(
+        hWeightNLO,
+        "Weight",
+        "Entries",
+        nloFolder + "/weights.pdf");
 
 
     // ========================================================
     // 2. Scattered muon energy
     // ========================================================
 
-    TH1D *hMuonEnergy = new TH1D("hMuonEnergy","Scattered muon energy",500,0,10);
+    TH1D *hMuonEnergyLO =
+        new TH1D("hMuonEnergyLO",
+                 "LO Scattered muon energy",
+                 500, 0, 10);
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0; j < scatteredPID->size(); j++) {
-            if (scatteredPID->at(j) != 13)
+    TH1D *hMuonEnergyNLO =
+        new TH1D("hMuonEnergyNLO",
+                 "NLO Scattered muon energy",
+                 500, 0, 10);
+
+
+    for (Long64_t i = 0; i < nEventsLO; i++) {
+
+        treeLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDLO->size(); j++) {
+
+            if (scatteredPIDLO->at(j) != 13)
                 continue;
-            hMuonEnergy->Fill(scatteredEnergy->at(j));
+
+            hMuonEnergyLO->Fill(
+                scatteredEnergyLO->at(j));
         }
     }
 
-    saveHistogram(hMuonEnergy,"Scattered muon energy [GeV]","Entries",outputFolder + "/scattered_muon_energy.pdf");
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 13)
+                continue;
+
+            hMuonEnergyNLO->Fill(
+                scatteredEnergyNLO->at(j));
+        }
+    }
+
+
+    saveHistogram(
+        hMuonEnergyLO,
+        "Scattered muon energy [GeV]",
+        "Entries",
+        loFolder + "/scattered_muon_energy.pdf");
+
+    saveHistogram(
+        hMuonEnergyNLO,
+        "Scattered muon energy [GeV]",
+        "Entries",
+        nloFolder + "/scattered_muon_energy.pdf");
+
+    saveComparison(
+        hMuonEnergyLO,
+        hMuonEnergyNLO,
+        "Scattered muon energy [GeV]",
+        compFolder + "/scattered_muon_energy.pdf");
 
 
     // ========================================================
     // 3. Photon energy
     // ========================================================
+    TH1D *hPhotonEnergyNLO =
+        new TH1D("hPhotonEnergyNLO",
+                 "NLO Photon energy",
+                 500, -1, 10);
 
-    TH1D *hPhotonEnergy = new TH1D("hPhotonEnergy","Photon energy",500,0,10);
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0; j < scatteredPID->size(); j++) {
+        treeNLO->GetEntry(i);
 
-            // Currently photons have PID 22
-            if (scatteredPID->at(j) != 22)
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 22)
                 continue;
 
-            hPhotonEnergy->Fill(scatteredEnergy->at(j));
+            hPhotonEnergyNLO->Fill(
+                scatteredEnergyNLO->at(j));
         }
     }
 
-    saveHistogram(hPhotonEnergy,"Photon energy [GeV]","Entries",outputFolder + "/photon_energy.pdf");
+    saveHistogram(
+        hPhotonEnergyNLO,
+        "Photon energy [GeV]",
+        "Entries",
+        nloFolder + "/photon_energy.pdf");
 
 
     // ========================================================
-    // 4. Photon angle
+    // 4. Photon angle - CMS
     // ========================================================
+    TH1D *hPhotonAngleNLO =
+        new TH1D("hPhotonAngleNLO",
+                 "NLO Photon angle - CMS",
+                 500, 0, 20);
 
-    TH1D *hPhotonAngle = new TH1D("hPhotonAngle","Photon angle - CMS",500,0,20);
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0;j < scatteredPID->size();j++) {
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
 
-            if (scatteredPID->at(j) != 22)
+        treeNLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 22)
                 continue;
 
-            double px = scatteredMomentumX->at(j);
-            double py = scatteredMomentumY->at(j);
-            double pz = scatteredMomentumZ->at(j);
+            double px = scatteredMomentumXNLO->at(j);
+            double py = scatteredMomentumYNLO->at(j);
+            double pz = scatteredMomentumZNLO->at(j);
 
-            double pPerp =sqrt(px * px +py * py);
+            double pPerp = sqrt(px * px + py * py);
 
-            double theta = atan2(pPerp,pz);
+            double theta = atan2(pPerp, pz);
 
-            // rad -> mrad
             theta *= 1000.0;
 
-            hPhotonAngle->Fill(theta);
+            hPhotonAngleNLO->Fill(theta);
         }
     }
 
-
-    saveHistogram(hPhotonAngle,"Photon angle #theta_{#gamma}^{CMS} [mrad]","Entries",outputFolder + "/photon_angle_cms.pdf");
+    saveHistogram(
+        hPhotonAngleNLO,
+        "Photon angle #theta_{#gamma}^{CMS} [mrad]",
+        "Entries",
+        nloFolder + "/photon_angle_cms.pdf");
 
 
     // ========================================================
     // 5. Scattered muon angle - CMS
     // ========================================================
 
-    TH1D *hMuonAngleCMS =new TH1D("hMuonAngleCMS","Scattered muon angle - CMS",500,0,5);
+    TH1D *hMuonAngleCMSLO =
+        new TH1D("hMuonAngleCMSLO",
+                 "LO Scattered muon angle - CMS",
+                 500, 3, 31);
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0;j < scatteredPID->size();j++) {
+    TH1D *hMuonAngleCMSNLO =
+        new TH1D("hMuonAngleCMSNLO",
+                 "NLO Scattered muon angle - CMS",
+                 500, 3, 31);
 
-            if (scatteredPID->at(j) != 13)
+
+    for (Long64_t i = 0; i < nEventsLO; i++) {
+
+        treeLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDLO->size(); j++) {
+
+            if (scatteredPIDLO->at(j) != 13)
                 continue;
 
-            double px = scatteredMomentumX->at(j);
-            double py = scatteredMomentumY->at(j);
-            double pz = scatteredMomentumZ->at(j);
+            double px = scatteredMomentumXLO->at(j);
+            double py = scatteredMomentumYLO->at(j);
+            double pz = scatteredMomentumZLO->at(j);
 
             double pPerp = sqrt(px * px + py * py);
-            double theta = atan2(pPerp,pz);
 
-            // rad -> mrad
+            double theta = atan2(pPerp, pz);
+
             theta *= 1000.0;
 
-            hMuonAngleCMS->Fill(theta);
+            hMuonAngleCMSLO->Fill(theta);
         }
     }
 
-    saveHistogram(hMuonAngleCMS,"Scattered muon angle #theta_{#mu}^{CMS} [mrad]","Entries",outputFolder + "/scattered_muon_angle_cms.pdf");
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 13)
+                continue;
+
+            double px = scatteredMomentumXNLO->at(j);
+            double py = scatteredMomentumYNLO->at(j);
+            double pz = scatteredMomentumZNLO->at(j);
+
+            double pPerp = sqrt(px * px + py * py);
+
+            double theta = atan2(pPerp, pz);
+
+            theta *= 1000.0;
+
+            hMuonAngleCMSNLO->Fill(theta);
+        }
+    }
+
+
+    saveHistogram(
+        hMuonAngleCMSLO,
+        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
+        "Entries",
+        loFolder + "/scattered_muon_angle_cms.pdf");
+
+    saveHistogram(
+        hMuonAngleCMSNLO,
+        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
+        "Entries",
+        nloFolder + "/scattered_muon_angle_cms.pdf");
+
+    saveComparison(
+        hMuonAngleCMSLO,
+        hMuonAngleCMSNLO,
+        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
+        compFolder + "/scattered_muon_angle_cms.pdf");
 
 
     // ========================================================
     // 6. Scattered muon angle - LAB
     // ========================================================
 
-    TH1D *hMuonAngleLAB = new TH1D("hMuonAngleLAB","Scattered muon angle - LAB",500,0,5);
+    TH1D *hMuonAngleLABLO =
+        new TH1D("hMuonAngleLABLO",
+                 "LO Scattered muon angle - LAB",
+                 500, 0, 2.5);
 
-    // Beam energy and proton mass
-    const double beamEnergyLab = 100.0;       // GeV
-    const double protonMass = 0.938272088;    // GeV
+    TH1D *hMuonAngleLABNLO =
+        new TH1D("hMuonAngleLABNLO",
+                 "NLO Scattered muon angle - LAB",
+                 500, 0, 2.5);
 
-    // CMS -> LAB boost
-    double beta =beamEnergyLab / (beamEnergyLab + protonMass);
-    double gamma =1.0 / sqrt(1.0 - beta * beta);
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0;j < scatteredPID->size();j++) {
+    for (Long64_t i = 0; i < nEventsLO; i++) {
 
-            if (scatteredPID->at(j) != 13)
+        treeLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDLO->size(); j++) {
+
+            if (scatteredPIDLO->at(j) != 13)
                 continue;
 
-            double px =scatteredMomentumX->at(j);
-            double py =scatteredMomentumY->at(j);
-            double pz =scatteredMomentumZ->at(j);
+            double px = scatteredMomentumXLO->at(j);
+            double py = scatteredMomentumYLO->at(j);
+            double pz = scatteredMomentumZLO->at(j);
 
-            double E = scatteredEnergy->at(j);
-            double pzLAB = gamma * (pz + beta * E);
-            double pPerp = sqrt(px * px + py * py);
+            double E = scatteredEnergyLO->at(j);
 
-            double thetaLAB = atan2(pPerp,pzLAB);
+            double pzLAB =
+                gamma * (pz + beta * E);
 
-            // rad -> mrad
+            double pPerp =
+                sqrt(px * px + py * py);
+
+            double thetaLAB =
+                atan2(pPerp, pzLAB);
+
             thetaLAB *= 1000.0;
 
-            hMuonAngleLAB->Fill(thetaLAB);
+            hMuonAngleLABLO->Fill(thetaLAB);
         }
     }
 
-    saveHistogram(hMuonAngleLAB,"Scattered muon angle #theta_{#mu}^{LAB} [mrad]","Entries",outputFolder + "/scattered_muon_angle_lab.pdf");
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 13)
+                continue;
+
+            double px = scatteredMomentumXNLO->at(j);
+            double py = scatteredMomentumYNLO->at(j);
+            double pz = scatteredMomentumZNLO->at(j);
+
+            double E = scatteredEnergyNLO->at(j);
+
+            double pzLAB =
+                gamma * (pz + beta * E);
+
+            double pPerp =
+                sqrt(px * px + py * py);
+
+            double thetaLAB =
+                atan2(pPerp, pzLAB);
+
+            thetaLAB *= 1000.0;
+
+            hMuonAngleLABNLO->Fill(thetaLAB);
+        }
+    }
+
+
+    saveHistogram(
+        hMuonAngleLABLO,
+        "Scattered muon angle #theta_{#mu}^{LAB} [mrad]",
+        "Entries",
+        loFolder + "/scattered_muon_angle_lab.pdf");
+
+    saveHistogram(
+        hMuonAngleLABNLO,
+        "Scattered muon angle #theta_{#mu}^{LAB} [mrad]",
+        "Entries",
+        nloFolder + "/scattered_muon_angle_lab.pdf");
+
+    saveComparison(
+        hMuonAngleLABLO,
+        hMuonAngleLABNLO,
+        "Scattered muon angle #theta_{#mu}^{LAB} [mrad]",
+        compFolder + "/scattered_muon_angle_lab.pdf");
 
 
     // ========================================================
     // 7. Q^2
     // ========================================================
 
-    TH1D *hQ2 = new TH1D("hQ2","Momentum transfer Q^{2}",500,0,0.05);
+    TH1D *hQ2LO =
+        new TH1D("hQ2LO",
+                 "LO Momentum transfer Q^{2}",
+                 500, 0, 0.05);
 
-    const double muonMass = 0.105658375; // GeV
+    TH1D *hQ2NLO =
+        new TH1D("hQ2NLO",
+                 "NLO Momentum transfer Q^{2}",
+                 500, 0, 0.05);
 
-    // Initial muon in CMS
-    // E = 6.833951 GeV
-    const double EbeamCMS = 6.833951293;
-    const double pBeamCMS = sqrt(EbeamCMS * EbeamCMS - muonMass * muonMass);
 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
-        for (size_t j = 0;j < scatteredPID->size();j++) {
+    for (Long64_t i = 0; i < nEventsLO; i++) {
 
-            if (scatteredPID->at(j) != 13)
+        treeLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDLO->size(); j++) {
+
+            if (scatteredPIDLO->at(j) != 13)
                 continue;
 
-            double px = scatteredMomentumX->at(j);
-            double py = scatteredMomentumY->at(j);
-            double pz = scatteredMomentumZ->at(j);
+            double px = scatteredMomentumXLO->at(j);
+            double py = scatteredMomentumYLO->at(j);
+            double pz = scatteredMomentumZLO->at(j);
 
-            double E = scatteredEnergy->at(j);
+            double E = scatteredEnergyLO->at(j);
 
-            // Initial and final muon four-vectors
             double dE = EbeamCMS - E;
             double dpx = -px;
             double dpy = -py;
             double dpz = pBeamCMS - pz;
 
-            double q2 = dE * dE - dpx * dpx - dpy * dpy - dpz * dpz;
+            double q2 =
+                dE * dE
+                - dpx * dpx
+                - dpy * dpy
+                - dpz * dpz;
 
-            // Q^2 = -q^2
             q2 = -q2;
 
-            hQ2->Fill(q2);
+            hQ2LO->Fill(q2);
         }
     }
 
-    saveHistogram(hQ2,"Q^{2} [GeV^{2}]","Entries",outputFolder + "/Q2.pdf");
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
+
+            if (scatteredPIDNLO->at(j) != 13)
+                continue;
+
+            double px = scatteredMomentumXNLO->at(j);
+            double py = scatteredMomentumYNLO->at(j);
+            double pz = scatteredMomentumZNLO->at(j);
+
+            double E = scatteredEnergyNLO->at(j);
+
+            double dE = EbeamCMS - E;
+            double dpx = -px;
+            double dpy = -py;
+            double dpz = pBeamCMS - pz;
+
+            double q2 =
+                dE * dE
+                - dpx * dpx
+                - dpy * dpy
+                - dpz * dpz;
+
+            q2 = -q2;
+
+            hQ2NLO->Fill(q2);
+        }
+    }
+
+
+    saveHistogram(
+        hQ2LO,
+        "Q^{2} [GeV^{2}]",
+        "Entries",
+        loFolder + "/Q2.pdf");
+
+    saveHistogram(
+        hQ2NLO,
+        "Q^{2} [GeV^{2}]",
+        "Entries",
+        nloFolder + "/Q2.pdf");
+
+    saveComparison(
+        hQ2LO,
+        hQ2NLO,
+        "Q^{2} [GeV^{2}]",
+        compFolder + "/Q2.pdf");
 
 
     // ========================================================
     // 8. Energy conservation
     // ========================================================
 
-    TH1D *hEnergyConservation = new TH1D("hEnergyConservation","Energy conservation",500,-1e-6,1e-6);
+    TH1D *hEnergyConservationLO =
+        new TH1D("hEnergyConservationLO",
+                 "LO Energy conservation",
+                 500, -1e-6, 1e-6);
 
-    // Initial-state energies in CMS
-    const double initialMuonEnergy = 6.833951293;
-    const double initialProtonEnergy = 6.897251706; 
-    const double initialTotalEnergy = initialMuonEnergy + initialProtonEnergy;
- 
-    for (Long64_t i = 0; i < nEvents; i++) {
-        tree->GetEntry(i);
+    TH1D *hEnergyConservationNLO =
+        new TH1D("hEnergyConservationNLO",
+                 "NLO Energy conservation",
+                 500, -1e-6, 1e-6);
+
+
+    for (Long64_t i = 0; i < nEventsLO; i++) {
+
+        treeLO->GetEntry(i);
 
         double finalTotalEnergy = 0.0;
 
-        for (size_t j = 0;j < scatteredEnergy->size();j++) {
-            finalTotalEnergy += scatteredEnergy->at(j);
-        }
+        for (size_t j = 0; j < scatteredEnergyLO->size(); j++)
+            finalTotalEnergy += scatteredEnergyLO->at(j);
 
-        double deltaE = finalTotalEnergy - initialTotalEnergy;
+        double deltaE =
+            finalTotalEnergy - initialTotalEnergy;
 
-        hEnergyConservation->Fill(deltaE);
+        hEnergyConservationLO->Fill(deltaE);
     }
 
-    saveHistogram(hEnergyConservation,"#Delta E = E_{final} - E_{initial} [GeV]","Entries",outputFolder + "/energy_conservation.pdf");
+
+    for (Long64_t i = 0; i < nEventsNLO; i++) {
+
+        treeNLO->GetEntry(i);
+
+        double finalTotalEnergy = 0.0;
+
+        for (size_t j = 0; j < scatteredEnergyNLO->size(); j++)
+            finalTotalEnergy += scatteredEnergyNLO->at(j);
+
+        double deltaE =
+            finalTotalEnergy - initialTotalEnergy;
+
+        hEnergyConservationNLO->Fill(deltaE);
+    }
+
+
+    saveHistogram(
+        hEnergyConservationLO,
+        "#Delta E = E_{final} - E_{initial} [GeV]",
+        "Entries",
+        loFolder + "/energy_conservation.pdf");
+
+    saveHistogram(
+        hEnergyConservationNLO,
+        "#Delta E = E_{final} - E_{initial} [GeV]",
+        "Entries",
+        nloFolder + "/energy_conservation.pdf");
+
+    saveComparison(
+        hEnergyConservationLO,
+        hEnergyConservationNLO,
+        "#Delta E = E_{final} - E_{initial} [GeV]",
+        compFolder + "/energy_conservation.pdf",
+        false);
 
 
     // ========================================================
@@ -323,7 +776,11 @@ int main()
     cout << endl;
     cout << "All histograms created successfully." << endl;
 
-    f->Close();
+    cout << "LO events:  " << nEventsLO << endl;
+    cout << "NLO events: " << nEventsNLO << endl;
+
+    fLO->Close();
+    fNLO->Close();
 
     return 0;
 }
