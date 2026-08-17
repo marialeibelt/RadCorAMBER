@@ -1,5 +1,5 @@
 % $ biblatex auxiliary file $
-% $ biblatex bbl format version 3.3 $
+% $ biblatex bbl format version 3.2 $
 % Do not modify the above lines!
 %
 % This is an auxiliary file used by the 'biblatex' package.
@@ -18,8 +18,8 @@
 
 
 \refsection{0}
-  \datalist[entry]{none/global//global/global/global}
-    \entry{LHC}{online}{}{}
+  \datalist[entry]{none/global//global/global}
+    \entry{LHC}{online}{}
       \name{author}{1}{}{%
         {{hash=6b5e2ee874c50533bf238c2b4c8dc979}{%
            family={{Oleg Denisov}},
@@ -27,28 +27,29 @@
       }
       \strng{namehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{fullhash}{6b5e2ee874c50533bf238c2b4c8dc979}
-      \strng{fullhashraw}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{bibnamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authorbibnamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authornamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authorfullhash}{6b5e2ee874c50533bf238c2b4c8dc979}
-      \strng{authorfullhashraw}{6b5e2ee874c50533bf238c2b4c8dc979}
       \field{extraname}{1}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{Super Proton Synchrotron}
+      \field{urlday}{16}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
       \field{year}{0}
+      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://de.wikipedia.org/wiki/Super_Proton_Synchrotron
       \endverb
       \verb{url}
       \verb https://de.wikipedia.org/wiki/Super_Proton_Synchrotron
       \endverb
-      \warn{\item online entry 'LHC' (bibliography.bib): Invalid format '16.07.2026' of date field 'urldate' - ignoring}
     \endentry
-    \entry{setup}{online}{}{}
+    \entry{setup}{online}{}
       \name{author}{1}{}{%
         {{hash=6b5e2ee874c50533bf238c2b4c8dc979}{%
            family={{Oleg Denisov}},
@@ -56,26 +57,27 @@
       }
       \strng{namehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{fullhash}{6b5e2ee874c50533bf238c2b4c8dc979}
-      \strng{fullhashraw}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{bibnamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authorbibnamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authornamehash}{6b5e2ee874c50533bf238c2b4c8dc979}
       \strng{authorfullhash}{6b5e2ee874c50533bf238c2b4c8dc979}
-      \strng{authorfullhashraw}{6b5e2ee874c50533bf238c2b4c8dc979}
       \field{extraname}{2}
       \field{sortinit}{3}
       \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{title}{AMBERAMBER experiment at CERN, SPS}
+      \field{urlday}{16}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
       \field{year}{2021}
+      \field{urldateera}{ce}
       \verb{urlraw}
       \verb https://indico.ihep.ac.cn/event/15121/contributions/37218/attachments/18271/20850/AMBER_Had_Struct_HE_HL_2021_10_Oleg.pdf
       \endverb
       \verb{url}
       \verb https://indico.ihep.ac.cn/event/15121/contributions/37218/attachments/18271/20850/AMBER_Had_Struct_HE_HL_2021_10_Oleg.pdf
       \endverb
-      \warn{\item online entry 'setup' (bibliography.bib): Invalid format '16.07.2026' of date field 'urldate' - ignoring}
     \endentry
   \enddatalist
 \endrefsection

@@ -11,24 +11,26 @@
 \contentsline {paragraph}{\nonumberline Spectrometer Magnets}{5}{paragraph*.14}%
 \contentsline {paragraph}{\nonumberline Electromagnetic and Hadronic Calorimeters}{5}{paragraph*.16}%
 \contentsline {paragraph}{\nonumberline Muon Filters}{6}{paragraph*.18}%
-\contentsline {chapter}{\numberline {3}Theoretical Background}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Elastic Muon-Proton Scattering}{7}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}From transition rates to scattering cross sections}{7}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Kinematics}{8}{subsection.3.1.2}%
-\contentsline {section}{\numberline {3.2}Differential Cross Section for Elastic Muon-Proton Scattering}{9}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Born Approximation}{10}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Radiative Corrections}{14}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Simulation with McMule}{16}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview of McMule}{16}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Simulation Setup and Implementation of the ECal2 Detector}{16}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Event Generation with McMule}{17}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Results}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Comparison of $Q^2$ distribution with Analytical solution}{18}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Impact of radiative corrections}{18}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Influence of Analysis Cuts}{18}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}The Scattered Muon Angle Range}{18}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}The Photon Energy Threshold}{18}{subsection.6.3.2}%
-\contentsline {chapter}{\numberline {7}Discussion}{19}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{20}{chapter.8}%
-\contentsline {chapter}{Acronyms}{20}{chapter.8}%
+\contentsline {chapter}{\numberline {3}Theoretical Background on Elastic Muon-Proton Scattering}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}From transition rates to scattering cross sections}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Non-Radiative Kinematics}{8}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Differential Cross Section for Elastic Muon-Proton Scattering}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Born Approximation}{10}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Radiative Corrections}{16}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Virtual Photons}{16}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Real Photon Emission}{17}{subsection.3.5.2}%
+\contentsline {chapter}{\numberline {4}Simulation with McMule}{18}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overview of McMule}{18}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Simulation Setup and Implementation of the ECal2 Detector}{18}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Event Generation with McMule}{19}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Results}{20}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Comparison of $Q^2$ distribution with Analytical solution}{20}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Impact of radiative corrections}{20}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Influence of Analysis Cuts}{20}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}The Scattered Muon Angle Range}{20}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}The Photon Energy Threshold}{20}{subsection.6.3.2}%
+\contentsline {chapter}{\numberline {7}Discussion}{21}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{22}{chapter.8}%
+\contentsline {chapter}{Acronyms}{22}{chapter.8}%
+\contentsline {chapter}{\nonumberline Bibliography}{24}{chapter*.23}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

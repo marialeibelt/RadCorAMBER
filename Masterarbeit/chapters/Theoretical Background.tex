@@ -1,7 +1,6 @@
-\chapter{Theoretical Background}\label{chap:chapter 2}
+\chapter{Theoretical Background on Elastic Muon-Proton Scattering}\label{chap:Theory}
 \acresetall
-\section{Elastic Muon-Proton Scattering}
-\subsection{From transition rates to scattering cross sections}
+\section{From transition rates to scattering cross sections}
 
 The transition rate of a quantum mechanical process is described by Fermi's golden rule. It relates the probability of a transition between an initial state and a final state to the interaction matrix element and the available phase space:
 
@@ -59,8 +58,7 @@ The flux factor accounts for the relative motion of the incoming particles and n
     d\Phi_n .
 \end{equation}
 
-\subsection{Kinematics}
-
+\section{Non-Radiative Kinematics}
 In this thesis, only elastic muon-proton scattering is considered,
 
 \begin{equation}
@@ -107,9 +105,11 @@ To describe relativistic scattering processes, it is convenient to use the Loren
 \[
 s=(p_1+p_2)^2=(p_3+p_4)^2=m_p^2+2m_pE_{\mu}+m_{\mu}^2,
 \]
-\[
-t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE'_p=-Q^2,
-\]
+\begin{equation}
+    t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE'_p=-Q^2,
+\label{eq:t}
+\end{equation}
+
 \[
 u=(p_1-p_4)^2=(p_2-p_3)^2=m_p^2-2m_pE'_{\mu}+m_{\mu}^2.
 \]
@@ -163,8 +163,7 @@ Therefore, the differential cross section can be rewritten as
 \]
 
 This expression is written in a Lorentz-invariant form and can therefore be
-evaluated in any reference frame, including the laboratory frame used in the
-AMBER experiment.
+evaluated in any reference frame.
 
 However, the experimentally measured quantity is not directly
 $d\sigma/dt$. The detector measures the kinematic properties of the outgoing
@@ -235,9 +234,12 @@ which leads to the final expression for the transformation factor:
 \]
 
 Finally we have an expression for the differential cross section:
-\[
-\frac{d\sigma}{d\Omega} = \frac{E_\mu^2}{16\pi^2\lambda(s,m_\mu^2,m_p^2)[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}|\mathcal{M}|^2.
-\]
+\begin{equation}
+    \frac{d\sigma}{d\Omega}
+    =
+    \frac{E_\mu^2}{16\pi^2\lambda(s,m_\mu^2,m_p^2)[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}|\mathcal{M}|^2.
+    \label{eq:diff_cross_section}
+\end{equation}
 The remaining task is to determine the matrix element
 $\mathcal{M}$ describing the electromagnetic interaction.
 
@@ -279,6 +281,26 @@ where $u(p_1)$ and $\overline{u}(p_3)$ are the Dirac spinors for the incoming an
 \Gamma^\nu(q^2) = F_1(q^2)\gamma^\nu + \frac{i\sigma^{\nu\rho}q_\rho}{2m_p}F_2(q^2),
 \]
 where $\sigma^{\nu\rho} = \frac{i}{2}[\gamma^\nu,\gamma^\rho]$ is the antisymmetric tensor constructed from the gamma matrices, and $m_p$ is the mass of the proton.
+The $Q^2$ dependence of the form factors is shown in \autoref{fig:FormFac}.
+\begin{figure}[htbp]
+    \centering
+
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Theory/F1Protonq4.pdf}
+        \label{fig:F1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Theory/F2Protonq4.pdf}
+        \label{fig:F2}
+    \end{subfigure}
+
+    \caption{The Dirac ($F_1$) and Pauli ($F_2$) form factors of the proton in relativistic chiral perturbation theory
+     at $\mathcal{O}(q4)$. Comparison of two different calculation approaches: EOMS (solid lines) and infrared regularization (dashed lines). Figures taken from Thomas Fuchs 2004.}
+    \label{fig:FormFac}
+\end{figure}
 The Dirac form factor $F_1(q^2)$ describes the charge distribution, while the Pauli form factor $F_2(q^2)$ describes the anomalous magnetic moment of the proton.
 The Sachs form factors are related to the Dirac and Pauli form factors by
 \[
@@ -288,12 +310,30 @@ and
 \[
 G_M(Q^2) = F_1(Q^2) + F_2(Q^2).
 \]
+The $Q^2$ dependence of the Sachs form factors is shown in \autoref{fig:Sachs}.
+\begin{figure}[htbp]
+    \centering
 
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Theory/GEprotonq4.pdf}
+        \label{fig:GE}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/Theory/GMprotonq4.pdf}
+        \label{fig:GM}
+    \end{subfigure}
+
+    \caption{The Sachs form factors of the nucleon at $\mathcal{O}(q4)$.  Comparison of two different calculation approaches: EOMS (solid lines) and infrared regularization (dashed lines). Figures taken from Thomas Fuchs 2004.}
+    \label{fig:Sachs}
+\end{figure}
 The exchanged photon connects the muon and proton vertices. Since this photon is virtual, it is described by a photon propagator rather than by an external photon wave function. In Feynman gauge, the propagator is
 \[
 \frac{-ig_{\mu\nu}}{q^2},
 \]
-where $g_{\mu\nu}$ is the metric tensor and $q^2$ is the four-momentum squared of the virtual photon. 
+where $g_{\mu\nu}$ is the metric tensor. 
 The muon vertex carries a free Lorentz index $\mu$, while the proton vertex carries a free Lorentz index $\nu$. Initially, these two indices are independent because they originate from two separate spinor chains, namely the lepton line and the hadron line. The two spinor chains cannot be multiplied directly; instead, they are connected by the virtual-photon propagator. The propagator carries exactly two Lorentz indices, one associated with each side of the propagator, and the metric tensor $g_{\mu\nu}$ contracts these indices according to the Einstein summation convention.
 
 Written with both Lorentz indices explicitly, the matrix element is
@@ -400,11 +440,11 @@ used:
 \[
 \sum_s u(p,s)\overline{u}(p,s)
 =
-\not{p}+m,
+\slashed{p}+m,
 \]
 where
 \[
-\not{p}
+\slashed{p}
 =
 \gamma^\mu p_\mu.
 \]
@@ -424,9 +464,9 @@ L^{\mu\nu}
 =
 \operatorname{Tr}
 \left[
-(\not{p}_4+m_\mu)
+(\slashed{p}_4+m_\mu)
 \gamma^\mu
-(\not{p}_2+m_\mu)
+(\slashed{p}_2+m_\mu)
 \gamma^\nu
 \right],
 \]
@@ -436,9 +476,9 @@ H_{\mu\nu}
 =
 \operatorname{Tr}
 \left[
-(\not{p}_3+m_p)
+(\slashed{p}_3+m_p)
 \Gamma_\mu(q^2)
-(\not{p}_1+m_p)
+(\slashed{p}_1+m_p)
 \overline{\Gamma}_\nu(q^2)
 \right].
 \]
@@ -471,24 +511,7 @@ gives the spin-averaged squared matrix element in terms of the kinematic
 variables and the proton form factors.
 
 The resulting quantity is then inserted into the general expression for the
-differential cross section:
-\[
-\frac{d\sigma}{d\Omega}
-=
-\frac{E_\mu^2}
-{16\pi^2
-\lambda(s,m_\mu^2,m_p^2)
-\left[
-1+
-\left(\frac{2E_\mu}{m_p}\right)
-\sin^2\left(\frac{\theta_\mu}{2}\right)
-\right]^2}
-\,
-\overline{|\mathcal{M}|^2}.
-\]
-
-The remaining algebra can be simplified by expressing the proton structure
-in terms of the Sachs form factors \(G_E\) and \(G_M\). Evaluating the
+differential cross section \autoref{eq:diff_cross_section}. Evaluating the
 leptonic and hadronic tensors and performing the contraction
 \(L^{\mu\nu}H_{\mu\nu}\) then leads to the Rosenbluth form of the elastic
 Born cross section.
@@ -506,7 +529,7 @@ Born cross section.
     \label{eq:born_cross_section}
 \end{equation}
 
-where the Mott cross section which describes the elastic scattering of a charged
+where $\frac{d\sigma_{\mathrm{Mott}}}{d\Omega}$ isthe Mott cross section which describes the elastic scattering of a charged
 lepton from a structureless charged target. In the ultrarelativistic limit,
 it is given by
 
@@ -524,7 +547,7 @@ Moreover,
     \label{eq:tau}
 \end{equation}
 
-and
+is a dimensionless parameter and
 
 \begin{equation}
     \epsilon
@@ -535,7 +558,7 @@ and
     \label{eq:epsilon}
 \end{equation}
 
-is the virtual photon polarization parameter.
+is the so-called virtual photon polarization parameter.
 
 The internal structure of the proton is described by the electric and
 magnetic Sachs form factors. In the low-$Q^2$ region relevant for proton
@@ -590,14 +613,18 @@ magnetic form factor, such that $G_M(0)=\mu_p$.
 
 
 \section{Radiative Corrections}
-Relevant for this thesis are radiative corrections to next to leading order (NLO). These include processes with an additional photon.
-The corresponding Feynman diagrams are shown in \autoref{fig:radcor_diagrams}. The radiative corrections can be divided into two categories: virtual corrections and real photon emission. 
-The virtual corrections arise from loop diagrams, where a virtual photon is emitted and reabsorbed by the charged particles. 
-These diagrams modify the interaction vertex and the propagators of the particles involved. The real photon emission corresponds to processes where an additional photon is emitted in the final state.
+Relevant for this thesis are radiative corrections to next to leading order (NLO). These include processes with one additional photon.
+The corresponding Feynman diagrams are shown in \autoref{fig:processes}. 
+The radiative corrections can be divided into two categories: virtual corrections and real photon emission. 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.\textwidth]{figures/Processes_Mehran.pdf}
     \caption{LO and NLO processes. Figure taken from Mehran Depour.}
     \label{fig:processes}
 \end{figure}
+\subsection{Virtual Photons}
+The virtual corrections arise from loop diagrams, where a virtual photon is emitted and reabsorbed by the charged particles. 
+These diagrams modify the interaction vertex and the propagators of the particles involved. 
+\subsection{Real Photon Emission}
+The real photon emission corresponds to processes where an additional photon is emitted in the final state.
 
