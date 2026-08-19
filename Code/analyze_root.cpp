@@ -283,12 +283,12 @@ int main(int argc, char* argv[])
     TH1D *hMuonEnergyLO =
         new TH1D("hMuonEnergyLO",
                  "LO Scattered muon energy",
-                 500, 0, 10);
+                 500, 0, 110);
 
     TH1D *hMuonEnergyNLO =
         new TH1D("hMuonEnergyNLO",
                  "NLO Scattered muon energy",
-                 500, 0, 10);
+                 500, 0, 110);
 
 
     for (Long64_t i = 0; i < nEventsLO; i++) {
@@ -346,7 +346,7 @@ int main(int argc, char* argv[])
     TH1D *hPhotonEnergyNLO =
         new TH1D("hPhotonEnergyNLO",
                  "NLO Photon energy",
-                 500, -1, 10);
+                 500, -1, 100);
 
     for (Long64_t i = 0; i < nEventsNLO; i++) {
 
@@ -375,7 +375,7 @@ int main(int argc, char* argv[])
     TH1D *hPhotonAngleNLO =
         new TH1D("hPhotonAngleNLO",
                  "NLO Photon angle - LAB",
-                 500, 0, 20);
+                 500, -1, 4);
 
 
     for (Long64_t i = 0; i < nEventsNLO; i++) {
@@ -502,12 +502,12 @@ int main(int argc, char* argv[])
     TH1D *hQ2LO =
         new TH1D("hQ2LO",
                  "LO Momentum transfer Q^{2}",
-                 500, 0, 0.05);
+                 500, -0.0025, 0.05);
 
     TH1D *hQ2NLO =
         new TH1D("hQ2NLO",
                  "NLO Momentum transfer Q^{2}",
-                 500, 0, 0.05);
+                 500, -0.0025, 0.05);
 
 
     for (Long64_t i = 0; i < nEventsLO; i++) {
