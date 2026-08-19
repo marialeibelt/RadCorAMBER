@@ -75,11 +75,15 @@ git rebase --continue
   * source /cvmfs/sft.cern.ch/lcg/views/LCG_109/x86_64-el9-gcc13-opt/setup.sh
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/analyze_root.cpp $(root-config --cflags --libs) -o analyze_root
 * ./analyze_root LO.root NLO.root output_folder
-  * ./analyze_root 05_08_evtgen/out/05_08_evtgen_LO.root 05_08_evtgen/out/05_08_evtgen.root 05_08_analysis_output
+  * ./analyze_root 05_08_evtgen/out/05_08_evtgen_LO_lab.root 05_08_evtgen/out/05_08_evtgen_NLO_lab.root 05_08_analysis_output_lab
 
 ## Scale ROOOT
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/scale_root.cpp $(root-config --cflags --libs) -o scale_root
-* ./scale_root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen_LO.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/14_08_05_08_evtgen_cross_sections.txt /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out
+* ./scale_root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen_LO_lab.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen_NLO_lab.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/14_08_05_08_evtgen_cross_sections.txt /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out
+  * string loFileName  = argv[1];
+    string nloFileName = argv[2];
+    string csFileName  = argv[3];
+    string outputDir   = argv[4];
   
 
 ## LATEX
