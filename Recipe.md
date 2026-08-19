@@ -67,7 +67,9 @@
 * Run: ./lhe_to_root 05_08_evtgen/out/gen-C-1-01-67187.lhe 05_08_evtgen/out/05_08_evtgen.root
 
 ## Analyze ROOT
-* 
+* Load ROOT:
+  * module load gcc/13.2.0
+  * source /cvmfs/sft.cern.ch/lcg/views/LCG_109/x86_64-el9-gcc13-opt/setup.sh
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/analyze_root.cpp $(root-config --cflags --libs) -o analyze_root
 * ./analyze_root LO.root NLO.root output_folder
   * ./analyze_root 05_08_evtgen/out/05_08_evtgen_LO.root 05_08_evtgen/out/05_08_evtgen.root 05_08_analysis_output
