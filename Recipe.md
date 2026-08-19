@@ -77,6 +77,7 @@ git pull --rebase
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/analyze_root.cpp $(root-config --cflags --libs) -o analyze_root
 * ./analyze_root LO.root NLO.root output_folder
   * ./analyze_root 05_08_evtgen/out/05_08_evtgen_LO_lab.root 05_08_evtgen/out/05_08_evtgen_NLO_lab.root 05_08_analysis_output_lab
+  * ./analyze_root 05_08_evtgen/out/LO_scaled.root 05_08_evtgen/out/NLO_scaled.root 05_08_analysis_output_lab_scaled
 
 ## Scale ROOT
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/scale_root.cpp $(root-config --cflags --libs) -o scale_root
