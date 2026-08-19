@@ -372,6 +372,15 @@ int main(int argc, char **argv)
     )) {
 
         // Ignore negative-weight events
+        if (weight < 0.0)
+            continue;
+
+        // Accept-Reject probability
+        double probability = weight / maxWeight;
+
+        double randomNumber =
+            std::generate_canonical<double, 53>(rng);
+            
         if (randomNumber < probability) {
 
             weight = 1.0;
