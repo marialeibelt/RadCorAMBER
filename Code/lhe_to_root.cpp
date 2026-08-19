@@ -9,6 +9,7 @@
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TLorentzVector.h"
 
 struct Particle {
 
@@ -248,6 +249,14 @@ double findMaxWeight(
 
 int main(int argc, char **argv)
 {
+    const double Ebeam = 100.0;       // GeV
+    const double mmu   = 0.105658375; // GeV
+    const double mp    = 0.938272088; // GeV
+
+    const double pbeam = std::sqrt(Ebeam * Ebeam - mmu * mmu);
+
+    const double beta = pbeam / (Ebeam + mp);
+
     if (argc != 3) {
         std::cout << "Usage: ./lhe_to_root input.lhe output.root\n";
         return 1;
@@ -377,12 +386,44 @@ int main(int argc, char **argv)
 
             weight = 1.0;
 
-            tree.Fill();
-            acceptedEvents++;
+            // CMS -> Lab
+            // Boost incoming muon
+            TLorentzVector beam;
 
-            if (acceptedEvents % 100000 == 0)
-                logFile << acceptedEvents
-                        << " unweighted events written\n";
+            beam.SetPxPyPzE(
+                beamMomentumX,
+                beamMomentumY,
+                beamMomentumZ,
+                beamEnergy
+            );
+
+            beam.Boost(0.0, 0.0, beta);
+
+            beamMomentumX = beam.Px();
+            beamMomentumY = beam.Py();
+            beamMomentumZ = beam.Pz();
+            beamEnergy     = beam.E();
+
+
+            // Boost final-state particles
+            for (size_t i = 0; i < scatteredPID.size(); ++i) {
+
+                TLorentzVector p;
+
+                p.SetPxPyPzE(
+                    scatteredMomentumX[i],
+                    scatteredMomentumY[i],
+                    scatteredMomentumZ[i],
+                    scatteredEnergy[i]
+                );
+
+                p.Boost(0.0, 0.0, beta);
+
+                scatteredMomentumX[i] = p.Px();
+                scatteredMomentumY[i] = p.Py();
+                scatteredMomentumZ[i] = p.Pz();
+                scatteredEnergy[i]    = p.E();
+            }
         }
     }
 

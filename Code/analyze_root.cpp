@@ -222,32 +222,16 @@ int main(int argc, char* argv[])
     treeNLO->SetBranchAddress("scatteredMomentumZ", &scatteredMomentumZNLO);
     treeNLO->SetBranchAddress("weight", &weightNLO);
 
-
-    // ========================================================
-    // Constants
-    // ========================================================
-
     const double beamEnergyLab = 100.0;
-    const double protonMass = 0.938272088;
     const double muonMass = 0.105658375;
+    const double protonMass = 0.938272088;
 
-    const double EbeamCMS = 6.833951293;
-    const double pBeamCMS =
-        sqrt(EbeamCMS * EbeamCMS - muonMass * muonMass);
+    const double pBeamLab =
+        sqrt(beamEnergyLab * beamEnergyLab - muonMass * muonMass);
 
-    const double initialMuonEnergy = 6.833951293;
-    const double initialProtonEnergy = 6.897251706;
-    const double initialTotalEnergy =
-        initialMuonEnergy + initialProtonEnergy;
-
-    // CMS -> LAB boost
-    double beta =
-        beamEnergyLab / (beamEnergyLab + protonMass);
-
-    double gamma =
-        1.0 / sqrt(1.0 - beta * beta);
-
-
+    const double initialTotalEnergyLab =
+        beamEnergyLab + protonMass;
+        
     // ========================================================
     // 1. Weight distributions
     // ========================================================
@@ -386,11 +370,11 @@ int main(int argc, char* argv[])
 
 
     // ========================================================
-    // 4. Photon angle - CMS
+    // 4. Photon angle - LAB
     // ========================================================
     TH1D *hPhotonAngleNLO =
         new TH1D("hPhotonAngleNLO",
-                 "NLO Photon angle - CMS",
+                 "NLO Photon angle - LAB",
                  500, 0, 20);
 
 
@@ -409,105 +393,24 @@ int main(int argc, char* argv[])
 
             double pPerp = sqrt(px * px + py * py);
 
-            double theta = atan2(pPerp, pz);
+            double thetaLAB =
+                atan2(pPerp, pz);
 
-            theta *= 1000.0;
+            thetaLAB *= 1000.0;
 
-            hPhotonAngleNLO->Fill(theta);
+            hPhotonAngleNLO->Fill(thetaLAB);
         }
     }
 
     saveHistogram(
         hPhotonAngleNLO,
-        "Photon angle #theta_{#gamma}^{CMS} [mrad]",
+        "Photon angle #theta_{#gamma}^{LAB} [mrad]",
         "Entries",
-        nloFolder + "/photon_angle_cms.pdf");
+        nloFolder + "/photon_angle_lab.pdf");
 
 
     // ========================================================
-    // 5. Scattered muon angle - CMS
-    // ========================================================
-
-    TH1D *hMuonAngleCMSLO =
-        new TH1D("hMuonAngleCMSLO",
-                 "LO Scattered muon angle - CMS",
-                 500, 3, 31);
-
-    TH1D *hMuonAngleCMSNLO =
-        new TH1D("hMuonAngleCMSNLO",
-                 "NLO Scattered muon angle - CMS",
-                 500, 3, 31);
-
-
-    for (Long64_t i = 0; i < nEventsLO; i++) {
-
-        treeLO->GetEntry(i);
-
-        for (size_t j = 0; j < scatteredPIDLO->size(); j++) {
-
-            if (scatteredPIDLO->at(j) != 13)
-                continue;
-
-            double px = scatteredMomentumXLO->at(j);
-            double py = scatteredMomentumYLO->at(j);
-            double pz = scatteredMomentumZLO->at(j);
-
-            double pPerp = sqrt(px * px + py * py);
-
-            double theta = atan2(pPerp, pz);
-
-            theta *= 1000.0;
-
-            hMuonAngleCMSLO->Fill(theta);
-        }
-    }
-
-
-    for (Long64_t i = 0; i < nEventsNLO; i++) {
-
-        treeNLO->GetEntry(i);
-
-        for (size_t j = 0; j < scatteredPIDNLO->size(); j++) {
-
-            if (scatteredPIDNLO->at(j) != 13)
-                continue;
-
-            double px = scatteredMomentumXNLO->at(j);
-            double py = scatteredMomentumYNLO->at(j);
-            double pz = scatteredMomentumZNLO->at(j);
-
-            double pPerp = sqrt(px * px + py * py);
-
-            double theta = atan2(pPerp, pz);
-
-            theta *= 1000.0;
-
-            hMuonAngleCMSNLO->Fill(theta);
-        }
-    }
-
-
-    saveHistogram(
-        hMuonAngleCMSLO,
-        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
-        "Entries",
-        loFolder + "/scattered_muon_angle_cms.pdf");
-
-    saveHistogram(
-        hMuonAngleCMSNLO,
-        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
-        "Entries",
-        nloFolder + "/scattered_muon_angle_cms.pdf");
-
-    saveComparison(
-        hMuonAngleCMSLO,
-        hMuonAngleCMSNLO,
-        "Scattered muon angle #theta_{#mu}^{CMS} [mrad]",
-        compFolder + "/scattered_muon_angle_cms.pdf");
-
-
-    // ========================================================
-    // 6. Scattered muon angle - LAB
+    // 5. Scattered muon angle - LAB
     // ========================================================
 
     TH1D *hMuonAngleLABLO =
@@ -534,16 +437,11 @@ int main(int argc, char* argv[])
             double py = scatteredMomentumYLO->at(j);
             double pz = scatteredMomentumZLO->at(j);
 
-            double E = scatteredEnergyLO->at(j);
-
-            double pzLAB =
-                gamma * (pz + beta * E);
-
             double pPerp =
                 sqrt(px * px + py * py);
 
             double thetaLAB =
-                atan2(pPerp, pzLAB);
+                atan2(pPerp, pz);
 
             thetaLAB *= 1000.0;
 
@@ -565,16 +463,11 @@ int main(int argc, char* argv[])
             double py = scatteredMomentumYNLO->at(j);
             double pz = scatteredMomentumZNLO->at(j);
 
-            double E = scatteredEnergyNLO->at(j);
-
-            double pzLAB =
-                gamma * (pz + beta * E);
-
             double pPerp =
                 sqrt(px * px + py * py);
 
             double thetaLAB =
-                atan2(pPerp, pzLAB);
+                atan2(pPerp, pz);
 
             thetaLAB *= 1000.0;
 
@@ -603,7 +496,7 @@ int main(int argc, char* argv[])
 
 
     // ========================================================
-    // 7. Q^2
+    // 6. Q^2
     // ========================================================
 
     TH1D *hQ2LO =
@@ -632,10 +525,10 @@ int main(int argc, char* argv[])
 
             double E = scatteredEnergyLO->at(j);
 
-            double dE = EbeamCMS - E;
+            double dE = beamEnergyLab - E;
             double dpx = -px;
             double dpy = -py;
-            double dpz = pBeamCMS - pz;
+            double dpz = pBeamLab - pz;
 
             double q2 =
                 dE * dE
@@ -665,10 +558,10 @@ int main(int argc, char* argv[])
 
             double E = scatteredEnergyNLO->at(j);
 
-            double dE = EbeamCMS - E;
+            double dE = beamEnergyLab - E;
             double dpx = -px;
             double dpy = -py;
-            double dpz = pBeamCMS - pz;
+            double dpz = pBeamLab - pz;
 
             double q2 =
                 dE * dE
@@ -703,7 +596,7 @@ int main(int argc, char* argv[])
 
 
     // ========================================================
-    // 8. Energy conservation
+    // 7. Energy conservation
     // ========================================================
 
     TH1D *hEnergyConservationLO =
@@ -727,7 +620,7 @@ int main(int argc, char* argv[])
             finalTotalEnergy += scatteredEnergyLO->at(j);
 
         double deltaE =
-            finalTotalEnergy - initialTotalEnergy;
+            finalTotalEnergy - initialTotalEnergyLab;
 
         hEnergyConservationLO->Fill(deltaE);
     }
@@ -743,7 +636,7 @@ int main(int argc, char* argv[])
             finalTotalEnergy += scatteredEnergyNLO->at(j);
 
         double deltaE =
-            finalTotalEnergy - initialTotalEnergy;
+            finalTotalEnergy - initialTotalEnergyLab;
 
         hEnergyConservationNLO->Fill(deltaE);
     }
