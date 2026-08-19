@@ -372,21 +372,14 @@ int main(int argc, char **argv)
     )) {
 
         // Ignore negative-weight events
-        if (weight < 0.0)
-            continue;
-
-
-        // Accept-Reject
-        double probability = weight / maxWeight;
-
-        double randomNumber =
-            std::generate_canonical<double, 53>(rng);
-
         if (randomNumber < probability) {
 
             weight = 1.0;
 
-            // CMS -> Lab
+            // =========================
+            // CMS -> Lab boost
+            // =========================
+
             // Boost incoming muon
             TLorentzVector beam;
 
@@ -424,6 +417,15 @@ int main(int argc, char **argv)
                 scatteredMomentumZ[i] = p.Pz();
                 scatteredEnergy[i]    = p.E();
             }
+
+
+            // =========================
+            // Write event
+            // =========================
+
+            acceptedEvents++;
+
+            tree.Fill();
         }
     }
 

@@ -6,6 +6,9 @@
 * Beam settings file: /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
   * nano /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root_NLO.xml
 
+## Git
+* Rebase: git add <datei>
+git rebase --continue
 
 
 ## To Run
@@ -61,10 +64,10 @@
     * ./lhe_to_root_weighted 05_08_evtgen/out/gen-C-1-01-67187.lhe 05_08_evtgen/out/05_08_evtgen_weighted.root
 
 * Esprimo: x86_64-centos7-gcc11-opt
-* source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.28.06-0b358/x86_64-centos7-gcc11-opt/bin/thisroot.sh
-* load ROOT: module load root/6.28.06_py3.9.18_cxx17 
-* Compile: g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/lhe_to_root.cpp $(root-config --cflags --libs) -o lhe_to_root
-* Run: ./lhe_to_root 05_08_evtgen/out/gen-C-1-01-67187.lhe 05_08_evtgen/out/05_08_evtgen.root
+  *  source /cvmfs/sft.cern.ch/lcg/releases/ROOT/6.28.06-0b358/x86_64-centos7-gcc11-opt/bin/thisroot.sh
+  * load ROOT: module load root/6.28.06_py3.9.18_cxx17 
+  * Compile: g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/lhe_to_root.cpp $(root-config --cflags --libs) -o lhe_to_root
+  * Run: ./lhe_to_root 05_08_evtgen/out/gen-C-1-01-67187.lhe 05_08_evtgen/out/05_08_evtgen.root
 
 ## Analyze ROOT
 * Load ROOT:
