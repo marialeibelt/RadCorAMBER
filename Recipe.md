@@ -76,12 +76,12 @@ git pull --rebase
   * source /cvmfs/sft.cern.ch/lcg/views/LCG_109/x86_64-el9-gcc13-opt/setup.sh
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/analyze_root.cpp $(root-config --cflags --libs) -o analyze_root
 * ./analyze_root LO.root NLO.root output_folder
-  * ./analyze_root 05_08_evtgen/out/05_08_evtgen_LO_lab.root 05_08_evtgen/out/05_08_evtgen_NLO_lab.root 05_08_analysis_output_lab
-  * ./analyze_root 05_08_evtgen/out/LO_scaled.root 05_08_evtgen/out/NLO_scaled.root 05_08_analysis_output_lab_scaled
+  * ./analyze_root /nfs/momos/user/mleibelt/05_08_evtgen/out/05_08_evtgen_LO_lab.root 05_08_evtgen/out/05_08_evtgen_NLO_lab.root 05_08_analysis_output_lab
+  * ./analyze_root /nfs/momos/user/mleibelt/05_08_evtgen/out/LO_scaled.root 05_08_evtgen/out/NLO_scaled.root 05_08_analysis_output_lab_scaled
 
 ## Scale ROOT
 * g++ /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Code/scale_root.cpp $(root-config --cflags --libs) -o scale_root
-* ./scale_root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen_LO_lab.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out/05_08_evtgen_NLO_lab.root /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/14_08_05_08_evtgen_cross_sections.txt /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/05_08_evtgen/out
+* ./scale_root /nfs/momos/user/mleibelt/05_08_evtgen/out/05_08_evtgen_LO_lab.root /nfs/momos/user/mleibelt/05_08_evtgen/out/05_08_evtgen_NLO_lab.root /nfs/momos/user/mleibelt/05_08_evtgen/14_08_05_08_evtgen_cross_sections.txt /nfs/momos/user/mleibelt/05_08_evtgen/out
   * string loFileName  = argv[1];
     string nloFileName = argv[2];
     string csFileName  = argv[3];
@@ -89,6 +89,19 @@ git pull --rebase
 
 
 ## Finally in TGEANT
+* module unload gcc/13.2.0
+* source /cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/setup.sh
+* export GEANT4_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64/cmake/Geant4
+* export CLHEP_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib/CLHEP-2.4.6.4
+* export LD_LIBRARY_PATH=/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib:$LD_LIBRARY_PATH
+* export TGEANT=/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build
+* source build/thisgeant.sh
+
+* build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml 
+
+* !!!NEW!!!-Skript:
+  * source /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/setup_tgeant_amber.sh
+  * build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
 
 ## LATEX
 * Bereinigen und neu kompilieren: latexmk -C
