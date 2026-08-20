@@ -4,7 +4,9 @@
 * /usr/bin/python3.9 Code/getCS.py
 * more eventgen space: cd /nfs/momos/user/mleibelt/
 * Beam settings file: /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
-  * nano /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root_NLO.xml
+  * nano /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
+* pROBLEM fILE: nano src/simulation/beam/src/T4ROOTFileEvent.cc
+* Header File:  nano src/simulation/beam/include/T4ROOTFileEvent.hh
 
 ## Git
 * Rebase: git add <datei>
@@ -89,6 +91,12 @@ git pull --rebase
 
 
 ## Finally in TGEANT
+* Did you change .cc,.cpp,.hh code from TGEANT?
+  * build newly: cd /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build
+  * make -j4
+  * $TGEANT/build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
+
+
 * module unload gcc/13.2.0
 * source /cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/setup.sh
 * export GEANT4_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64/cmake/Geant4
@@ -96,12 +104,11 @@ git pull --rebase
 * export LD_LIBRARY_PATH=/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib:$LD_LIBRARY_PATH
 * export TGEANT=/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build
 * source build/thisgeant.sh
-
 * build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml 
 
 * !!!NEW!!!-Skript:
   * source /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/setup_tgeant_amber.sh
-  * build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
+  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build/bin/TGEANT /nfs/momos/user/mleibelt/TGEANT_runs/settings_Mary_root.xml
 
 ## LATEX
 * Bereinigen und neu kompilieren: latexmk -C
