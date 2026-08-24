@@ -10,7 +10,7 @@
 \contentsline {paragraph}{\nonumberline Spectrometer Magnets}{5}{paragraph*.11}%
 \contentsline {paragraph}{\nonumberline Electromagnetic and Hadronic Calorimeters}{5}{paragraph*.13}%
 \contentsline {paragraph}{\nonumberline Muon Filters}{6}{paragraph*.15}%
-\contentsline {chapter}{\numberline {3}Elastic Muon--Proton Scattering}{7}{chapter.3}%
+\contentsline {chapter}{\numberline {3}Theoretical Background on Elastic Muon--Proton Scattering}{7}{chapter.3}%
 \contentsline {section}{\numberline {3.1}From Transition Rates to Scattering Cross Sections}{7}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Non-Radiative Kinematics}{8}{section.3.2}%
 \contentsline {section}{\numberline {3.3}Differential Cross Section for Elastic Muon--Proton Scattering}{9}{section.3.3}%
@@ -18,7 +18,7 @@
 \contentsline {subsection}{\numberline {3.4.1}Ultrarelativistic Limit}{17}{subsection.3.4.1}%
 \contentsline {section}{\numberline {3.5}Radiative Corrections}{19}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}Notes}{19}{subsection.3.5.1}%
-\contentsline {paragraph}{\nonumberline Virtual Corrections}{20}{paragraph*.20}%
+\contentsline {paragraph}{\nonumberline Virtual Corrections}{19}{paragraph*.20}%
 \contentsline {paragraph}{\nonumberline Real Photon Emission}{20}{paragraph*.22}%
 \contentsline {subsection}{\numberline {3.5.2}Structure of the NLO Cross Section}{20}{subsection.3.5.2}%
 \contentsline {subsection}{\numberline {3.5.3}Virtual Corrections}{20}{subsection.3.5.3}%
