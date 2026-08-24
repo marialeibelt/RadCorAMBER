@@ -1,36 +1,26 @@
 \babel@toc {english}{}\relax 
 \babel@toc {english}{}\relax 
 \contentsline {chapter}{\nonumberline Abstract}{ii}{chapter*.1}%
-\contentsline {chapter}{\nonumberline Preface}{iii}{chapter*.2}%
-\contentsline {chapter}{\numberline {1}Introduction: The Proton Radius Puzzle}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {chapter}{\numberline {2}The AMBER Experiment}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Overview of the AMBER Experiment}{3}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Experimental Setup for the Proton Radius Measurement}{4}{section.2.2}%
-\contentsline {paragraph}{\nonumberline Combined Tracking Stations}{4}{paragraph*.10}%
-\contentsline {paragraph}{\nonumberline Time Projection Chamber}{5}{paragraph*.12}%
-\contentsline {paragraph}{\nonumberline Spectrometer Magnets}{5}{paragraph*.14}%
-\contentsline {paragraph}{\nonumberline Electromagnetic and Hadronic Calorimeters}{5}{paragraph*.16}%
-\contentsline {paragraph}{\nonumberline Muon Filters}{6}{paragraph*.18}%
+\contentsline {paragraph}{\nonumberline Unified Tracking Stations}{4}{paragraph*.7}%
+\contentsline {paragraph}{\nonumberline Time Projection Chamber}{5}{paragraph*.9}%
+\contentsline {paragraph}{\nonumberline Spectrometer Magnets}{5}{paragraph*.11}%
+\contentsline {paragraph}{\nonumberline Electromagnetic and Hadronic Calorimeters}{5}{paragraph*.13}%
+\contentsline {paragraph}{\nonumberline Muon Filters}{6}{paragraph*.15}%
 \contentsline {chapter}{\numberline {3}Theoretical Background on Elastic Muon-Proton Scattering}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}From transition rates to scattering cross sections}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.1}From Transition Rates to Scattering Cross Sections}{7}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Non-Radiative Kinematics}{8}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Differential Cross Section for Elastic Muon-Proton Scattering}{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Born Approximation}{10}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Radiative Corrections}{16}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Virtual Photons}{16}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Real Photon Emission}{17}{subsection.3.5.2}%
-\contentsline {chapter}{\numberline {4}Simulation with McMule}{18}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overview of McMule}{18}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Simulation Setup and Implementation of the ECal2 Detector}{18}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Event Generation with McMule}{19}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Results}{20}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Comparison of $Q^2$ distribution with Analytical solution}{20}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Impact of radiative corrections}{20}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Influence of Analysis Cuts}{20}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}The Scattered Muon Angle Range}{20}{subsection.6.3.1}%
-\contentsline {subsection}{\numberline {6.3.2}The Photon Energy Threshold}{20}{subsection.6.3.2}%
-\contentsline {chapter}{\numberline {7}Discussion}{21}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Conclusion and Outlook}{22}{chapter.8}%
-\contentsline {chapter}{Acronyms}{22}{chapter.8}%
-\contentsline {chapter}{\nonumberline Bibliography}{24}{chapter*.23}%
+\contentsline {section}{\numberline {3.3}Differential Cross Section for Elastic Muon--Proton Scattering}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Born Approximation}{11}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Radiative Corrections}{17}{section.3.5}%
+\contentsline {paragraph}{\nonumberline Virtual corrections.}{18}{paragraph*.20}%
+\contentsline {paragraph}{\nonumberline Real photon emission.}{18}{paragraph*.22}%
+\contentsline {chapter}{\numberline {4}Simulation with McMule}{19}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Results}{20}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Discussion}{21}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Conclusion and Outlook}{22}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{23}{chapter*.23}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
