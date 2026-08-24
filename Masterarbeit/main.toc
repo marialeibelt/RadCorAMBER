@@ -10,17 +10,23 @@
 \contentsline {paragraph}{\nonumberline Spectrometer Magnets}{5}{paragraph*.11}%
 \contentsline {paragraph}{\nonumberline Electromagnetic and Hadronic Calorimeters}{5}{paragraph*.13}%
 \contentsline {paragraph}{\nonumberline Muon Filters}{6}{paragraph*.15}%
-\contentsline {chapter}{\numberline {3}Theoretical Background on Elastic Muon-Proton Scattering}{7}{chapter.3}%
+\contentsline {chapter}{\numberline {3}Elastic Muon--Proton Scattering}{7}{chapter.3}%
 \contentsline {section}{\numberline {3.1}From Transition Rates to Scattering Cross Sections}{7}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Non-Radiative Kinematics}{8}{section.3.2}%
 \contentsline {section}{\numberline {3.3}Differential Cross Section for Elastic Muon--Proton Scattering}{9}{section.3.3}%
 \contentsline {section}{\numberline {3.4}Born Approximation}{11}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Radiative Corrections}{17}{section.3.5}%
-\contentsline {paragraph}{\nonumberline Virtual corrections.}{18}{paragraph*.20}%
-\contentsline {paragraph}{\nonumberline Real photon emission.}{18}{paragraph*.22}%
-\contentsline {chapter}{\numberline {4}Simulation with McMule}{19}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Results}{20}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Discussion}{21}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Conclusion and Outlook}{22}{chapter.7}%
-\contentsline {chapter}{\nonumberline Bibliography}{23}{chapter*.23}%
+\contentsline {subsection}{\numberline {3.4.1}Ultrarelativistic Limit}{17}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Radiative Corrections}{19}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Notes}{19}{subsection.3.5.1}%
+\contentsline {paragraph}{\nonumberline Virtual Corrections}{20}{paragraph*.20}%
+\contentsline {paragraph}{\nonumberline Real Photon Emission}{20}{paragraph*.22}%
+\contentsline {subsection}{\numberline {3.5.2}Structure of the NLO Cross Section}{20}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Virtual Corrections}{20}{subsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.5.4}Real Photon Emission}{20}{subsection.3.5.4}%
+\contentsline {subsection}{\numberline {3.5.5}Infrared Cancellation}{20}{subsection.3.5.5}%
+\contentsline {chapter}{\numberline {4}Simulation with McMule}{21}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Results}{22}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Discussion}{23}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Conclusion and Outlook}{24}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{25}{chapter*.23}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

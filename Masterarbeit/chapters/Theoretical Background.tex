@@ -1,19 +1,28 @@
-\chapter{Theoretical Background on Elastic Muon-Proton Scattering}\label{chap:Theory}
-Throughout this chapter, natural units with \(\hbar=c=1\) and the metric convention \(g^{\mu\nu}=\operatorname{diag}(1,-1,-1,-1)\) are used.
+\chapter[Elastic Muon--Proton Scattering]{Theoretical Background on Elastic Muon--Proton Scattering}
+\label{chap:Theory}
+\acresetall
+
+Throughout this chapter, natural units with \(\hbar=c=1\) and the metric convention
+\[
+g^{\mu\nu}=\operatorname{diag}(1,-1,-1,-1)
+\]
+are used.
 
 \section{From Transition Rates to Scattering Cross Sections}
 
-The transition rate of a quantum mechanical process is described by Fermi's golden rule. It relates the probability of a transition between an initial state and a final state to the interaction matrix element and the available phase space:
+The transition rate of a quantum mechanical process is described by Fermi's golden rule. It relates the probability of a transition between an initial and a final state to the interaction matrix element and the available phase space,
 
 \begin{equation}
     \Gamma_{i\rightarrow f}
     =
     2\pi
     \left|\mathcal{M}_{fi}\right|^2
-    \rho(E_f),
+    \rho(E_f).
 \end{equation}
 
-where \(\mathcal{M}_{fi}\) is the matrix element of the interaction and contains all information about the dynamics of the process. It is calculated from the corresponding Feynman diagrams. The factor \(\rho(E_f)\) describes the density of accessible final states and contains only kinematic information. It depends on the masses, energies, and momenta of the particles involved. A larger available phase space increases the number of possible final states and therefore enhances the transition probability. The nonrelativistic matrix element \(\mathcal{M}_{fi}\) and the invariant amplitude \(\mathcal{M}\) used below play analogous roles, although their state-normalization conventions are different.
+Here, \(\mathcal{M}_{fi}\) is the transition matrix element and contains the dynamical information about the interaction. The factor \(\rho(E_f)\) describes the density of accessible final states and therefore contains the kinematic information of the process. It depends on the masses, energies, and momenta of the particles involved.
+
+In relativistic quantum field theory, the corresponding quantity is the invariant scattering amplitude \(\mathcal{M}\), which is obtained from the relevant Feynman diagrams. The nonrelativistic transition matrix element \(\mathcal{M}_{fi}\) and the relativistic invariant amplitude \(\mathcal{M}\) play similar roles, but are defined using different normalization conventions for the particle states.
 
 For the decay of one initial particle with four-momentum \(p_1\) into \(n\) final-state particles, the differential transition rate is given by
 
@@ -29,7 +38,7 @@ For the decay of one initial particle with four-momentum \(p_1\) into \(n\) fina
     d\Phi_n ,
 \end{equation}
 
-where the Lorentz-invariant phase space element is defined as
+where the Lorentz-invariant phase-space element is
 
 \begin{equation}
     d\Phi_n
@@ -38,14 +47,15 @@ where the Lorentz-invariant phase space element is defined as
     \frac{d^3\mathbf{p}_f}{(2\pi)^3 2E_f}.
 \end{equation}
 
-The four-dimensional delta function ensures conservation of energy and momentum. In scattering processes, the relevant observable is not the transition rate but the cross section. It is obtained by normalizing the transition rate to the incident particle flux,
+The four-dimensional delta function ensures conservation of energy and momentum. For scattering processes, the relevant observable is not the transition rate itself but the cross section. It is obtained by normalizing the transition rate to the incident particle flux,
 
 \begin{equation}
     d\sigma
     =
     \frac{d\Gamma}{\text{flux}}.
 \end{equation}
-The flux factor accounts for the relative motion of the incoming particles and normalizes the transition rate to the number of possible collisions. For a general \(2\rightarrow n\) scattering process, this results in the Lorentz-invariant expression
+
+The flux factor accounts for the relative motion of the incoming particles and normalizes the transition probability to the number of possible collisions. For a general \(2\rightarrow n\) scattering process, the Lorentz-invariant cross section is
 
 \begin{equation}
     d\sigma
@@ -61,14 +71,16 @@ The flux factor accounts for the relative motion of the incoming particles and n
 
 For an unpolarized process, the bar denotes an average over the initial-state spins and a sum over the final-state spins.
 
+
 \section{Non-Radiative Kinematics}
-In this thesis, only elastic muon-proton scattering is considered,
+
+The starting point for the following discussion is the non-radiative elastic muon--proton scattering process
 
 \begin{equation}
     p(p_1)+\mu(p_2)\rightarrow p(p_3)+\mu(p_4).
 \end{equation}
 
-The proton is initially at rest, therefore the incoming four-momenta are given by
+In the laboratory frame, the initial proton is at rest. The incoming four-momenta are therefore
 
 \begin{equation}
     p_1=(m_p,\mathbf{0}),
@@ -90,7 +102,7 @@ Energy and momentum conservation require
     p_1+p_2=p_3+p_4.
 \end{equation}
 
-The interaction is mediated by the exchange of a virtual photon with four-momentum
+At leading order, the interaction is mediated by the exchange of a virtual photon with four-momentum
 
 \begin{equation}
     q=p_2-p_4=p_3-p_1 .
@@ -102,68 +114,79 @@ The invariant momentum transfer is defined as
     Q^2=-q^2,
 \end{equation}
 
-where the positive sign convention for \(Q^2\) is commonly used in scattering experiments. The value of \(Q^2\) determines the resolution scale of the interaction: larger values of \(Q^2\) correspond to a smaller distance scale probed inside the proton.
+such that \(Q^2>0\) for the spacelike momentum transfers relevant to elastic scattering. The value of \(Q^2\) determines the spatial resolution of the interaction: larger momentum transfers correspond to smaller distance scales being probed inside the proton.
 
-The Mandelstam variables provide a convenient description of relativistic scattering processes. Because these variables are Lorentz invariant, they give a compact, frame-independent representation of scattering kinematics and cross sections. For a \(2\rightarrow2\) process, they are
+The Mandelstam variables provide a convenient Lorentz-invariant description of the scattering kinematics. For the elastic \(2\rightarrow2\) process considered here, they are
+
 \[
-s=(p_1+p_2)^2=(p_3+p_4)^2=m_p^2+2m_pE_{\mu}+m_{\mu}^2,
+s=(p_1+p_2)^2
+=(p_3+p_4)^2
+=m_p^2+m_\mu^2+2m_pE_\mu,
 \]
+
 \begin{equation}
-    t=(p_1-p_3)^2=(p_2-p_4)^2=2m_p^2-2m_pE'_p=-Q^2,
-\label{eq:t}
+    t=(p_1-p_3)^2
+    =(p_2-p_4)^2
+    =2m_p^2-2m_pE'_p
+    =-Q^2,
+    \label{eq:t}
 \end{equation}
 
+and
+
 \[
-u=(p_1-p_4)^2=(p_2-p_3)^2=m_p^2-2m_pE'_{\mu}+m_{\mu}^2.
+u=(p_1-p_4)^2
+=(p_2-p_3)^2
+=m_p^2+m_\mu^2-2m_pE'_\mu.
 \]
+
 They satisfy
+
 \[
 s+t+u=2m_p^2+2m_\mu^2.
 \]
 
+
 \section{Differential Cross Section for Elastic Muon--Proton Scattering}
 
-The differential cross section for elastic muon-proton scattering can be expressed in terms of the Mandelstam variables and the matrix element of the interaction. The general expression for a two-particle scattering process is given by
+The differential cross section for elastic muon--proton scattering can be expressed in terms of the Mandelstam variables and the invariant matrix element. For a general \(2\rightarrow2\) process,
 
 \[
 \frac{d\sigma}{dt}
 =
-\frac{1}{64\pi s}
-\frac{1}{|\mathbf{p}_{1,\mathrm{cm}}|^2}
+\frac{1}{64\pi s\,p_{\mathrm{cm}}^2}
 \overline{|\mathcal{M}|^2},
 \]
 
-where $|\mathbf{p}_{1,\mathrm{cm}}|$ is the magnitude of the incoming particle momentum in the center-of-mass frame. To express the momentum in terms of the Mandelstam variable $s$, the Källén function is introduced:
+where \(p_{\mathrm{cm}}\) denotes the magnitude of either incoming particle momentum in the center-of-mass frame. It can be expressed using the Källén function,
 
 \[
 \lambda(s,m_\mu^2,m_p^2)
 =
 s^2+m_\mu^4+m_p^4
 -2s(m_\mu^2+m_p^2)
--2m_\mu^2m_p^2 .
+-2m_\mu^2m_p^2,
 \]
 
-The center-of-mass momentum is related to the Källén function by
+through
 
 \[
-|\mathbf{p}_{1,\mathrm{cm}}|^2
+p_{\mathrm{cm}}^2
 =
 \frac{\lambda(s,m_\mu^2,m_p^2)}{4s}.
 \]
 
-Therefore, the differential cross section can be rewritten as
+The differential cross section can therefore be written in the Lorentz-invariant form
 
-\[
+\begin{equation}
 \frac{d\sigma}{dt}
 =
 \frac{1}{16\pi\lambda(s,m_\mu^2,m_p^2)}
-\overline{|\mathcal{M}|^2} .
-\]
+\overline{|\mathcal{M}|^2}.
+\label{eq:dsigma_dt}
+\end{equation}
 
-This expression is written in a Lorentz-invariant form and can therefore be
-evaluated in any reference frame.
-
-However, the experimentally measured quantity is not directly $d\sigma/dt$. The detector measures the kinematic properties of the outgoing muon, in particular its scattering angle and energy. Therefore, the differential cross section is usually expressed as a function of the scattering angle:
+While \(d\sigma/dt\) provides a compact invariant description, the experimentally accessible quantities are the energy and scattering angle of the outgoing muon. It is therefore useful to express the cross section in terms of the solid angle,
 
 \begin{equation}
 \frac{d\sigma}{d\Omega}
@@ -174,17 +197,17 @@ However, the experimentally measured quantity is not directly $d\sigma/dt$. The 
 \right|.
 \end{equation}
 
-Since $t=-Q^2$ by definition, see \autoref{eq:t}, the absolute value of the
-transformation factor is
+Since \(t=-Q^2\), see \autoref{eq:t}, the transformation factor becomes
 
 \begin{equation}
-\left|\frac{dt}{d\Omega}\right|
+\left|
+\frac{dt}{d\Omega}
+\right|
 =
 \frac{dQ^2}{d\Omega}.
 \end{equation}
 
-No massless approximation is made for the muon in the following derivation. In the
-laboratory frame, the magnitudes of the incoming and outgoing muon momenta are
+No massless approximation is made for the muon at this stage. In the laboratory frame, the magnitudes of the incoming and outgoing muon three-momenta are
 
 \begin{equation}
 p_\mu=\sqrt{E_\mu^2-m_\mu^2},
@@ -192,15 +215,14 @@ p_\mu=\sqrt{E_\mu^2-m_\mu^2},
 p'_\mu=\sqrt{{E'_\mu}^2-m_\mu^2}.
 \end{equation}
 
-The on-shell condition for the final-state proton,
-$(p_1+q)^2=m_p^2$, gives
+The outgoing proton is a real, on-shell particle and therefore satisfies \(p_3^2=m_p^2\). Since \(p_3=p_1+q\), this condition gives
 
 \begin{equation}
 Q^2=2m_p(E_\mu-E'_\mu).
 \label{eq:Q2_energy_transfer}
 \end{equation}
 
-Independently, evaluating $Q^2=-(p_2-p_4)^2$ yields
+Independently, evaluating \(Q^2=-(p_2-p_4)^2\) gives
 
 \begin{equation}
 Q^2
@@ -213,11 +235,7 @@ E_\mu E'_\mu
 \label{eq:Q2_massive_angle}
 \end{equation}
 
-where $\theta_\mu$ is the laboratory scattering angle of the outgoing muon.
-Equations~\eqref{eq:Q2_energy_transfer} and
-\eqref{eq:Q2_massive_angle} determine $E'_\mu$ and $Q^2$ for a given beam
-energy and scattering angle. Solving them for the physical outgoing-muon
-energy gives
+where \(\theta_\mu\) is the laboratory scattering angle of the outgoing muon. Equations~\eqref{eq:Q2_energy_transfer} and \eqref{eq:Q2_massive_angle} determine the final-state energy and momentum transfer for a given incoming energy and scattering angle. Solving for the physical outgoing-muon energy gives
 
 \begin{equation}
 E'_\mu
@@ -232,14 +250,15 @@ E'_\mu
 \label{eq:outgoing_muon_energy}
 \end{equation}
 
-For an azimuthally symmetric unpolarized cross section, the azimuthal angle has already been integrated from $0$ to $2\pi$, so that
+For an azimuthally symmetric unpolarized cross section, the azimuthal angle can be integrated from \(0\) to \(2\pi\), such that
 
 \begin{equation}
-d\Omega=2\pi\sin\theta_\mu\,d\theta_\mu.
+d\Omega
+=
+2\pi\sin\theta_\mu\,d\theta_\mu.
 \end{equation}
 
-
-Using this, the transformation between the two differential cross sections becomes
+The corresponding transformation is therefore
 
 \[
 \frac{dQ^2}{d\Omega}
@@ -256,225 +275,317 @@ Differentiating the exact kinematic relations gives
 \frac{dQ^2}{d\theta_\mu}
 =
 \frac{
-2m_p p_\mu {p'_\mu}^2\sin\theta_\mu
+2m_p p_\mu (p'_\mu)^2\sin\theta_\mu
 }{
-p'_\mu(m_p+E_\mu)-p_\mu E'_\mu\cos\theta_\mu
+p'_\mu(m_p+E_\mu)
+-p_\mu E'_\mu\cos\theta_\mu
 }.
 \end{equation}
 
-Consequently, the exact transformation factor is
+Consequently,
 
 \begin{equation}
 \frac{dQ^2}{d\Omega}
 =
 \frac{
-m_p p_\mu {p'_\mu}^2
+m_p p_\mu (p'_\mu)^2
 }{
 \pi\left[
-p'_\mu(m_p+E_\mu)-p_\mu E'_\mu\cos\theta_\mu
+p'_\mu(m_p+E_\mu)
+-p_\mu E'_\mu\cos\theta_\mu
 \right]
 }.
 \label{eq:massive_jacobian}
 \end{equation}
 
-In the laboratory frame, the Käll\'en function satisfies $\lambda(s,m_\mu^2,m_p^2)=4m_p^2p_\mu^2$. Inserting this relation and \autoref{eq:massive_jacobian} into the invariant cross section gives
+In the laboratory frame, the Källén function satisfies
+
+\[
+\lambda(s,m_\mu^2,m_p^2)
+=
+4m_p^2p_\mu^2.
+\]
+
+Inserting this relation together with \autoref{eq:massive_jacobian} into \autoref{eq:dsigma_dt} gives
 
 \begin{equation}
 \frac{d\sigma}{d\Omega}
-= \frac{{p'_\mu}^2}
-{64\pi^2m_p p_\mu[p'_\mu(m_p+E_\mu)-p_\mu E'_\mu\cos\theta_\mu]}
-\overline{|\mathcal{M}|^2}.
-\label{eq:diff_cross_section}
-\end{equation}
-
-This expression contains the exact two-body phase-space and recoil factors
-for a finite muon mass. The remaining task is to determine the matrix element
-$\mathcal{M}$ describing the electromagnetic interaction.
-
-In the ultra-relativistic limit \(E_\mu \gg m_\mu\). It follows that \(p_{\mu}\approx E_\mu\) and the outgoing muon momentum can be approximated by \(p'_\mu\approx E'_\mu\). In this limit 
-
-\begin{equation}
-\frac{dQ^2}{d\theta_\mu}
 =
-\frac{
-2E_\mu^2\sin\theta_\mu
-}{
+\frac{(p'_\mu)^2}
+{64\pi^2m_p p_\mu
 \left[
-1+(2E_\mu/m_p)
-\sin^2\left(\theta_\mu/2\right)
-\right]^2
-}.
+p'_\mu(m_p+E_\mu)
+-p_\mu E'_\mu\cos\theta_\mu
+\right]}
+\overline{|\mathcal{M}|^2}.
+\label{eq:diff_cross_section_exact}
 \end{equation}
 
-and the differential cross section simplifies to
-
-\begin{equation}
-    \frac{d\sigma}{d\Omega}
-    =
-    \frac{1}{64\pi^2 m_p^2
-[1+(2E_\mu/m_p)\sin^2(\theta_\mu/2)]^2}\overline{|\mathcal{M}|^2}.
-    \label{eq:diff_cross_section}
-\end{equation}
+This expression contains the exact two-body phase-space and recoil factors for a finite muon mass. The remaining task is to determine the matrix element \(\mathcal{M}\) describing the electromagnetic interaction.
 
 
 \section{Born Approximation}
-The starting point for calculating the scattering amplitude is the interaction part of the QED Lagrangian. At leading order in quantum electrodynamics (Born approximation), the interaction is described by the exchange of a single virtual photon.
-\[
-\mathcal{L}_{\mathrm{int}} = -eQ_f\overline{\psi}\gamma^\mu\psi A_\mu,
-\]
-where $\psi$ is the Dirac spinor field representing the charged fermion, $A_\mu$ is the electromagnetic four-potential, $\gamma^\mu$ are the Dirac gamma matrices, $e>0$ is the elementary charge, and $Q_f$ is the fermion charge in units of $e$.
-The interaction Lagrangian can therefore be written in terms of the electromagnetic current $j^\mu_{\mathrm{em}} = Q_f\overline{\psi}\gamma^\mu\psi$ as
-\[
-\mathcal{L}_{\mathrm{int}} = -e j^\mu_{\mathrm{em}} A_\mu.
-\]
-This expression directly shows that the electromagnetic interaction arises from the coupling between the electromagnetic current and the electromagnetic field. In a scattering process, this coupling is represented diagrammatically by a vertex. The vertex therefore describes the interaction between a charged fermion and a photon. For a point-like fermion such as the muon, the electromagnetic vertex follows directly from the QED interaction Lagrangian. Apart from the charge factor $Q_\mu$, the corresponding Feynman rule is
-\[
--ie\gamma^\mu,
-\]
-and, written in terms of the incoming and outgoing muon spinors, the vertex factor is
-\[
-Q_\mu\overline{u}(p_4)(-ie\gamma^\mu)u(p_2),
-\]
-where $u(p_2)$ and $\overline{u}(p_4)$ are the Dirac spinors for the incoming and outgoing muon, respectively.
 
-For a composite particle like the proton, the electromagnetic vertex is modified by the internal structure of the particle. This modification is described by the electromagnetic form factors, which encode information about the spatial distribution of charge and magnetization within the proton. The vertex factor for the proton can be expressed as
+The starting point for calculating the scattering amplitude is the interaction part of the QED Lagrangian. At leading order in quantum electrodynamics, referred to as the Born approximation, muon--proton scattering is described by the exchange of a single virtual photon.
+
+For a charged fermion, the electromagnetic interaction is described by
+
 \[
-\overline{u}(p_3)(-ie\Gamma^\nu(Q^2))u(p_1),
+\mathcal{L}_{\mathrm{int}}
+=
+-eQ_f\overline{\psi}\gamma^\mu\psi A_\mu,
 \]
-where $u(p_1)$ and $\overline{u}(p_3)$ are the Dirac spinors for the incoming and outgoing proton. In the spacelike region, the form factors are written as functions of the positive variable $Q^2=-q^2$; that is, $F_i(Q^2)\equiv F_i(q^2=-Q^2)$. The electromagnetic vertex function is
+
+where \(\psi\) is the Dirac spinor field representing the charged fermion, \(A_\mu\) is the electromagnetic four-potential, \(\gamma^\mu\) are the Dirac gamma matrices, \(e>0\) is the elementary charge, and \(Q_f\) is the fermion charge in units of \(e\).
+
+Introducing the electromagnetic current
+
 \[
-\Gamma^\nu(Q^2) = F_1(Q^2)\gamma^\nu + \frac{i\sigma^{\nu\rho}q_\rho}{2m_p}F_2(Q^2),
+j^\mu_{\mathrm{em}}
+=
+Q_f\overline{\psi}\gamma^\mu\psi,
 \]
-where $\sigma^{\nu\rho} = \frac{i}{2}[\gamma^\nu,\gamma^\rho]$ is the antisymmetric tensor constructed from the gamma matrices, and $m_p$ is the mass of the proton.
-The $Q^2$ dependence of the form factors is shown in \autoref{fig:FormFac}.
+
+the interaction Lagrangian becomes
+
+\[
+\mathcal{L}_{\mathrm{int}}
+=
+-ej^\mu_{\mathrm{em}}A_\mu.
+\]
+
+This expression directly shows that the electromagnetic interaction arises from the coupling between the electromagnetic current and the electromagnetic field. In a scattering process, this interaction is represented diagrammatically by a vertex connecting a charged fermion to a photon.
+
+For a point-like fermion such as the muon, the electromagnetic vertex follows directly from the QED interaction Lagrangian. Apart from the charge factor \(Q_\mu\), the corresponding Feynman rule is
+
+\[
+-ie\gamma^\mu.
+\]
+
+Including the incoming and outgoing muon spinors, the muon vertex is
+
+\[
+Q_\mu
+\overline{u}(p_4)
+(-ie\gamma^\mu)
+u(p_2),
+\]
+
+where \(u(p_2)\) and \(\overline{u}(p_4)\) describe the incoming and outgoing muon, respectively.
+
+For a composite particle such as the proton, the electromagnetic vertex is modified by its internal structure. This modification is described by electromagnetic form factors, which encode the response of the proton's charge and magnetization distributions to the electromagnetic probe. The proton vertex can be written as
+
+\[
+\overline{u}(p_3)
+(-ie\Gamma^\nu(Q^2))
+u(p_1),
+\]
+
+with the vertex function
+
+\begin{equation}
+\Gamma^\nu(Q^2)
+=
+F_1(Q^2)\gamma^\nu
++
+\frac{i\sigma^{\nu\rho}q_\rho}{2m_p}
+F_2(Q^2),
+\label{eq:proton_vertex}
+\end{equation}
+
+where
+
+\[
+\sigma^{\nu\rho}
+=
+\frac{i}{2}
+[\gamma^\nu,\gamma^\rho].
+\]
+
+In the spacelike region, the form factors are expressed in terms of the positive variable \(Q^2=-q^2\).
+
+The Dirac form factor \(F_1\) describes the charge-like part of the proton's electromagnetic interaction, while the Pauli form factor \(F_2\) accounts for its anomalous magnetic contribution. At zero momentum transfer, they satisfy
+
+\[
+F_1(0)=1,
+\qquad
+F_2(0)=\kappa_p=\mu_p-1,
+\]
+
+where \(\kappa_p\) is the anomalous magnetic moment and
+\(\mu_p=2.792847\) is the dimensionless proton magnetic moment in units of the nuclear magneton.
+
+The \(Q^2\) dependence of the two proton form factors is illustrated in \autoref{fig:FormFac}. Both form factors change as the momentum transfer increases, reflecting the fact that the proton is not point-like. The comparison of the two calculation schemes also illustrates how different theoretical treatments of the hadronic structure affect the detailed \(Q^2\) dependence.
+
 \begin{figure}[htbp]
     \centering
 
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/Theory/F1Protonq4.pdf}
+        \caption{Dirac form factor \(F_1(Q^2)\).}
         \label{fig:F1}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/Theory/F2Protonq4.pdf}
+        \caption{Pauli form factor \(F_2(Q^2)\).}
         \label{fig:F2}
     \end{subfigure}
 
-    \caption{The Dirac ($F_1$) and Pauli ($F_2$) form factors of the proton in relativistic chiral perturbation theory at $\mathcal{O}(q4)$. Comparison of two different calculation approaches: EOMS (solid lines) and infrared regularization (dashed lines). Figures taken from Thomas Fuchs 2004.}
+    \caption{Dirac and Pauli form factors of the proton in relativistic chiral perturbation theory at \(\mathcal{O}(q^4)\). The solid lines represent the extended on-mass-shell (EOMS) scheme, while the dashed lines show the result obtained using infrared regularization. Figures adapted from \cite{XXX}.}
     \label{fig:FormFac}
 \end{figure}
 
-At zero momentum transfer, the Dirac and Pauli form factors are normalized as
-\[
-F_1(0)=1,
-\qquad
-F_2(0)=\mu_p-1,
-\]
-where $\mu_p$ is the nuclear magneton. The two form factors together describe the response of the proton's charge and magnetization structure to the electromagnetic probe. A more direct interpretation in terms of electric and magnetic distributions is provided by the Sachs form factors.
+For the interpretation of elastic scattering, it is useful to introduce the Sachs form factors. They are related to the Dirac and Pauli form factors by
 
-The Sachs form factors are related to the Dirac and Pauli form factors by
-\[
-G_E(Q^2) = F_1(Q^2) - \frac{Q^2}{4m_p^2}F_2(Q^2)
-\]
+\begin{equation}
+G_E(Q^2)
+=
+F_1(Q^2)
+-
+\frac{Q^2}{4m_p^2}F_2(Q^2)
+\end{equation}
+
 and
+
+\begin{equation}
+G_M(Q^2)
+=
+F_1(Q^2)+F_2(Q^2).
+\end{equation}
+
+Their normalizations at zero momentum transfer are
+
 \[
-G_M(Q^2) = F_1(Q^2) + F_2(Q^2).
+G_E(0)=1,
+\qquad
+G_M(0)=\mu_p.
 \]
 
-The $Q^2$ dependence of the Sachs form factors is shown in \autoref{fig:Sachs}.
+The Sachs form factors provide a more direct description of the electric and magnetic structure of the proton. Their \(Q^2\) dependence is shown in \autoref{fig:Sachs}. Both \(G_E\) and \(G_M\) decrease as the momentum transfer increases, indicating that the electromagnetic structure of the proton becomes resolved. Of particular importance for the proton-radius measurement is the behavior of \(G_E\) close to \(Q^2=0\). As discussed in the introduction, the slope of \(G_E\) in this region determines the proton charge radius. Measurements at very small \(Q^2\), such as those performed by AMBER, are therefore especially sensitive to this quantity.
+
 \begin{figure}[htbp]
     \centering
 
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/Theory/GEprotonq4.pdf}
+        \caption{Electric Sachs form factor \(G_E(Q^2)\).}
         \label{fig:GE}
     \end{subfigure}
     \hfill
     \begin{subfigure}{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/Theory/GMprotonq4.pdf}
+        \caption{Magnetic Sachs form factor \(G_M(Q^2)\).}
         \label{fig:GM}
     \end{subfigure}
 
-    \caption{The Sachs form factors of the nucleon at $\mathcal{O}(q4)$.  Comparison of two different calculation approaches: EOMS (solid lines) and infrared regularization (dashed lines). Figures taken from Thomas Fuchs 2004 \cite{XXX}.}
+    \caption{Electric and magnetic Sachs form factors of the proton at \(\mathcal{O}(q^4)\). The solid lines represent the EOMS scheme and the dashed lines the infrared-regularization result. Figures adapted from \cite{XXX}.}
     \label{fig:Sachs}
 \end{figure}
-The exchanged photon connects the muon and proton vertices. Since this photon is virtual, it is described by a photon propagator rather than by an external photon wave function. In Feynman gauge, the propagator is
-\[
-\frac{-ig_{\mu\nu}}{q^2},
-\]
-where $g_{\mu\nu}$ is the metric tensor. The muon and proton vertices carry the Lorentz indices $\mu$ and $\nu$, respectively. These indices are contracted through the virtual-photon propagator, whose metric tensor $g_{\mu\nu}$ connects the leptonic and hadronic currents according to the Einstein summation convention.
 
-Written with both Lorentz indices explicitly, the matrix element is
+The exchanged virtual photon connects the muon and proton vertices. Since it is an internal particle, it is represented by a propagator rather than an external photon wave function. In Feynman gauge, a convenient gauge choice in which the photon propagator takes a particularly simple form, it is given by
+
 \[
-\mathcal{M}
+\frac{-ig_{\mu\nu}}{q^2}.
+\]
+
+The muon and proton vertices carry the Lorentz indices \(\mu\) and \(\nu\), respectively, corresponding to the leptonic and hadronic spinor chains. The virtual-photon propagator connects these two currents, with the metric tensor \(g_{\mu\nu}\) contracting the Lorentz indices according to the Einstein summation convention.
+
+Written with both Lorentz indices explicitly, the Born matrix element is
+
+\begin{equation}
+\mathcal{M}_{\mathrm{Born}}
 =
 \left[
-Q_\mu\overline{u}(p_4)(-ie\gamma^\mu)u(p_2)
+Q_\mu
+\overline{u}(p_4)
+(-ie\gamma^\mu)
+u(p_2)
 \right]
 \frac{-ig_{\mu\nu}}{q^2}
 \left[
-\overline{u}(p_3)(-ie\Gamma^\nu(Q^2))u(p_1)
+\overline{u}(p_3)
+(-ie\Gamma^\nu(Q^2))
+u(p_1)
 \right].
+\end{equation}
+
+The contraction with the metric tensor lowers the Lorentz index of the proton vertex,
+
+\[
+g_{\mu\nu}\Gamma^\nu(Q^2)
+=
+\Gamma_\mu(Q^2),
 \]
 
-The contraction with the metric tensor identifies the two Lorentz indices. In particular,
-\[
-g_{\mu\nu}\Gamma^\nu(Q^2)=\Gamma_\mu(Q^2),
-\]
-where the index is lowered according to the metric. Thus, the propagator effectively connects the Lorentz index of the leptonic current to that of the hadronic current. The matrix element can therefore be written as
-\[
-\mathcal{M}
+so that the matrix element can be written more compactly as
+
+\begin{equation}
+\mathcal{M}_{\mathrm{Born}}
 =
-Q_\mu\frac{e^2}{q^2}
+Q_\mu
+\frac{e^2}{q^2}
 \,
 \overline{u}(p_4)\gamma^\mu u(p_2)
 \,
 \overline{u}(p_3)\Gamma_\mu(Q^2)u(p_1).
-\]
+\label{eq:born_amplitude}
+\end{equation}
 
-This expression is the starting point for calculating the cross section. However, the matrix element itself is not yet the observable quantity. The differential cross section is proportional to the squared modulus of the matrix element, summed over the unobserved final-state spins and averaged over the initial-state spins.
+The matrix element itself is not directly observable. The differential cross section depends on its squared modulus, summed over the unobserved final-state spins and averaged over the initial-state spins. For unpolarized muon--proton scattering,
 
-For unpolarized scattering, the spin-averaged squared matrix element is
-defined as
-\[
+\begin{equation}
 \overline{|\mathcal{M}|^2}
 =
 \frac{1}{4}
 \sum_{s_1,s_2,s_3,s_4}
 |\mathcal{M}|^2,
-\]
-where the factor \(1/4\) averages over the two possible initial spin states of the muon and the two possible initial spin states of the proton.
+\end{equation}
 
-Writing the spin labels explicitly, the matrix element is
+where the factor \(1/4\) averages over the two possible spin states of each incoming spin-\(1/2\) particle.
+
+Writing the spin labels explicitly,
+
 \[
 \mathcal{M}
 =
 Q_\mu\frac{e^2}{q^2}
 \left[
-\overline{u}(p_4,s_4)\gamma^\mu u(p_2,s_2)
+\overline{u}(p_4,s_4)
+\gamma^\mu
+u(p_2,s_2)
 \right]
 \left[
-\overline{u}(p_3,s_3)\Gamma_\mu(Q^2)u(p_1,s_1)
+\overline{u}(p_3,s_3)
+\Gamma_\mu(Q^2)
+u(p_1,s_1)
 \right].
 \]
 
 Its complex conjugate is
+
 \[
 \mathcal{M}^*
 =
 Q_\mu\frac{e^2}{q^2}
 \left[
-\overline{u}(p_2,s_2)\gamma^\nu u(p_4,s_4)
+\overline{u}(p_2,s_2)
+\gamma^\nu
+u(p_4,s_4)
 \right]
 \left[
-\overline{u}(p_1,s_1)\overline{\Gamma}_\nu(Q^2)u(p_3,s_3)
+\overline{u}(p_1,s_1)
+\overline{\Gamma}_\nu(Q^2)
+u(p_3,s_3)
 \right],
 \]
+
 where
+
 \[
 \overline{\Gamma}_\nu
 =
@@ -483,7 +594,8 @@ where
 \gamma^0.
 \]
 
-Therefore,
+Since \(Q_\mu=-1\), the charge factor satisfies \(Q_\mu^2=1\) in the squared amplitude. Thus,
+
 \[
 |\mathcal{M}|^2
 =
@@ -501,28 +613,36 @@ Therefore,
 \overline{u}(p_1)\overline{\Gamma}_\nu u(p_3)
 \right].
 \]
-To evaluate the spin sums, the completeness relation for Dirac spinors is
-used:
+
+To evaluate the spin sums, the completeness relation for Dirac spinors is used,
+
 \[
-\sum_s u(p,s)\overline{u}(p,s)
+\sum_s
+u(p,s)\overline{u}(p,s)
 =
 \slashed{p}+m,
 \]
+
 where
+
 \[
 \slashed{p}
 =
 \gamma^\mu p_\mu.
 \]
 
-This relation allows the products of spinors to be converted into traces over products of gamma matrices. The spin-averaged squared matrix element can consequently be written as
-\[
+This relation converts the products of spinors into traces over gamma matrices. The spin-averaged squared matrix element can consequently be written as
+
+\begin{equation}
 \overline{|\mathcal{M}|^2}
 =
 \frac{e^4}{4(q^2)^2}
 L^{\mu\nu}H_{\mu\nu},
-\]
+\label{eq:tensor_factorization}
+\end{equation}
+
 where the leptonic tensor is
+
 \[
 L^{\mu\nu}
 =
@@ -534,7 +654,9 @@ L^{\mu\nu}
 \gamma^\nu
 \right],
 \]
+
 and the hadronic tensor is
+
 \[
 H_{\mu\nu}
 =
@@ -547,12 +669,9 @@ H_{\mu\nu}
 \right].
 \]
 
-The factorization into a leptonic and a hadronic tensor separates the two
-physical contributions. The leptonic tensor describes the coupling of the
-virtual photon to the muon, while the hadronic tensor contains the proton
-electromagnetic structure through the form factors.
+The factorization into a leptonic and a hadronic tensor separates the two parts of the interaction. The leptonic tensor describes the coupling of the virtual photon to the point-like muon, whereas the hadronic tensor contains the electromagnetic structure of the proton through its form factors.
 
-For the point-like muon, the leptonic tensor can be evaluated using the standard gamma-matrix trace identities. This gives
+For the muon, the leptonic tensor can be evaluated using the standard gamma-matrix trace identities,
 
 \begin{equation}
 L^{\mu\nu}
@@ -560,98 +679,204 @@ L^{\mu\nu}
 4\left[
 p_4^\mu p_2^\nu
 +p_4^\nu p_2^\mu
--g^{\mu\nu}\left(p_2\cdot p_4-m_\mu^2\right)
+-g^{\mu\nu}
+\left(
+p_2\cdot p_4-m_\mu^2
+\right)
 \right].
 \label{eq:massive_leptonic_tensor}
 \end{equation}
 
-The leptonic tensor obeys current conservation,
-$q_\mu L^{\mu\nu}=q_\nu L^{\mu\nu}=0$.
+The leptonic tensor satisfies current conservation and is therefore transverse to the transferred four-momentum,
+
+\[
+q_\mu L^{\mu\nu}
+=
+q_\nu L^{\mu\nu}
+=
+0.
+\]
 
 To evaluate the hadronic tensor, it is convenient to introduce
 
 \begin{equation}
-\tau=\frac{Q^2}{4m_p^2}
+\tau
+=
+\frac{Q^2}{4m_p^2}
 \label{eq:tau}
 \end{equation}
 
-and the sum of the initial and final proton momenta,
+and
 
-\begin{equation}
-P^\mu=p_1^\mu+p_3^\mu.
-\end{equation}
+\[
+P^\mu
+=
+p_1^\mu+p_3^\mu.
+\]
 
-The on-shell conditions imply $P\cdot q=0$ and
-$P^2=4m_p^2+Q^2$. Using the Sachs form factors, the hadronic trace can then
-be written in the compact form
+The on-shell conditions imply
+
+\[
+P\cdot q=0,
+\qquad
+P^2=4m_p^2+Q^2.
+\]
+
+Expressed in terms of the Sachs form factors, the hadronic tensor takes the form
 
 \begin{equation}
 H_{\mu\nu}
 =
-2\frac{G_E^2(Q^2)+\tau G_M^2(Q^2)}{1+\tau}
+2\frac{G_E^2(Q^2)+\tau G_M^2(Q^2)}
+{1+\tau}
 P_\mu P_\nu
--2G_M^2(Q^2)
-\left(q_\mu q_\nu+Q^2g_{\mu\nu}\right).
+-
+2G_M^2(Q^2)
+\left(
+q_\mu q_\nu
++
+Q^2g_{\mu\nu}
+\right).
 \label{eq:hadronic_tensor_sachs}
 \end{equation}
 
-The terms containing $q_\mu q_\nu$ do not contribute to the contraction with
-the conserved leptonic tensor. Defining
+Because of current conservation, terms proportional to \(q_\mu q_\nu\) do not contribute when the hadronic tensor is contracted with the leptonic tensor. Defining
 
 \begin{equation}
 A(Q^2)
 =
-\frac{G_E^2(Q^2)+\tau G_M^2(Q^2)}{1+\tau},
+\frac{G_E^2(Q^2)+\tau G_M^2(Q^2)}
+{1+\tau},
 \end{equation}
 
-the contraction of \autoref{eq:massive_leptonic_tensor} with
-\autoref{eq:hadronic_tensor_sachs} yields the exact spin-averaged squared
-Born matrix element
+the contraction of \autoref{eq:massive_leptonic_tensor} and \autoref{eq:hadronic_tensor_sachs} gives the exact spin-averaged Born matrix element,
 
 \begin{equation}
 \begin{split}
 \overline{|\mathcal{M}_{\mathrm{Born}}|^2}
-=\frac{e^4}{Q^4}\Bigl\{&
+=
+\frac{e^4}{Q^4}
+\Bigl\{&
 A(Q^2)
 \left[
-(s-u)^2-Q^2\left(4m_p^2+Q^2\right)
+(s-u)^2
+-
+Q^2\left(4m_p^2+Q^2\right)
 \right]
 \\
-&+2G_M^2(Q^2)Q^2\left(Q^2-2m_\mu^2\right)
+&+
+2G_M^2(Q^2)Q^2
+\left(Q^2-2m_\mu^2\right)
 \Bigr\}.
 \end{split}
 \label{eq:born_matrix_element_massive}
 \end{equation}
 
-Inserting \autoref{eq:born_matrix_element_massive} into \autoref{eq:diff_cross_section} gives the exact laboratory-frame Born cross section,
+Inserting \autoref{eq:born_matrix_element_massive} into \autoref{eq:diff_cross_section_exact} yields the exact laboratory-frame Born cross section,
 
 \begin{equation}
 \begin{split}
 \frac{d\sigma_{\mathrm{Born}}}{d\Omega}
 ={}&
 \frac{1}{64\pi^2m_p p_\mu}
-\frac{{p'_\mu}^{\,2}}
-{p'_\mu(m_p+E_\mu)-p_\mu E'_\mu\cos\theta_\mu}
+\frac{(p'_\mu)^2}
+{
+p'_\mu(m_p+E_\mu)
+-
+p_\mu E'_\mu\cos\theta_\mu
+}
 \frac{e^4}{Q^4}
 \\
 &\times
 \left\{
 A(Q^2)
 \left[
-(s-u)^2-Q^2\left(4m_p^2+Q^2\right)
+(s-u)^2
+-
+Q^2\left(4m_p^2+Q^2\right)
 \right]
-+2G_M^2(Q^2)Q^2\left(Q^2-2m_\mu^2\right)
++
+2G_M^2(Q^2)Q^2
+\left(Q^2-2m_\mu^2\right)
 \right\}.
 \end{split}
-\label{eq:born_cross_section}
+\label{eq:born_cross_section_exact}
 \end{equation}
 
 
+\subsection{Ultrarelativistic Limit}
 
+For the \SI{100}{GeV} muon beam used in the AMBER proton-radius measurement, the incoming muon energy is much larger than the muon mass. It is therefore useful to consider the ultrarelativistic limit
 
+\[
+E_\mu\gg m_\mu.
+\]
 
+In this limit,
 
-In the ultrarelativisitic limit, the Leptonic tensor simplifies to
+\[
+p_\mu\simeq E_\mu,
+\qquad
+p'_\mu\simeq E'_\mu,
+\]
+
+and the outgoing-muon energy becomes
+
+\begin{equation}
+E'_\mu
+=
+\frac{E_\mu}
+{
+1+\dfrac{2E_\mu}{m_p}
+\sin^2\left(\dfrac{\theta_\mu}{2}\right)
+}.
+\label{eq:Eprime_ultrarel}
+\end{equation}
+
+The momentum transfer can then be written as
+
+\[
+Q^2
+=
+4E_\mu E'_\mu
+\sin^2\left(\frac{\theta_\mu}{2}\right),
+\]
+
+and differentiation with respect to the scattering angle gives
+
+\begin{equation}
+\frac{dQ^2}{d\theta_\mu}
+=
+\frac{
+2E_\mu^2\sin\theta_\mu
+}{
+\left[
+1+\dfrac{2E_\mu}{m_p}
+\sin^2\left(\dfrac{\theta_\mu}{2}\right)
+\right]^2
+}.
+\label{eq:dQ2_dtheta_ultrarel}
+\end{equation}
+
+The exact phase-space expression in \autoref{eq:diff_cross_section_exact} correspondingly simplifies to
+
+\begin{equation}
+\frac{d\sigma}{d\Omega}
+=
+\frac{
+\overline{|\mathcal{M}|^2}
+}{
+64\pi^2m_p^2
+\left[
+1+\dfrac{2E_\mu}{m_p}
+\sin^2\left(\dfrac{\theta_\mu}{2}\right)
+\right]^2
+}.
+\label{eq:diff_cross_section_ultrarel}
+\end{equation}
+
+The muon-mass terms also disappear from the leptonic tensor,
+
 \[
 L^{\mu\nu}
 =
@@ -665,121 +890,166 @@ g^{\mu\nu}p_4\cdot p_2
 \right).
 \]
 
-and the hadronic tensor reduces to !!!!!check this!!!!!!
+The hadronic tensor in \autoref{eq:hadronic_tensor_sachs}, however, remains unchanged, since the ultrarelativistic approximation concerns the muon kinematics rather than the proton structure.
+
+Combining the leptonic and hadronic tensors leads to the Rosenbluth form of the elastic Born cross section,
+
+\begin{equation}
+\frac{d\sigma_{\mathrm{Born}}}{d\Omega}
+=
+\frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
+\,
+\frac{
+\tau G_M^2(Q^2)
++
+\epsilon G_E^2(Q^2)
+}{
+\epsilon(1+\tau)
+}.
+\label{eq:rosenbluth}
+\end{equation}
+
+Here, the Mott factor describes scattering from a point-like charged target. With the recoil factor included in the convention used here, it is
+
+\begin{equation}
+\frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
+=
+\frac{
+\alpha^2
+\cos^2\left(\theta_\mu/2\right)
+}{
+4E_\mu^2
+\sin^4\left(\theta_\mu/2\right)
+}
+\frac{E'_\mu}{E_\mu},
+\label{eq:mott_cross_section}
+\end{equation}
+
+where
+
 \[
-H_{\mu\nu}
-=       
-2\frac{G_E^2(Q^2)+\tau G_M^2(Q^2)}{1+\tau} 
-P_\mu P_\nu . 
+\alpha=\frac{e^2}{4\pi}
 \]
 
-Evaluating the leptonic and hadronic tensors and performing the contraction \(L^{\mu\nu}H_{\mu\nu}\) then leads to the Rosenbluth form of the elastic Born cross section.
+is the fine-structure constant. The virtual-photon polarization parameter is
 
 \begin{equation}
-    \frac{d\sigma_{\mathrm{Born}}}{d\Omega}
-    =
-    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
-    \frac{\tau}{\epsilon(1+\tau)}
-    \left(
-        G_M^2(Q^2)
-        +
-        \frac{\epsilon}{\tau}G_E^2(Q^2)
-    \right),
-    \label{eq:born_cross_section}
+\epsilon
+=
+\left[
+1
++
+2(1+\tau)
+\tan^2\left(\frac{\theta_\mu}{2}\right)
+\right]^{-1}.
+\label{eq:epsilon}
 \end{equation}
 
-where $\frac{d\sigma_{\mathrm{Mott}}}{d\Omega}$ is the Mott cross section which describes the elastic scattering of a charged lepton from a structureless charged target. In the ultrarelativistic limit, it is given by
+The Rosenbluth expression makes the role of the proton structure explicit: the electric and magnetic contributions enter separately through \(G_E\) and \(G_M\), while a point-like proton would correspond to structure-independent form factors.
+
+
+For the numerical description used later in this thesis, the Sachs form factors are represented by the empirical dipole parametrization
 
 \begin{equation}
-    \frac{d\sigma_{\mathrm{Mott}}}{d\Omega}
-    =
-    \frac{\alpha^2 \cos^2(\theta/2)}
-    {4E^2\sin^4(\theta/2)}.
-    \label{eq:mott_cross_section}
+G_D(Q^2)
+=
+\left(
+1+\frac{Q^2}{\Lambda^2}
+\right)^{-2},
+\label{eq:dipole_form_factor}
 \end{equation}
 
-, where the the so-called virtual photon polarization parameter \(\epsilon\) is given by
-\begin{equation}
-    \epsilon
-    =
-    \left(
-        1+2(1+\tau)\tan^2\frac{\theta}{2}
-    \right)^{-1}.
-    \label{eq:epsilon}
-\end{equation}
+with
 
-In the low-$Q^2$ region relevant for proton radius measurements, the Sachs form factors can be approximated by the empirical dipole parametrization
+\[
+\Lambda^2
+=
+0.71\,\mathrm{GeV}^2.
+\]
 
-\begin{equation}
-    G_D(Q^2)
-    =
-    \left(
-        1+\frac{Q^2}{\Lambda^2}
-    \right)^{-2},
-    \label{eq:dipole_form_factor}
-\end{equation}
-
-where the dipole mass parameter is
+The proton electric and magnetic form factors are then parametrized as
 
 \begin{equation}
-    \Lambda^2 = 0.71\,\mathrm{GeV}^2.
+G_E(Q^2)
+=
+G_D(Q^2)
+=
+\left(
+1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
+\right)^{-2},
+\label{eq:GE_dipole}
 \end{equation}
 
-The electric and magnetic form factors are then expressed as
-
-\begin{equation}
-    G_E(Q^2)
-    =
-    G_D(Q^2)
-    =
-    \left(
-        1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
-    \right)^{-2},\footnote{For a point-like proton, the form factor would be \(G_E(Q^2)=1\) for all \(Q^2\).}
-    \label{eq:GE_dipole}
-\end{equation}
 and
+
 \begin{equation}
-    G_M(Q^2)
-    =
-    \mu_p G_D(Q^2)
-    =
-    \mu_p
-    \left(
-        1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
-    \right)^{-2},
-    \label{eq:GM_dipole}
+G_M(Q^2)
+=
+\mu_p G_D(Q^2)
+=
+\mu_p
+\left(
+1+\frac{Q^2}{0.71\,\mathrm{GeV}^2}
+\right)^{-2}.
+\label{eq:GM_dipole}
 \end{equation}
-where $\mu_p = 2.792847$ is the dimensionless proton magnetic moment in
-units of the nuclear magneton $\mu_N$. It defines the normalization of the
-magnetic form factor, such that $G_M(0)=\mu_p$.
+
+The dipole parametrization provides the proton-structure input used for the theoretical simulation discussed later in this thesis and therefore connects the analytic Born description presented here with the numerical treatment of the scattering process. Its normalization ensures
+
+\[
+G_E(0)=1,
+\qquad
+G_M(0)=\mu_p.
+\]
+
+For comparison, a point-like proton would have \(G_E(Q^2)=1\) independent of \(Q^2\). The decrease of \(G_E\) with increasing momentum transfer therefore reflects the finite spatial extension of the proton, while its behavior close to \(Q^2=0\) contains the information required for the determination of the proton charge radius.
 
 
 \section{Radiative Corrections}
-This thesis considers radiative corrections through next-to-leading order
-(NLO) in QED. The Born amplitude is of order $e^2$ and gives a cross section
-of order $\alpha^2$. The NLO contribution to the cross section is of order
-$\alpha^3$ and receives contributions from both virtual one-loop amplitudes
-and real-photon emission. The corresponding Feynman diagrams are shown in
-\autoref{fig:processes}.
+\subsection{Notes}
+The Born approximation provides the leading contribution to elastic muon--proton scattering, but a precision determination of the proton charge radius requires higher-order QED effects to be included. In this thesis, radiative corrections are considered through next-to-leading order (NLO).
+
+The Born amplitude is of order \(e^2\), corresponding to a cross section of order \(\alpha^2\). At NLO, the cross section receives corrections of order \(\alpha^3\) from two different types of contributions: virtual one-loop corrections and real-photon emission. The corresponding processes are illustrated in \autoref{fig:processes}.
+
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.\textwidth]{figures/Processes_Mehran.pdf}
-    \caption{Leading-order and next-to-leading-order contributions to elastic muon--proton scattering. Figure provided by M. Depour.}
+    \caption{Leading-order and next-to-leading-order contributions to muon--proton scattering. At leading order, the interaction proceeds through the exchange of a single virtual photon. At NLO, virtual loop corrections and real-photon emission contribute. Figure taken from \cite{M.Depour}.}
     \label{fig:processes}
 \end{figure}
-\paragraph{Virtual corrections.}
-Virtual corrections arise from one-loop diagrams and include self-energy,
-vertex, vacuum-polarization, and, where included in the chosen correction
-class, two-photon-exchange contributions. They modify the Born amplitude
-through the interference term between the one-loop and Born amplitudes.
-Ultraviolet divergences are removed by renormalization, whereas infrared
-divergences cancel only after the corresponding real-emission contribution
-is included.
 
-\paragraph{Real photon emission.}
-The real contribution is the bremsstrahlung process
-$p\mu\rightarrow p\mu\gamma$, in which an additional photon is emitted from
-a charged external particle. Its phase space must be combined with the
-virtual contribution using the same definition of the measured observable.
-The resulting sum is infrared finite. Experimentally, its numerical value
-also depends on acceptance requirements and photon-energy cuts.
+The figure illustrates the qualitative difference between the Born and NLO contributions. While the Born process contains only the outgoing muon and proton, real-photon emission changes the final-state topology to a three-particle state. This is experimentally relevant because the emitted photon carries away part of the energy and momentum and therefore changes the reconstructed kinematics of the muon--proton system.
+
+\paragraph{Virtual Corrections}
+
+Virtual corrections arise from one-loop diagrams. They include self-energy, vertex, vacuum-polarization, and box contributions such as two-photon exchange. Since the virtual diagrams lead to the same external final state as the Born process, their contribution to the NLO cross section enters through the interference between the Born and one-loop amplitudes,
+
+\[
+2\,\mathrm{Re}
+\left(
+\mathcal{M}_{\mathrm{Born}}^*
+\mathcal{M}_{\mathrm{virtual}}
+\right).
+\]
+
+Ultraviolet divergences appearing in the loop integrals are removed through renormalization. Infrared divergences, however, cancel only when the virtual contribution is combined consistently with the corresponding real-emission contribution for an infrared-safe observable.
+
+\paragraph{Real Photon Emission}
+
+The real NLO contribution is the bremsstrahlung process
+
+\begin{equation}
+p\mu
+\rightarrow
+p\mu\gamma,
+\label{eq:real_emission}
+\end{equation}
+
+in which an additional photon is emitted from one of the charged external particles. In contrast to the non-radiative \(2\rightarrow2\) process, real photon emission produces a three-body final state. The photon carries energy and momentum away from the muon--proton system and can therefore significantly alter observables such as the outgoing-muon energy, scattering angle, and reconstructed momentum transfer.
+
+The virtual and real contributions must be combined using the same definition of the measured observable. Their sum is infrared finite, while the resulting numerical correction depends on the experimental phase-space definition, acceptance requirements, and photon-energy cuts. This makes a fully differential treatment of radiative corrections particularly important for the AMBER proton-radius measurement.
+
+\subsection{Structure of the NLO Cross Section}
+\subsection{Virtual Corrections}
+\subsection{Real Photon Emission}
+\subsection{Infrared Cancellation}
