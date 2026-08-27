@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.5)  24 AUG 2026 21:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.9.5)  27 AUG 2026 19:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -2210,14 +2210,14 @@ pdfTeX warning: pdflatex.exe (file ./figures/Theory/GMProtonq4.pdf): PDF inclusi
 <figures/Processes_Mehran.pdf, id=369, 378.42131pt x 163.2111pt>
 File: figures/Processes_Mehran.pdf Graphic file (type pdf)
 <use figures/Processes_Mehran.pdf>
-Package pdftex.def Info: figures/Processes_Mehran.pdf  used on input line 1005.
+Package pdftex.def Info: figures/Processes_Mehran.pdf  used on input line 1003.
 (pdftex.def)             Requested size: 448.13095pt x 193.28224pt.
 
 
-LaTeX Warning: Citation 'M.Depour' on page 19 undefined on input line 1006.
+LaTeX Warning: Citation 'M.Depour' on page 19 undefined on input line 1004.
 
 
-LaTeX Warning: Citation 'M.Depour' on page 19 undefined on input line 1006.
+LaTeX Warning: Citation 'M.Depour' on page 19 undefined on input line 1004.
 
 
 
@@ -2283,18 +2283,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 68525 strings out of 473578
- 1530040 string characters out of 5732243
+ 68529 strings out of 473578
+ 1530075 string characters out of 5732243
  2684588 words of memory out of 5000000
  89798 multiletter control sequences out of 15000+600000
- 632543 words of font info for 381 fonts, out of 8000000 for 9000
+ 632743 words of font info for 384 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  111i,19n,124p,10927b,2461s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <d:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmr.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/fpl/fplrc8a.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb><d:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb><d:/texlive/2024/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><d:/texlive/2024/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb><d:/texlive/2024/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (28 pages, 1819214 bytes).
+Output written on main.pdf (28 pages, 1820045 bytes).
 PDF statistics:
- 576 PDF objects out of 1000 (max. 8388607)
- 454 compressed objects within 5 object streams
+ 577 PDF objects out of 1000 (max. 8388607)
+ 455 compressed objects within 5 object streams
  120 named destinations out of 1000 (max. 500000)
  98034 words of extra memory for PDF output out of 106986 (max. 10000000)
 

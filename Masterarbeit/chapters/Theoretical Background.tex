@@ -994,11 +994,9 @@ G_M(Q^2)
 
 
 \section{Radiative Corrections}
-This part is still under construction. 
-\subsection{Notes}
 The Born approximation provides the leading contribution to elastic muon--proton scattering, but a precision determination of the proton charge radius requires higher-order QED effects to be included. In this thesis, radiative corrections are considered through next-to-leading order (NLO).
 
-The Born amplitude is of order \(e^2\), corresponding to a cross section of order \(\alpha^2\). At NLO, the cross section receives corrections of order \(\alpha^3\) from two different types of contributions: virtual one-loop corrections and real-photon emission. The corresponding processes are illustrated in \autoref{fig:processes}.
+The Born amplitude is of order \(e^2\), corresponding to a cross section of order \(\alpha^2\). At NLO, the cross section receives corrections of order \(\alpha^3\) from two different types of contributions: virtual one-loop corrections and real-photon emission. \autoref{fig:processes} illustrates these processes. 
 
 \begin{figure}[htbp]
     \centering
@@ -1007,11 +1005,16 @@ The Born amplitude is of order \(e^2\), corresponding to a cross section of orde
     \label{fig:processes}
 \end{figure}
 
-The figure illustrates the qualitative difference between the Born and NLO contributions. While the Born process contains only the outgoing muon and proton, real-photon emission changes the final-state topology to a three-particle state. This is experimentally relevant because the emitted photon carries away part of the energy and momentum and therefore changes the reconstructed kinematics of the muon--proton system.
+The complete NLO correczred spin-averaged amplitude is given by
+\(
+\overline{\mathcal{M}^2}=\mathcal{\chi}_{Born}+\mathcal{\chi}_{virtual}+\mathcal{\chi}_{Bremsstrahlung},
+\)
+where the LO Born contribution is just \(\mathcal{\chi}_{Born}=\mathcal{M}_{Born}\) (\autoref{eq:born_matrix_element_massive}) and the NLO correction contributions will be detailed in the following two subsections.
 
-\paragraph{Virtual Corrections}
+\subsection{One-Loop Virtual Processes}
+Virtual corrections arise from one-loop diagrams. They include self-energy, vertex, vacuum-polarization, and box contributions such as two-photon exchange. 
 
-Virtual corrections arise from one-loop diagrams. They include self-energy, vertex, vacuum-polarization, and box contributions such as two-photon exchange. Since the virtual diagrams lead to the same external final state as the Born process, their contribution to the NLO cross section enters through the interference between the Born and one-loop amplitudes,
+Since the virtual diagrams lead to the same external final state as the Born process, their contribution to the NLO cross section enters through the interference between the Born and one-loop amplitudes,
 
 \[
 2\,\mathrm{Re}
@@ -1022,6 +1025,12 @@ Virtual corrections arise from one-loop diagrams. They include self-energy, vert
 \]
 
 Ultraviolet divergences appearing in the loop integrals are removed through renormalization. Infrared divergences, however, cancel only when the virtual contribution is combined consistently with the corresponding real-emission contribution for an infrared-safe observable.
+
+
+This part is still under construction.
+\paragraph{Virtual Corrections}
+
+
 
 \paragraph{Real Photon Emission}
 
