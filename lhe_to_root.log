@@ -1,5 +1,8 @@
 Finished.
-Total events processed: 3285011
-Negative events: 27436
-Maximum positive weight: 0.00216137
-Unweighted events written: 1046
+Random seed: 123456789
+CMS -> lab beta: 0.990704
+Total events processed: 41416
+Negative events: 0
+Maximum positive weight: 1.74304e-05
+Unweighted events written: 1270
+Acceptance fraction: 0.0306645

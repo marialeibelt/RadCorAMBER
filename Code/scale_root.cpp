@@ -81,10 +81,10 @@ int main(int argc, char* argv[])
     // Check command line arguments
     // --------------------------------------------------------
 
-    if (argc != 5) {
+    if (argc != 5 && argc != 6) {
         cerr << "Usage:\n"
             << "  " << argv[0]
-            << " LO.root NLO.root cross_sections.txt output_folder\n";
+            << " LO.root NLO.root cross_sections.txt output_folder [suffix]\n";
         return 1;
     }
 
@@ -93,8 +93,14 @@ int main(int argc, char* argv[])
     string csFileName  = argv[3];
     string outputDir   = argv[4];
 
-    std::filesystem::create_directories(outputDir);
+    // Optional suffix, e.g. "run0", "test", "xi01"
+    string suffix = "";
 
+    if (argc == 6) {
+        suffix = "_" + string(argv[5]);
+    }
+
+    std::filesystem::create_directories(outputDir);
 
     // --------------------------------------------------------
     // Read cross sections
@@ -129,6 +135,17 @@ int main(int argc, char* argv[])
 
     cout << "LO fraction  = " << fractionLO  << endl;
     cout << "NLO fraction = " << fractionNLO << endl;
+
+    double fractionSum = fractionLO + fractionNLO;
+
+    cout << "Fraction sum = " << fractionSum << endl;
+
+    if (std::abs(fractionSum - 1.0) > 1e-6) {
+
+        cerr << "WARNING: LO and NLO fractions do not add up to 1." << endl;
+        cerr << "Check the meaning of sigma_LO, sigma_NLO and sigma_full."
+            << endl;
+    }
 
 
     // --------------------------------------------------------
@@ -309,9 +326,17 @@ int main(int argc, char* argv[])
     // Output files
     // --------------------------------------------------------
 
-    string loOutputName       = outputDir + "/LO_scaled.root";
-    string nloOutputName      = outputDir + "/NLO_scaled.root";
-    string combinedOutputName = outputDir + "/LOandNLO_scaled.root";
+    string loOutputName =
+        outputDir + "/LO_scaled" + suffix + ".root";
+
+    string nloOutputName =
+        outputDir + "/NLO_scaled" + suffix + ".root";
+
+
+    cout << "Output files:" << endl;
+    cout << "  " << loOutputName << endl;
+    cout << "  " << nloOutputName << endl;
+
 
     TFile* loOut =
         TFile::Open(loOutputName.c_str(), "RECREATE");
@@ -319,13 +344,16 @@ int main(int argc, char* argv[])
     TFile* nloOut =
         TFile::Open(nloOutputName.c_str(), "RECREATE");
 
-    TFile* combinedOut =
-        TFile::Open(combinedOutputName.c_str(), "RECREATE");
 
+    if (!loOut || loOut->IsZombie()) {
+        cerr << "ERROR: Could not create "
+            << loOutputName << endl;
+        return 1;
+    }
 
-    if (!loOut || !nloOut || !combinedOut) {
-        cerr << "ERROR: Could not create output files."
-             << endl;
+    if (!nloOut || nloOut->IsZombie()) {
+        cerr << "ERROR: Could not create "
+            << nloOutputName << endl;
         return 1;
     }
 
@@ -342,19 +370,6 @@ int main(int argc, char* argv[])
     nloOut->cd();
     TTree* nloOutTree = nloTree->CloneTree(0);
 
-    combinedOut->cd();
-    TTree* combinedTree = loTree->CloneTree(0);
-
-
-    // Add an order branch to combined tree
-    int order;
-
-    combinedTree->Branch(
-        "order",
-        &order,
-        "order/I"
-    );
-
 
     // --------------------------------------------------------
     // Fill LO output
@@ -365,11 +380,7 @@ int main(int argc, char* argv[])
     for (Long64_t index : loIndices) {
 
         loTree->GetEntry(index);
-
         loOutTree->Fill();
-
-        order = 0;
-        combinedTree->Fill();
     }
 
 
@@ -382,11 +393,7 @@ int main(int argc, char* argv[])
     for (Long64_t index : nloIndices) {
 
         nloTree->GetEntry(index);
-
         nloOutTree->Fill();
-
-        order = 1;
-        combinedTree->Fill();
     }
 
 
@@ -400,13 +407,8 @@ int main(int argc, char* argv[])
     nloOut->cd();
     nloOutTree->Write();
 
-    combinedOut->cd();
-    combinedTree->Write();
-
-
     loOut->Close();
     nloOut->Close();
-    combinedOut->Close();
 
     loFile->Close();
     nloFile->Close();
@@ -422,9 +424,8 @@ int main(int argc, char* argv[])
     cout << "==============================================" << endl;
 
     cout << "Created:" << endl;
-    cout << "  LO_scaled.root" << endl;
-    cout << "  NLO_scaled.root" << endl;
-    cout << "  LOandNLO_scaled.root" << endl;
+    cout << "  " << loOutputName << endl;
+    cout << "  " << nloOutputName << endl;
 
     return 0;
 }

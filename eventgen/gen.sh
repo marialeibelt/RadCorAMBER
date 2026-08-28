@@ -1,8 +1,8 @@
 #!/bin/bash
-basefolder="/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor"
+basefolder="/nfs/momos/user/mleibelt"   # "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor"
 
 # ---------------change this each time you want to run a new analysis---------------
-anafolder="05_08_evtgen" # "08_07_200MeV_Q2big_xi01_gentest_1444"
+anafolder="05_08_evtgen_25_08" # "08_07_200MeV_Q2big_xi01_gentest_1444"
 
 mcmule0="mp2mp0_mu-p_S0000077682X1.00000D1.00000_ITMX020x080.0M.mcmule" # "mp2mp0_mu-p_S0000085728X1.00000D1.00000_ITMX020x008.0M.mcmule"
 
@@ -24,7 +24,7 @@ generate() {
     flag="$2"
     xi="$3"
     seed="$4"
-    tgteff=1e-3
+    tgteff=1e-1
     dmax=1.
 
     if [[ "$order" == 0 ]] ; then
