@@ -1,72 +1,161 @@
 #!/bin/bash
-basefolder="/nfs/momos/user/mleibelt"   # "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor"
 
-# ---------------change this each time you want to run a new analysis---------------
-anafolder="05_08_evtgen_25_08" # "08_07_200MeV_Q2big_xi01_gentest_1444"
+# Path of this script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-mcmule0="mp2mp0_mu-p_S0000077682X1.00000D1.00000_ITMX020x080.0M.mcmule" # "mp2mp0_mu-p_S0000085728X1.00000D1.00000_ITMX020x008.0M.mcmule"
+# Read configuration
+source "$SCRIPT_DIR/input_evtgen_mcmule.conf"
 
-mcmuleNLO0_xi01="mp2mpNLO0_mu-p_S0000075957X0.10000D0.10000_ITMX020x080.0M.mcmule" # "mp2mpNLO0_mu-p_S0000044063X0.10000D0.10000_ITMX020x008.0M.mcmule"
-mcmuleR_xi01="mp2mpR_mu-p_S0000023375X0.10000D0.10000_ITMX020x080.0M.mcmule" # "mp2mpR_mu-p_S0000040361X0.10000D0.10000_ITMX020x008.0M.mcmule"
-
-mcmuleNLO0_xi10="mp2mpNLO0_blabla.mcmule"
-mcmuleR_xi10="mp2mpR_blabla.mcmule"
-# ----------------------------------------------------------------------------------
 
 build_piece () {
-    for i in $@ ; do
+
+    for i in "$@"; do
         echo "$basefolder/$anafolder/input/$i"
     done
 }
+
+
 mkdir -p "$basefolder/$anafolder/log"
+mkdir -p "$basefolder/$anafolder/out"
+
+
 generate() {
+
     order="$1"
     flag="$2"
     xi="$3"
     seed="$4"
-    tgteff=1e-1
-    dmax=1.
 
-    if [[ "$order" == 0 ]] ; then
+
+    # ============================================================
+    # LO
+    # ============================================================
+
+    if [[ "$order" == "0" ]]; then
+
         npieces=1
-        pieces=$(build_piece "$mcmule0")
-        nenter=500
-        itmx=12
-        tgteff=-1
 
-    elif [[ "$order" == 1 ]] ; then
+        nenter="$nenter_LO"
+        itmx="$itmx_LO"
+        tgteff="$tgteff_LO"
+
+        if [[ "$xi" == "01" ]]; then
+
+            pieces=$(build_piece \
+                "$mcmule0_xi01"
+            )
+
+        elif [[ "$xi" == "10" ]]; then
+
+            pieces=$(build_piece \
+                "$mcmule0_xi10"
+            )
+
+        else
+
+            echo "ERROR: Unknown xi = $xi"
+            return 1
+
+        fi
+
+
+    # ============================================================
+    # NLO
+    # ============================================================
+
+    elif [[ "$order" == "1" ]]; then
+
         npieces=2
-        nenter=500
-        itmx=12
-        nsub=30
 
-        if [[ "$xi" == "01" ]] ; then
+        nenter="$nenter_NLO"
+        itmx="$itmx_NLO"
+        tgteff="$tgteff_NLO"
+        nsub="$nsub_NLO"
+
+        if [[ "$xi" == "01" ]]; then
+
             pieces=$(build_piece \
                 "$mcmuleNLO0_xi01" \
-                "$mcmuleR_xi01")
+                "$mcmuleR_xi01"
+            )
 
-        elif [[ "$xi" == "10" ]] ; then
+        elif [[ "$xi" == "10" ]]; then
+
             pieces=$(build_piece \
                 "$mcmuleNLO0_xi10" \
-                "$mcmuleR_xi10")
+                "$mcmuleR_xi10"
+            )
+
+        else
+
+            echo "ERROR: Unknown xi = $xi"
+            return 1
+
         fi
+
+    else
+
+        echo "ERROR: Unknown order = $order"
+        return 1
+
     fi
 
-    if [[ "$flag" == "N" ]] ; then
+
+    # ============================================================
+    # Generator flags
+    # ============================================================
+
+    if [[ "$flag" == "N" ]]; then
+
         features="V"
-    elif [[ "$flag" == "C" ]] ; then
-        features="VC\n$dmax"
-    elif [[ "$flag" == "S" ]] ; then
-        features="VCS\n$dmax\n$nsub"
-    elif [[ "$flag" == "U" ]] ; then
-        features="VU\n$tgteff"
-    elif [[ "$flag" == "CU" ]] ; then
-        features="VCU\n$dmax\n$tgteff"
-    elif [[ "$flag" == "SU" ]] ; then
-        features="VCSU\n$dmax\n$nsub\n$tgteff"
-    fi
-    runcard="$nenter\n$itmx\n$seed\n$npieces\nout/gen-$flag-$order-$xi-$seed.lhe\n$features\n$pieces"
 
-    echo "===== RUNNING <3 ====="
-    echo -e "$runcard" | time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule --gen "$basefolder/$anafolder/user.so" | tee "$basefolder/$anafolder/log/gen-$flag-$order-$xi-$seed.txt"
+    elif [[ "$flag" == "C" ]]; then
+
+        features="VC\n$dmax"
+
+    elif [[ "$flag" == "S" ]]; then
+
+        features="VCS\n$dmax\n$nsub"
+
+    elif [[ "$flag" == "U" ]]; then
+
+        features="VU\n$tgteff"
+
+    elif [[ "$flag" == "CU" ]]; then
+
+        features="VCU\n$dmax\n$tgteff"
+
+    elif [[ "$flag" == "SU" ]]; then
+
+        features="VCSU\n$dmax\n$nsub\n$tgteff"
+
+    else
+
+        echo "ERROR: Unknown flag = $flag"
+        return 1
+
+    fi
+
+
+    # ============================================================
+    # Runcard
+    # ============================================================
+
+    runcard="$nenter
+$itmx
+$seed
+$npieces
+out/gen-$flag-$order-$xi-$seed.lhe
+$features
+$pieces"
+
+
+    # ============================================================
+    # Run generator
+    # ============================================================
+
+    echo -e "$runcard" | \
+        time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule \
+        --gen "$basefolder/$anafolder/user.so" \
+        | tee "$basefolder/$anafolder/log/gen-$flag-$order-$xi-$seed.txt"
 }

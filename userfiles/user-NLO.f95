@@ -119,8 +119,8 @@ module user
     ! Muon Windows
     select case (thmu_window)
       case ('NOR')
-        thmu_low = 0.316e-3_prec
-        thmu_up  = 2.000e-3_prec
+        thmu_low = 0.316e-4_prec
+        thmu_up  = 4.000e-3_prec
       case ('BIG')
         thmu_low = 1.2e-3_prec
         thmu_up  = 8.e-3_prec

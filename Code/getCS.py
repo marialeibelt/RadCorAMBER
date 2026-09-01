@@ -1,11 +1,13 @@
 from pymule import *
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import LogNorm
+import argparse
+import os
 import sys
+
 
 class Tee:
     """Writes output to both terminal and a file."""
+
     def __init__(self, filename):
         self.terminal = sys.stdout
         self.file = open(filename, "w")
@@ -22,61 +24,160 @@ class Tee:
         self.file.close()
 
 
-homedir = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/"  # Office
+def get_cross_sections(homedir, outfolder, savename):
 
-# =========================
-# Input definitions
-# =========================
+    # ==========================================
+    # Paths
+    # ==========================================
 
-savenames = ["14_08"]        #0       
-outfolder = ["05_08_evtgen"] #0
+    outdir = os.path.join(homedir, outfolder)
+    mcmule_outdir = os.path.join(outdir, "out")
 
-# =========================
-# Dataset choice / Has to be checked each time!
-# =========================
-out_i=0
-savename_i = 0
-nbins = 500
+    if not os.path.isdir(mcmule_outdir):
+        raise FileNotFoundError(
+            f"McMule output directory does not exist:\n{mcmule_outdir}"
+        )
 
-savename_base = savenames[savename_i] + "_" + outfolder[out_i]
-outdir = homedir + outfolder[out_i] 
+    # Only use folder name for output file names
+    outfolder_name = os.path.basename(os.path.normpath(outfolder))
 
-# Redirect stdout
-log_file = outdir + "/" + f"{savename_base}_output.txt"
-sys.stdout = Tee(log_file)
+    savename_base = f"{savename}_{outfolder_name}"
 
-print("=======================================================================")
-print("        Analysed file: ", savename_base)
-print("=======================================================================")
+    # ==========================================
+    # Redirect stdout
+    # ==========================================
 
-print("outdir + /out:", outdir + "/out")
+    log_file = os.path.join(
+        outdir,
+        f"{savename_base}_output.txt"
+    )
 
-setup(folder= outdir + "/out")
-lo = mergefks(sigma("mp2mp0")) * alpha**2 * conv
+    old_stdout = sys.stdout
+    tee = Tee(log_file)
+    sys.stdout = tee
 
-setup(folder= outdir + "/out")
-nlo    = mergefks(sigma("mp2mpR"), sigma("mp2mpNLO0")) * alpha**3 * conv
-full   = lo + nlo
-onlyR  = mergefks(sigma("mp2mpR")) * alpha**3 * conv
+    try:
 
-cs_lo = lo.value[0] / 1000
-cs_onlyR = onlyR.value[0] / 1000
-cs_nlo = nlo.value[0] / 1000
-cs_full = full.value[0] / 1000
+        print("=======================================================================")
+        print("Analysed file:", savename_base)
+        print("=======================================================================")
+        print("McMule output directory:", mcmule_outdir)
+        print()
 
-print("LO cross section:     ", cs_lo, " mb")
-print("NLO cross section:    ", cs_nlo, " mb")
-print("Full cross section:   ", cs_full, " mb")
-print("Only R cross section: ", cs_onlyR, " mb")
-cs_array = np.array([cs_lo, cs_onlyR, cs_nlo, cs_full])
-print("Cross section array (lo, onlyR, nlo, full):", cs_array)
+        # ==========================================
+        # Read McMule results
+        # ==========================================
 
-# Save cross section array to txt file
-array_file = outdir+ "/" + f"{savename_base}_cross_sections.txt"
-np.savetxt(
-    array_file,
-    cs_array,
-    header="1. LO  2. onlyR  3. NLO  4. full"
-)
+        setup(folder=mcmule_outdir)
 
-print("Cross section array saved to:", array_file)
+        lo = (
+            mergefks(
+                sigma("mp2mp0")
+            )
+            * alpha**2
+            * conv
+        )
+
+        nlo = (
+            mergefks(
+                sigma("mp2mpR"),
+                sigma("mp2mpNLO0")
+            )
+            * alpha**3
+            * conv
+        )
+
+        onlyR = (
+            mergefks(
+                sigma("mp2mpR")
+            )
+            * alpha**3
+            * conv
+        )
+
+        full = lo + nlo
+
+        # ==========================================
+        # Convert to mb
+        # ==========================================
+
+        cs_lo = lo.value[0] / 1000
+        cs_onlyR = onlyR.value[0] / 1000
+        cs_nlo = nlo.value[0] / 1000
+        cs_full = full.value[0] / 1000
+
+        # ==========================================
+        # Output
+        # ==========================================
+
+        print("LO cross section:     ", cs_lo, "mb")
+        print("NLO cross section:    ", cs_nlo, "mb")
+        print("Full cross section:   ", cs_full, "mb")
+        print("Only R cross section: ", cs_onlyR, "mb")
+
+        cs_array = np.array([
+            cs_lo,
+            cs_onlyR,
+            cs_nlo,
+            cs_full
+        ])
+
+        print()
+        print(
+            "Cross section array "
+            "(LO, onlyR, NLO, full):",
+            cs_array
+        )
+
+        # ==========================================
+        # Save array
+        # ==========================================
+
+        array_file = os.path.join(
+            outdir,
+            f"{savename_base}_cross_sections.txt"
+        )
+
+        np.savetxt(
+            array_file,
+            cs_array,
+            header="1. LO  2. onlyR  3. NLO  4. full"
+        )
+
+        print()
+        print("Cross section array saved to:")
+        print(array_file)
+
+    finally:
+        sys.stdout = old_stdout
+        tee.close()
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(
+        description="Calculate McMule cross sections"
+    )
+
+    parser.add_argument(
+        "--homedir",
+        required=True
+    )
+
+    parser.add_argument(
+        "--outfolder",
+        required=True
+    )
+
+    parser.add_argument(
+        "--savename",
+        required=True
+    )
+
+    args = parser.parse_args()
+
+    get_cross_sections(
+        homedir=args.homedir,
+        outfolder=args.outfolder,
+        savename=args.savename
+    )
