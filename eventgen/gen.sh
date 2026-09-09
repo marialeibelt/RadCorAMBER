@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Path of this script
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Read configuration
-source "$SCRIPT_DIR/input_evtgen_mcmule.conf"
+source "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_evtgen_mcmule.conf"
 
 
 build_piece () {
@@ -26,6 +23,7 @@ generate() {
     xi="$3"
     seed="$4"
 
+    tgteff=-1
 
     # ============================================================
     # LO
@@ -37,26 +35,8 @@ generate() {
 
         nenter="$nenter_LO"
         itmx="$itmx_LO"
-        tgteff="$tgteff_LO"
 
-        if [[ "$xi" == "01" ]]; then
-
-            pieces=$(build_piece \
-                "$mcmule0_xi01"
-            )
-
-        elif [[ "$xi" == "10" ]]; then
-
-            pieces=$(build_piece \
-                "$mcmule0_xi10"
-            )
-
-        else
-
-            echo "ERROR: Unknown xi = $xi"
-            return 1
-
-        fi
+        pieces=$(build_piece "$mcmule0")
 
 
     # ============================================================
@@ -69,8 +49,6 @@ generate() {
 
         nenter="$nenter_NLO"
         itmx="$itmx_NLO"
-        tgteff="$tgteff_NLO"
-        nsub="$nsub_NLO"
 
         if [[ "$xi" == "01" ]]; then
 

@@ -7,6 +7,7 @@
 #include <memory>
 #include <algorithm>
 #include <utility>
+#include <fstream>
 
 #include <zlib.h>
 
@@ -27,15 +28,10 @@ using namespace std;
 // Configuration
 // ============================================================
 
-// In the TGEANT particle block observed so far:
-//   incoming beam muon: GeV
-//   final-state particles: MeV
-//
-// Therefore final-state particle four-vectors are converted
-// with this factor before comparison to the McMule ROOT file.
-constexpr double TGEANT_FINALSTATE_TO_GEV = 1.0e-3;
+// Current TGEANT output used here stores the particle
+// four-vectors in the units required for the ROOT comparison.
+// No additional 1e-3 conversion is applied.
 
-// Plot ranges
 constexpr double Q2_MIN = 1.0e-5;
 constexpr double Q2_MAX = 1.0e-1;
 
@@ -54,6 +50,7 @@ constexpr double PHOTON_THETA_MAX = 15.0; // mrad
 // ============================================================
 
 struct Particle {
+
     int index = 0;
     int pid   = 0;
 
@@ -66,10 +63,12 @@ struct Particle {
 
 
 // ============================================================
-// Small helpers
+// Read one line from gzipped file
 // ============================================================
 
-bool readGzLine(gzFile file, string& line)
+bool readGzLine(
+    gzFile file,
+    string& line)
 {
     const int BUFFER_SIZE = 10000;
     char buffer[BUFFER_SIZE];
@@ -80,7 +79,9 @@ bool readGzLine(gzFile file, string& line)
     line = buffer;
 
     while (!line.empty() &&
-           (line.back() == '\n' || line.back() == '\r')) {
+           (line.back() == '\n' ||
+            line.back() == '\r')) {
+
         line.pop_back();
     }
 
@@ -88,30 +89,50 @@ bool readGzLine(gzFile file, string& line)
 }
 
 
-string getFirstToken(const string& line)
+// ============================================================
+// Read first token
+// ============================================================
+
+string getFirstToken(
+    const string& line)
 {
     stringstream ss(line);
+
     string token;
     ss >> token;
+
     return token;
 }
 
 
-bool isEventStart(const string& line)
+// ============================================================
+// Event markers
+// ============================================================
+
+bool isEventStart(
+    const string& line)
 {
     return getFirstToken(line) == "#EVENT";
 }
 
 
-bool isEventEnd(const string& line)
+bool isEventEnd(
+    const string& line)
 {
     return getFirstToken(line) == "#EVENT_END";
 }
 
 
-bool getEventNumber(const string& line, long long& eventNumber)
+// ============================================================
+// Event number
+// ============================================================
+
+bool getEventNumber(
+    const string& line,
+    long long& eventNumber)
 {
     stringstream ss(line);
+
     string tag;
 
     if (!(ss >> tag >> eventNumber))
@@ -121,7 +142,13 @@ bool getEventNumber(const string& line, long long& eventNumber)
 }
 
 
-bool parseSingleInteger(const string& line, int& value)
+// ============================================================
+// Parse single integer
+// ============================================================
+
+bool parseSingleInteger(
+    const string& line,
+    int& value)
 {
     stringstream ss(line);
 
@@ -137,7 +164,13 @@ bool parseSingleInteger(const string& line, int& value)
 }
 
 
-bool parseParticle(const string& line, Particle& p)
+// ============================================================
+// Parse one particle line
+// ============================================================
+
+bool parseParticle(
+    const string& line,
+    Particle& p)
 {
     stringstream ss(line);
 
@@ -156,6 +189,7 @@ bool parseParticle(const string& line, Particle& p)
           >> p.pz
           >> p.energy
           >> p.mass)) {
+
         return false;
     }
 
@@ -163,35 +197,56 @@ bool parseParticle(const string& line, Particle& p)
 }
 
 
+// ============================================================
+// Find particle block inside one TGEANT event
+// ============================================================
+
 bool findParticleBlock(
     const vector<string>& eventLines,
     vector<Particle>& particles)
 {
     particles.clear();
 
-    for (size_t i = 0; i < eventLines.size(); ++i) {
+    for (size_t i = 0;
+         i < eventLines.size();
+         ++i) {
 
         int nParticles = 0;
 
-        if (!parseSingleInteger(eventLines[i], nParticles))
-            continue;
+        if (!parseSingleInteger(
+                eventLines[i],
+                nParticles)) {
 
-        if (nParticles <= 0 || nParticles > 100)
             continue;
+        }
 
-        if (i + static_cast<size_t>(nParticles) >= eventLines.size())
+        if (nParticles <= 0 ||
+            nParticles > 100) {
+
             continue;
+        }
+
+        if (i + static_cast<size_t>(nParticles)
+            >= eventLines.size()) {
+
+            continue;
+        }
 
         vector<Particle> candidate;
         candidate.reserve(nParticles);
 
         bool valid = true;
 
-        for (int j = 0; j < nParticles; ++j) {
+        for (int j = 0;
+             j < nParticles;
+             ++j) {
 
             Particle p;
 
-            if (!parseParticle(eventLines[i + 1 + j], p)) {
+            if (!parseParticle(
+                    eventLines[i + 1 + j],
+                    p)) {
+
                 valid = false;
                 break;
             }
@@ -200,7 +255,8 @@ bool findParticleBlock(
         }
 
         if (valid) {
-            particles = std::move(candidate);
+
+            particles = move(candidate);
             return true;
         }
     }
@@ -209,8 +265,10 @@ bool findParticleBlock(
 }
 
 
-// Reads exactly one real TGEANT event.
-// Returns false only when no further #EVENT block exists.
+// ============================================================
+// Read exactly one real TGEANT event
+// ============================================================
+
 bool readNextTgeantEvent(
     gzFile file,
     long long& eventNumber,
@@ -225,14 +283,20 @@ bool readNextTgeantEvent(
             continue;
 
         eventNumber = -1;
-        getEventNumber(line, eventNumber);
+
+        getEventNumber(
+            line,
+            eventNumber
+        );
 
         vector<string> eventLines;
+
         bool foundEnd = false;
 
         while (readGzLine(file, line)) {
 
             if (isEventEnd(line)) {
+
                 foundEnd = true;
                 break;
             }
@@ -241,12 +305,18 @@ bool readNextTgeantEvent(
         }
 
         if (!foundEnd) {
-            cerr << "WARNING: no #EVENT_END found for TGEANT event "
-                 << eventNumber << endl;
+
+            cerr
+                << "WARNING: no #EVENT_END found for TGEANT event "
+                << eventNumber
+                << endl;
         }
 
         hasParticleBlock =
-            findParticleBlock(eventLines, particles);
+            findParticleBlock(
+                eventLines,
+                particles
+            );
 
         return true;
     }
@@ -266,28 +336,21 @@ TLorentzVector makeFourVector(
     double energy)
 {
     TLorentzVector p;
-    p.SetPxPyPzE(px, py, pz, energy);
+
+    p.SetPxPyPzE(
+        px,
+        py,
+        pz,
+        energy
+    );
+
     return p;
 }
 
 
-TLorentzVector makeTgeantFinalStateFourVector(
+TLorentzVector makeTgeantFourVector(
     const Particle& p)
 {
-    return makeFourVector(
-        p.px     * TGEANT_FINALSTATE_TO_GEV,
-        p.py     * TGEANT_FINALSTATE_TO_GEV,
-        p.pz     * TGEANT_FINALSTATE_TO_GEV,
-        p.energy * TGEANT_FINALSTATE_TO_GEV
-    );
-}
-
-
-TLorentzVector makeTgeantBeamFourVector(
-    const Particle& p)
-{
-    // Current observed TGEANT convention:
-    // beam particle is already stored in GeV.
     return makeFourVector(
         p.px,
         p.py,
@@ -308,14 +371,15 @@ double calculateQ2(
 }
 
 
-double thetaMrad(const TLorentzVector& p)
+double thetaMrad(
+    const TLorentzVector& p)
 {
     return p.Theta() * 1000.0;
 }
 
 
 // ============================================================
-// ROOT-particle extraction
+// ROOT particle extraction
 // ============================================================
 
 bool getRootParticle(
@@ -327,20 +391,29 @@ bool getRootParticle(
     const vector<double>* pz,
     TLorentzVector& result)
 {
-    if (!pid || !energy || !px || !py || !pz)
-        return false;
+    if (!pid ||
+        !energy ||
+        !px ||
+        !py ||
+        !pz) {
 
-    for (size_t i = 0; i < pid->size(); ++i) {
+        return false;
+    }
+
+    for (size_t i = 0;
+         i < pid->size();
+         ++i) {
 
         if (pid->at(i) != wantedPID)
             continue;
 
-        result = makeFourVector(
-            px->at(i),
-            py->at(i),
-            pz->at(i),
-            energy->at(i)
-        );
+        result =
+            makeFourVector(
+                px->at(i),
+                py->at(i),
+                pz->at(i),
+                energy->at(i)
+            );
 
         return true;
     }
@@ -350,7 +423,7 @@ bool getRootParticle(
 
 
 // ============================================================
-// TGEANT-particle extraction
+// TGEANT particle extraction
 // ============================================================
 
 bool getTgeantBeamMuon(
@@ -362,7 +435,9 @@ bool getTgeantBeamMuon(
         if (abs(p.pid) != 13)
             continue;
 
-        result = makeTgeantBeamFourVector(p);
+        result =
+            makeTgeantFourVector(p);
+
         return true;
     }
 
@@ -383,11 +458,14 @@ bool getTgeantScatteredMuon(
 
         ++muonCounter;
 
-        // Current observed ordering:
-        // first muon  = beam muon
-        // second muon = scattered muon
+        // First muon  = incoming beam muon
+        // Second muon = scattered muon
+
         if (muonCounter == 2) {
-            result = makeTgeantFinalStateFourVector(p);
+
+            result =
+                makeTgeantFourVector(p);
+
             return true;
         }
     }
@@ -405,7 +483,9 @@ bool getTgeantPhoton(
         if (p.pid != 22)
             continue;
 
-        result = makeTgeantFinalStateFourVector(p);
+        result =
+            makeTgeantFourVector(p);
+
         return true;
     }
 
@@ -424,16 +504,27 @@ vector<double> makeLogBins(
 {
     vector<double> edges(nBins + 1);
 
-    const double logMin = log10(minValue);
-    const double logMax = log10(maxValue);
+    const double logMin =
+        log10(minValue);
 
-    for (int i = 0; i <= nBins; ++i) {
+    const double logMax =
+        log10(maxValue);
+
+    for (int i = 0;
+         i <= nBins;
+         ++i) {
 
         const double fraction =
-            static_cast<double>(i) / nBins;
+            static_cast<double>(i)
+            / nBins;
 
         edges[i] =
-            pow(10.0, logMin + fraction * (logMax - logMin));
+            pow(
+                10.0,
+                logMin +
+                fraction *
+                (logMax - logMin)
+            );
     }
 
     return edges;
@@ -441,7 +532,7 @@ vector<double> makeLogBins(
 
 
 // ============================================================
-// Plot helpers
+// 2D plotting
 // ============================================================
 
 void save2D(
@@ -452,31 +543,61 @@ void save2D(
     bool logZ,
     bool diagonal = true)
 {
-    TCanvas canvas("canvas2d", hist->GetTitle(), 850, 700);
+    TCanvas canvas(
+        "canvas2d",
+        hist->GetTitle(),
+        850,
+        700
+    );
+
     canvas.SetRightMargin(0.15);
 
-    if (logX) canvas.SetLogx();
-    if (logY) canvas.SetLogy();
-    if (logZ) canvas.SetLogz();
+    if (logX)
+        canvas.SetLogx();
+
+    if (logY)
+        canvas.SetLogy();
+
+    if (logZ)
+        canvas.SetLogz();
 
     hist->Draw("COLZ");
 
     if (diagonal) {
 
-        const double xmin = hist->GetXaxis()->GetXmin();
-        const double xmax = hist->GetXaxis()->GetXmax();
+        const double xmin =
+            hist->GetXaxis()->GetXmin();
 
-        TLine line(xmin, xmin, xmax, xmax);
+        const double xmax =
+            hist->GetXaxis()->GetXmax();
+
+        TLine line(
+            xmin,
+            xmin,
+            xmax,
+            xmax
+        );
+
         line.SetLineStyle(2);
         line.SetLineWidth(2);
+
         line.Draw("SAME");
     }
 
-    canvas.SaveAs(outputFile.c_str());
+    canvas.SaveAs(
+        outputFile.c_str()
+    );
 
-    cout << "Created: " << outputFile << endl;
+    cout
+        << "Created: "
+        << outputFile
+        << endl;
 }
 
+
+// ============================================================
+// Normalized before/after comparison
+// ============================================================
 
 void saveNormalizedComparison(
     TH1D* before,
@@ -486,55 +607,135 @@ void saveNormalizedComparison(
     bool logY = true)
 {
     unique_ptr<TH1D> hBefore(
-        static_cast<TH1D*>(before->Clone("before_plot"))
+        static_cast<TH1D*>(
+            before->Clone("before_plot")
+        )
     );
 
     unique_ptr<TH1D> hAfter(
-        static_cast<TH1D*>(after->Clone("after_plot"))
+        static_cast<TH1D*>(
+            after->Clone("after_plot")
+        )
     );
 
     hBefore->SetDirectory(nullptr);
     hAfter->SetDirectory(nullptr);
 
-    if (hBefore->Integral() > 0.0)
-        hBefore->Scale(1.0 / hBefore->Integral());
 
-    if (hAfter->Integral() > 0.0)
-        hAfter->Scale(1.0 / hAfter->Integral());
+    if (hBefore->Integral() > 0.0) {
 
+        hBefore->Scale(
+            1.0 / hBefore->Integral()
+        );
+    }
+
+
+    if (hAfter->Integral() > 0.0) {
+
+        hAfter->Scale(
+            1.0 / hAfter->Integral()
+        );
+    }
+
+
+    // Before: solid
     hBefore->SetLineColor(kBlue + 1);
-    hBefore->SetLineWidth(2);
+    hBefore->SetLineWidth(3);
+    hBefore->SetLineStyle(1);
 
+
+    // After: dashed
     hAfter->SetLineColor(kRed + 1);
-    hAfter->SetLineWidth(2);
+    hAfter->SetLineWidth(3);
+    hAfter->SetLineStyle(2);
 
-    hBefore->GetXaxis()->SetTitle(xTitle.c_str());
-    hBefore->GetYaxis()->SetTitle("Normalized entries");
+
+    hBefore
+        ->GetXaxis()
+        ->SetTitle(
+            xTitle.c_str()
+        );
+
+    hBefore
+        ->GetYaxis()
+        ->SetTitle(
+            "Normalized entries"
+        );
+
 
     const double maxY =
-        max(hBefore->GetMaximum(), hAfter->GetMaximum());
+        max(
+            hBefore->GetMaximum(),
+            hAfter->GetMaximum()
+        );
 
-    if (maxY > 0.0)
-        hBefore->SetMaximum(1.25 * maxY);
 
-    TCanvas canvas("canvas1d", "Before vs after TGEANT", 850, 650);
+    if (maxY > 0.0) {
+
+        hBefore->SetMaximum(
+            1.3 * maxY
+        );
+    }
+
+
+    TCanvas canvas(
+        "canvas1d",
+        "Before vs after TGEANT",
+        850,
+        650
+    );
+
 
     if (logY)
         canvas.SetLogy();
 
-    hBefore->Draw("HIST");
-    hAfter->Draw("HIST SAME");
 
-    TLegend legend(0.68, 0.76, 0.88, 0.88);
-    legend.AddEntry(hBefore.get(), "Before TGEANT", "l");
-    legend.AddEntry(hAfter.get(),  "After TGEANT",  "l");
+    hBefore->Draw("HIST");
+
+    hAfter->Draw(
+        "HIST SAME"
+    );
+
+
+    TLegend legend(
+        0.62,
+        0.74,
+        0.88,
+        0.88
+    );
+
+    legend.SetBorderSize(0);
+    legend.SetFillStyle(0);
+
+    legend.AddEntry(
+        hBefore.get(),
+        "Before TGEANT",
+        "l"
+    );
+
+    legend.AddEntry(
+        hAfter.get(),
+        "After TGEANT",
+        "l"
+    );
+
     legend.Draw();
 
-    canvas.SaveAs(outputFile.c_str());
 
-    cout << "Created: " << outputFile << endl;
+    canvas.SaveAs(
+        outputFile.c_str()
+    );
+
+    cout
+        << "Created: "
+        << outputFile
+        << endl;
 }
 
+
+// ============================================================
+// Single histogram
+// ============================================================
 
 void saveSingleHistogram(
     TH1D* hist,
@@ -543,19 +744,40 @@ void saveSingleHistogram(
     const string& outputFile,
     bool logY = false)
 {
-    TCanvas canvas("canvas_single", hist->GetTitle(), 850, 650);
+    TCanvas canvas(
+        "canvas_single",
+        hist->GetTitle(),
+        850,
+        650
+    );
 
     if (logY)
         canvas.SetLogy();
 
-    hist->GetXaxis()->SetTitle(xTitle.c_str());
-    hist->GetYaxis()->SetTitle(yTitle.c_str());
+    hist
+        ->GetXaxis()
+        ->SetTitle(
+            xTitle.c_str()
+        );
+
+    hist
+        ->GetYaxis()
+        ->SetTitle(
+            yTitle.c_str()
+        );
+
+    hist->SetLineWidth(2);
 
     hist->Draw("HIST");
 
-    canvas.SaveAs(outputFile.c_str());
+    canvas.SaveAs(
+        outputFile.c_str()
+    );
 
-    cout << "Created: " << outputFile << endl;
+    cout
+        << "Created: "
+        << outputFile
+        << endl;
 }
 
 
@@ -563,13 +785,16 @@ void saveSingleHistogram(
 // Main
 // ============================================================
 
-int main(int argc, char* argv[])
+int main(
+    int argc,
+    char* argv[])
 {
     if (argc != 4) {
 
         cerr
             << "Usage:\n"
-            << "  " << argv[0]
+            << "  "
+            << argv[0]
             << " <McMule_input.root>"
             << " <TGEANT_output.tgeant.gz>"
             << " <output_folder>\n";
@@ -577,21 +802,34 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    const string rootInputFile = argv[1];
-    const string tgeantInputFile = argv[2];
-    const string outputFolder = argv[3];
 
-    filesystem::create_directories(outputFolder);
+    const string rootInputFile =
+        argv[1];
+
+    const string tgeantInputFile =
+        argv[2];
+
+    const string outputFolder =
+        argv[3];
 
 
-    // --------------------------------------------------------
-    // ROOT input: before TGEANT
-    // --------------------------------------------------------
+    filesystem::create_directories(
+        outputFolder
+    );
+
+
+    // ========================================================
+    // ROOT input
+    // ========================================================
 
     TFile* rootFile =
-        TFile::Open(rootInputFile.c_str());
+        TFile::Open(
+            rootInputFile.c_str()
+        );
 
-    if (!rootFile || rootFile->IsZombie()) {
+
+    if (!rootFile ||
+        rootFile->IsZombie()) {
 
         cerr
             << "ERROR: could not open ROOT input file: "
@@ -603,7 +841,10 @@ int main(int argc, char* argv[])
 
 
     TTree* tree =
-        static_cast<TTree*>(rootFile->Get("Output"));
+        static_cast<TTree*>(
+            rootFile->Get("Output")
+        );
+
 
     if (!tree) {
 
@@ -618,9 +859,9 @@ int main(int argc, char* argv[])
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // ROOT branches
-    // --------------------------------------------------------
+    // ========================================================
 
     int beamPID = 0;
 
@@ -629,37 +870,87 @@ int main(int argc, char* argv[])
     double beamMomentumY = 0.0;
     double beamMomentumZ = 0.0;
 
-    vector<int>* scatteredPID = nullptr;
+    vector<int>* scatteredPID =
+        nullptr;
 
-    vector<double>* scatteredEnergy = nullptr;
-    vector<double>* scatteredMomentumX = nullptr;
-    vector<double>* scatteredMomentumY = nullptr;
-    vector<double>* scatteredMomentumZ = nullptr;
+    vector<double>* scatteredEnergy =
+        nullptr;
+
+    vector<double>* scatteredMomentumX =
+        nullptr;
+
+    vector<double>* scatteredMomentumY =
+        nullptr;
+
+    vector<double>* scatteredMomentumZ =
+        nullptr;
 
 
-    tree->SetBranchAddress("beamPID", &beamPID);
-    tree->SetBranchAddress("beamEnergy", &beamEnergy);
-    tree->SetBranchAddress("beamMomentumX", &beamMomentumX);
-    tree->SetBranchAddress("beamMomentumY", &beamMomentumY);
-    tree->SetBranchAddress("beamMomentumZ", &beamMomentumZ);
+    tree->SetBranchAddress(
+        "beamPID",
+        &beamPID
+    );
 
-    tree->SetBranchAddress("scatteredPID", &scatteredPID);
-    tree->SetBranchAddress("scatteredEnergy", &scatteredEnergy);
-    tree->SetBranchAddress("scatteredMomentumX", &scatteredMomentumX);
-    tree->SetBranchAddress("scatteredMomentumY", &scatteredMomentumY);
-    tree->SetBranchAddress("scatteredMomentumZ", &scatteredMomentumZ);
+    tree->SetBranchAddress(
+        "beamEnergy",
+        &beamEnergy
+    );
+
+    tree->SetBranchAddress(
+        "beamMomentumX",
+        &beamMomentumX
+    );
+
+    tree->SetBranchAddress(
+        "beamMomentumY",
+        &beamMomentumY
+    );
+
+    tree->SetBranchAddress(
+        "beamMomentumZ",
+        &beamMomentumZ
+    );
+
+    tree->SetBranchAddress(
+        "scatteredPID",
+        &scatteredPID
+    );
+
+    tree->SetBranchAddress(
+        "scatteredEnergy",
+        &scatteredEnergy
+    );
+
+    tree->SetBranchAddress(
+        "scatteredMomentumX",
+        &scatteredMomentumX
+    );
+
+    tree->SetBranchAddress(
+        "scatteredMomentumY",
+        &scatteredMomentumY
+    );
+
+    tree->SetBranchAddress(
+        "scatteredMomentumZ",
+        &scatteredMomentumZ
+    );
 
 
     const Long64_t nRootEvents =
         tree->GetEntries();
 
 
-    // --------------------------------------------------------
-    // TGEANT input: after TGEANT
-    // --------------------------------------------------------
+    // ========================================================
+    // TGEANT input
+    // ========================================================
 
     gzFile tgeantFile =
-        gzopen(tgeantInputFile.c_str(), "rb");
+        gzopen(
+            tgeantInputFile.c_str(),
+            "rb"
+        );
+
 
     if (!tgeantFile) {
 
@@ -674,14 +965,19 @@ int main(int argc, char* argv[])
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // Histograms
-    // --------------------------------------------------------
+    // ========================================================
 
     gStyle->SetOptStat(0);
 
+
     const vector<double> q2Bins =
-        makeLogBins(120, Q2_MIN, Q2_MAX);
+        makeLogBins(
+            120,
+            Q2_MIN,
+            Q2_MAX
+        );
 
 
     TH2D hQ2BeforeAfter(
@@ -689,8 +985,10 @@ int main(int argc, char* argv[])
         "Q^{2}: before vs after TGEANT;"
         "Q^{2}_{before} [GeV^{2}];"
         "Q^{2}_{after} [GeV^{2}]",
-        120, q2Bins.data(),
-        120, q2Bins.data()
+        120,
+        q2Bins.data(),
+        120,
+        q2Bins.data()
     );
 
 
@@ -699,29 +997,41 @@ int main(int argc, char* argv[])
         "Scattered muon energy: before vs after TGEANT;"
         "E_{#mu,before} [GeV];"
         "E_{#mu,after} [GeV]",
-        150, EMU_MIN, EMU_MAX,
-        150, EMU_MIN, EMU_MAX
+        150,
+        EMU_MIN,
+        EMU_MAX,
+        150,
+        EMU_MIN,
+        EMU_MAX
     );
 
 
+    // Full McMule ROOT sample
     TH1D hMuonEnergyBefore(
         "hMuonEnergyBefore",
         "Scattered muon energy",
-        250, EMU_MIN, EMU_MAX
+        250,
+        EMU_MIN,
+        EMU_MAX
     );
 
 
+    // Available TGEANT sample
     TH1D hMuonEnergyAfter(
         "hMuonEnergyAfter",
         "Scattered muon energy",
-        250, EMU_MIN, EMU_MAX
+        250,
+        EMU_MIN,
+        EMU_MAX
     );
 
 
     TH1D hMuonEnergyLoss(
         "hMuonEnergyLoss",
         "Muon energy difference",
-        400, -5.0, 5.0
+        200,
+        -1.0,
+        1.0
     );
 
 
@@ -730,22 +1040,30 @@ int main(int argc, char* argv[])
         "Photon energy: before vs after TGEANT;"
         "E_{#gamma,before} [GeV];"
         "E_{#gamma,after} [GeV]",
-        150, PHOTON_E_MIN, PHOTON_E_MAX,
-        150, PHOTON_E_MIN, PHOTON_E_MAX
+        150,
+        PHOTON_E_MIN,
+        PHOTON_E_MAX,
+        150,
+        PHOTON_E_MIN,
+        PHOTON_E_MAX
     );
 
 
     TH1D hPhotonEnergyBefore(
         "hPhotonEnergyBefore",
         "Photon energy",
-        250, PHOTON_E_MIN, PHOTON_E_MAX
+        250,
+        PHOTON_E_MIN,
+        PHOTON_E_MAX
     );
 
 
     TH1D hPhotonEnergyAfter(
         "hPhotonEnergyAfter",
         "Photon energy",
-        250, PHOTON_E_MIN, PHOTON_E_MAX
+        250,
+        PHOTON_E_MIN,
+        PHOTON_E_MAX
     );
 
 
@@ -754,37 +1072,48 @@ int main(int argc, char* argv[])
         "Photon angle: before vs after TGEANT;"
         "#theta_{#gamma,before} [mrad];"
         "#theta_{#gamma,after} [mrad]",
-        150, PHOTON_THETA_MIN, PHOTON_THETA_MAX,
-        150, PHOTON_THETA_MIN, PHOTON_THETA_MAX
+        150,
+        PHOTON_THETA_MIN,
+        PHOTON_THETA_MAX,
+        150,
+        PHOTON_THETA_MIN,
+        PHOTON_THETA_MAX
     );
 
 
     TH1D hPhotonAngleBefore(
         "hPhotonAngleBefore",
         "Photon angle",
-        250, PHOTON_THETA_MIN, PHOTON_THETA_MAX
+        250,
+        PHOTON_THETA_MIN,
+        PHOTON_THETA_MAX
     );
 
 
     TH1D hPhotonAngleAfter(
         "hPhotonAngleAfter",
         "Photon angle",
-        250, PHOTON_THETA_MIN, PHOTON_THETA_MAX
+        250,
+        PHOTON_THETA_MIN,
+        PHOTON_THETA_MAX
     );
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // Counters
-    // --------------------------------------------------------
+    // ========================================================
+
+    long long rootMuonEventsTotal = 0;
+    long long rootPhotonEventsTotal = 0;
 
     long long realTgeantEvents = 0;
     long long comparedEvents = 0;
 
     long long noParticleBlock = 0;
-    long long noRootMuon = 0;
+    long long noRootMuonCompared = 0;
     long long noTgeantMuon = 0;
 
-    long long rootPhotonEvents = 0;
+    long long rootPhotonEventsComparedSubset = 0;
     long long comparedPhotonEvents = 0;
     long long missingTgeantPhoton = 0;
 
@@ -795,14 +1124,100 @@ int main(int argc, char* argv[])
 
 
     // ========================================================
-    // Event-by-event comparison
+    // FIRST LOOP:
+    // Analyze ALL McMule ROOT events
     // ========================================================
 
-    for (Long64_t i = 0; i < nRootEvents; ++i) {
+    for (Long64_t i = 0;
+         i < nRootEvents;
+         ++i) {
 
-        long long tgeantEventNumber = -1;
+        tree->GetEntry(i);
+
+
+        // ----------------------------------------------------
+        // Scattered muon
+        // ----------------------------------------------------
+
+        TLorentzVector rootMuon;
+
+
+        if (getRootParticle(
+                13,
+                scatteredPID,
+                scatteredEnergy,
+                scatteredMomentumX,
+                scatteredMomentumY,
+                scatteredMomentumZ,
+                rootMuon)) {
+
+            ++rootMuonEventsTotal;
+
+            hMuonEnergyBefore.Fill(
+                rootMuon.E()
+            );
+        }
+
+
+        // ----------------------------------------------------
+        // Photon
+        // ----------------------------------------------------
+
+        TLorentzVector rootPhoton;
+
+
+        const bool hasRootPhoton =
+            getRootParticle(
+                22,
+                scatteredPID,
+                scatteredEnergy,
+                scatteredMomentumX,
+                scatteredMomentumY,
+                scatteredMomentumZ,
+                rootPhoton
+            );
+
+
+        if (hasRootPhoton) {
+
+            ++rootPhotonEventsTotal;
+
+
+            hPhotonEnergyBefore.Fill(
+                rootPhoton.E()
+            );
+
+
+            hPhotonAngleBefore.Fill(
+                thetaMrad(rootPhoton)
+            );
+        }
+    }
+
+
+    cout
+        << "Finished complete ROOT scan: "
+        << nRootEvents
+        << " events."
+        << endl;
+
+
+    // ========================================================
+    // SECOND LOOP:
+    // Event-by-event ROOT <-> TGEANT comparison
+    // ========================================================
+
+    for (Long64_t i = 0;
+         i < nRootEvents;
+         ++i) {
+
+        long long tgeantEventNumber =
+            -1;
+
         vector<Particle> particles;
-        bool hasParticleBlock = false;
+
+        bool hasParticleBlock =
+            false;
 
 
         if (!readNextTgeantEvent(
@@ -824,11 +1239,17 @@ int main(int argc, char* argv[])
         ++realTgeantEvents;
 
 
+        // ----------------------------------------------------
+        // Event number check
+        // ----------------------------------------------------
+
         if (tgeantEventNumber != i) {
 
             ++eventNumberMismatch;
 
+
             if (eventNumberMismatch <= 10) {
+
                 cerr
                     << "WARNING: ROOT entry "
                     << i
@@ -850,9 +1271,9 @@ int main(int argc, char* argv[])
         }
 
 
-        // ----------------------------------------------------
-        // BEFORE TGEANT: ROOT four-vectors
-        // ----------------------------------------------------
+        // ====================================================
+        // ROOT particles before TGEANT
+        // ====================================================
 
         const TLorentzVector rootBeam =
             makeFourVector(
@@ -865,6 +1286,7 @@ int main(int argc, char* argv[])
 
         TLorentzVector rootMuon;
 
+
         if (!getRootParticle(
                 13,
                 scatteredPID,
@@ -874,14 +1296,14 @@ int main(int argc, char* argv[])
                 scatteredMomentumZ,
                 rootMuon)) {
 
-            ++noRootMuon;
+            ++noRootMuonCompared;
             continue;
         }
 
 
-        // ----------------------------------------------------
-        // AFTER TGEANT: particle block four-vectors
-        // ----------------------------------------------------
+        // ====================================================
+        // TGEANT particles after TGEANT
+        // ====================================================
 
         TLorentzVector tgeantBeam;
         TLorentzVector tgeantMuon;
@@ -890,6 +1312,7 @@ int main(int argc, char* argv[])
         if (!getTgeantBeamMuon(
                 particles,
                 tgeantBeam) ||
+
             !getTgeantScatteredMuon(
                 particles,
                 tgeantMuon)) {
@@ -899,18 +1322,26 @@ int main(int argc, char* argv[])
         }
 
 
-        // ----------------------------------------------------
-        // Q^2
-        // ----------------------------------------------------
+        // ====================================================
+        // Q2
+        // ====================================================
 
         const double q2Before =
-            calculateQ2(rootBeam, rootMuon);
+            calculateQ2(
+                rootBeam,
+                rootMuon
+            );
+
 
         const double q2After =
-            calculateQ2(tgeantBeam, tgeantMuon);
+            calculateQ2(
+                tgeantBeam,
+                tgeantMuon
+            );
 
 
-        if (q2Before > 0.0 && q2After > 0.0) {
+        if (q2Before > 0.0 &&
+            q2After > 0.0) {
 
             hQ2BeforeAfter.Fill(
                 q2Before,
@@ -918,19 +1349,26 @@ int main(int argc, char* argv[])
             );
         }
 
+
         if (q2Before <= 0.0)
             ++nonPositiveQ2Before;
+
 
         if (q2After <= 0.0)
             ++nonPositiveQ2After;
 
 
-        // ----------------------------------------------------
-        // Muon energy
-        // ----------------------------------------------------
+        // ====================================================
+        // Muon energy AFTER
+        //
+        // BEFORE histogram was already filled in the complete
+        // ROOT scan above.
+        // ====================================================
 
-        hMuonEnergyBefore.Fill(rootMuon.E());
-        hMuonEnergyAfter.Fill(tgeantMuon.E());
+        hMuonEnergyAfter.Fill(
+            tgeantMuon.E()
+        );
+
 
         hMuonEnergyBeforeAfter.Fill(
             rootMuon.E(),
@@ -938,21 +1376,22 @@ int main(int argc, char* argv[])
         );
 
 
-        // Positive means:
-        // after-TGEANT muon has less energy than before-TGEANT muon.
         const double muonEnergyLoss =
-            rootMuon.E() - tgeantMuon.E();
+            rootMuon.E()
+            - tgeantMuon.E();
+
 
         hMuonEnergyLoss.Fill(
             muonEnergyLoss
         );
 
 
-        // ----------------------------------------------------
-        // Photon
-        // ----------------------------------------------------
+        // ====================================================
+        // Photon comparison
+        // ====================================================
 
         TLorentzVector rootPhoton;
+
 
         const bool hasRootPhoton =
             getRootParticle(
@@ -968,9 +1407,11 @@ int main(int argc, char* argv[])
 
         if (hasRootPhoton) {
 
-            ++rootPhotonEvents;
+            ++rootPhotonEventsComparedSubset;
+
 
             TLorentzVector tgeantPhoton;
+
 
             const bool hasTgeantPhoton =
                 getTgeantPhoton(
@@ -979,22 +1420,15 @@ int main(int argc, char* argv[])
                 );
 
 
-            hPhotonEnergyBefore.Fill(
-                rootPhoton.E()
-            );
-
-            hPhotonAngleBefore.Fill(
-                thetaMrad(rootPhoton)
-            );
-
-
             if (hasTgeantPhoton) {
 
                 ++comparedPhotonEvents;
 
+
                 hPhotonEnergyAfter.Fill(
                     tgeantPhoton.E()
                 );
+
 
                 hPhotonAngleAfter.Fill(
                     thetaMrad(tgeantPhoton)
@@ -1024,13 +1458,18 @@ int main(int argc, char* argv[])
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // Check whether TGEANT contains more events than ROOT
-    // --------------------------------------------------------
+    // ========================================================
 
-    long long extraEventNumber = -1;
+    long long extraEventNumber =
+        -1;
+
     vector<Particle> extraParticles;
-    bool extraHasParticleBlock = false;
+
+    bool extraHasParticleBlock =
+        false;
+
 
     const bool hasExtraTgeantEvent =
         readNextTgeantEvent(
@@ -1057,7 +1496,8 @@ int main(int argc, char* argv[])
 
     save2D(
         &hQ2BeforeAfter,
-        outputFolder + "/Q2_before_vs_after.pdf",
+        outputFolder
+            + "/Q2_before_vs_after.pdf",
         true,
         true,
         true,
@@ -1067,7 +1507,8 @@ int main(int argc, char* argv[])
 
     save2D(
         &hMuonEnergyBeforeAfter,
-        outputFolder + "/muon_energy_before_vs_after.pdf",
+        outputFolder
+            + "/muon_energy_before_vs_after.pdf",
         false,
         false,
         true,
@@ -1079,7 +1520,8 @@ int main(int argc, char* argv[])
         &hMuonEnergyBefore,
         &hMuonEnergyAfter,
         "Scattered muon energy [GeV]",
-        outputFolder + "/muon_energy_distribution.pdf",
+        outputFolder
+            + "/muon_energy_distribution.pdf",
         true
     );
 
@@ -1088,37 +1530,27 @@ int main(int argc, char* argv[])
         &hMuonEnergyLoss,
         "E_{#mu,before} - E_{#mu,after} [GeV]",
         "Events",
-        outputFolder + "/muon_energy_loss.pdf",
-        true
+        outputFolder
+            + "/muon_energy_loss.pdf",
+        false
     );
 
 
-    save2D(
-        &hPhotonEnergyBeforeAfter,
-        outputFolder + "/photon_energy_before_vs_after.pdf",
-        false,
-        false,
-        true,
-        true
-    );
-
+    // --------------------------------------------------------
+    // Photon distributions
+    //
+    // Before histogram contains ALL ROOT photon events.
+    // After histogram contains photons found in available
+    // TGEANT events.
+    // --------------------------------------------------------
 
     saveNormalizedComparison(
         &hPhotonEnergyBefore,
         &hPhotonEnergyAfter,
         "Photon energy [GeV]",
-        outputFolder + "/photon_energy_distribution.pdf",
-        true
-    );
-
-
-    save2D(
-        &hPhotonAngleBeforeAfter,
-        outputFolder + "/photon_angle_before_vs_after.pdf",
-        false,
-        false,
-        true,
-        true
+        outputFolder
+            + "/photon_energy_distribution.pdf",
+        false
     );
 
 
@@ -1126,9 +1558,51 @@ int main(int argc, char* argv[])
         &hPhotonAngleBefore,
         &hPhotonAngleAfter,
         "Photon angle #theta_{#gamma} [mrad]",
-        outputFolder + "/photon_angle_distribution.pdf",
-        true
+        outputFolder
+            + "/photon_angle_distribution.pdf",
+        false
     );
+
+
+    // --------------------------------------------------------
+    // Only create photon before/after 2D plots if at least one
+    // photon could actually be compared.
+    // --------------------------------------------------------
+
+    if (comparedPhotonEvents > 0) {
+
+        save2D(
+            &hPhotonEnergyBeforeAfter,
+            outputFolder
+                + "/photon_energy_before_vs_after.pdf",
+            false,
+            false,
+            true,
+            true
+        );
+
+
+        save2D(
+            &hPhotonAngleBeforeAfter,
+            outputFolder
+                + "/photon_angle_before_vs_after.pdf",
+            false,
+            false,
+            true,
+            true
+        );
+    }
+
+    else {
+
+        cout
+            << "No photons could be compared before/after TGEANT."
+            << endl;
+
+        cout
+            << "Skipping photon before-vs-after 2D plots."
+            << endl;
+    }
 
 
     // ========================================================
@@ -1136,12 +1610,15 @@ int main(int argc, char* argv[])
     // ========================================================
 
     const string histogramFileName =
-        outputFolder + "/before_after_histograms.root";
+        outputFolder
+        + "/before_after_histograms.root";
+
 
     TFile histogramFile(
         histogramFileName.c_str(),
         "RECREATE"
     );
+
 
     hQ2BeforeAfter.Write();
 
@@ -1151,95 +1628,154 @@ int main(int argc, char* argv[])
     hMuonEnergyLoss.Write();
 
     hPhotonEnergyBeforeAfter.Write();
+
     hPhotonEnergyBefore.Write();
     hPhotonEnergyAfter.Write();
 
     hPhotonAngleBeforeAfter.Write();
+
     hPhotonAngleBefore.Write();
     hPhotonAngleAfter.Write();
+
 
     histogramFile.Close();
 
 
-    // ========================================================
+   // ========================================================
     // Summary
     // ========================================================
 
-    cout << endl;
-    cout << "==============================================" << endl;
-    cout << "Before / after TGEANT comparison" << endl;
-    cout << "==============================================" << endl;
+    const string summaryFileName =
+        outputFolder + "/comparison_summary.log";
 
-    cout
-        << "ROOT events available:            "
+    ofstream summaryFile(summaryFileName);
+
+    if (!summaryFile) {
+
+        cerr
+            << "ERROR: could not create summary log file: "
+            << summaryFileName
+            << endl;
+    }
+
+
+    stringstream summary;
+
+    summary << endl;
+
+    summary
+        << "=============================================="
+        << endl;
+
+    summary
+        << "Before / after TGEANT comparison"
+        << endl;
+
+    summary
+        << "=============================================="
+        << endl;
+
+    summary
+        << "ROOT events available:                 "
         << nRootEvents
         << endl;
 
-    cout
-        << "TGEANT events read:               "
+    summary
+        << "ROOT muon events analyzed:             "
+        << rootMuonEventsTotal
+        << endl;
+
+    summary
+        << "ROOT photon events total:              "
+        << rootPhotonEventsTotal
+        << endl;
+
+    summary
+        << "TGEANT events read:                    "
         << realTgeantEvents
         << endl;
 
-    cout
-        << "Events compared:                  "
+    summary
+        << "Events compared ROOT/TGEANT:           "
         << comparedEvents
         << endl;
 
-    cout
-        << "No TGEANT particle block:         "
+    summary
+        << "No TGEANT particle block:              "
         << noParticleBlock
         << endl;
 
-    cout
-        << "No scattered muon in ROOT:        "
-        << noRootMuon
+    summary
+        << "No scattered muon in ROOT subset:      "
+        << noRootMuonCompared
         << endl;
 
-    cout
-        << "No scattered muon in TGEANT:      "
+    summary
+        << "No scattered muon in TGEANT:           "
         << noTgeantMuon
         << endl;
 
-    cout
-        << "ROOT events with photon:          "
-        << rootPhotonEvents
+    summary
+        << "ROOT photons in compared subset:       "
+        << rootPhotonEventsComparedSubset
         << endl;
 
-    cout
-        << "Photon events compared:           "
+    summary
+        << "Photon events compared:                "
         << comparedPhotonEvents
         << endl;
 
-    cout
-        << "Photon missing in TGEANT block:   "
+    summary
+        << "Photon missing in TGEANT block:        "
         << missingTgeantPhoton
         << endl;
 
-    cout
-        << "Non-positive Q2 before:           "
+    summary
+        << "Non-positive Q2 before:                "
         << nonPositiveQ2Before
         << endl;
 
-    cout
-        << "Non-positive Q2 after:            "
+    summary
+        << "Non-positive Q2 after:                 "
         << nonPositiveQ2After
         << endl;
 
-    cout
-        << "Event-number mismatches:          "
+    summary
+        << "Event-number mismatches:               "
         << eventNumberMismatch
         << endl;
 
-    cout
-        << "Histograms written to:            "
+    summary
+        << "Histograms written to:                 "
         << histogramFileName
         << endl;
 
-    cout << "==============================================" << endl;
+    summary
+        << "=============================================="
+        << endl;
 
 
+    // Print to terminal
+    cout << summary.str();
+
+
+    // Write to logfile
+    if (summaryFile) {
+
+        summaryFile
+            << summary.str();
+
+        summaryFile.close();
+
+        cout
+            << "Summary written to:                    "
+            << summaryFileName
+            << endl;
+    }
     gzclose(tgeantFile);
+
     rootFile->Close();
+
 
     return 0;
 }

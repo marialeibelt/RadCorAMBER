@@ -3,7 +3,7 @@
 set -e
 
 # Input file
-CONF="{/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_getcs.conf}"
+CONF="/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_getcs.conf"
 
 if [[ ! -f "$CONF" ]]; then
     echo "ERROR: Config file not found:"
@@ -29,7 +29,7 @@ echo "OUTFOLDER: $OUTFOLDER"
 echo "SAVENAME:  $SAVENAME"
 echo "========================================"
 
-python3 "$CODEDIR/getCS.py"
+python3 "$CODEDIR/getCS.py" \
     --homedir "$HOMEDIR" \
     --outfolder "$OUTFOLDER" \
     --savename "$SAVENAME"

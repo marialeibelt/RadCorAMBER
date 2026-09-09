@@ -7,44 +7,49 @@
   
 * Analyze 4vecs:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_mcmule4vecs.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_mcmule4vecs.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_mcmule4vecs.sh 
   
 * Generate Events with McMule
   
 * Get Cross Sections: 
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_getcs.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_getcs.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_getcs.sh 
   
 * Parse .lhe to .root: 
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_lhe_to_root.conf
-    * LO: /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_LO.sh
-    * NLO: /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_NLO.sh
+    * LO: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_LO.sh
+    * NLO: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_NLO.sh
   
 * Analyze raw Output:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
   
 * Scale with CS: 
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_scale.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_scale.sh
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_scale.sh
   
 * Analyze:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
   
 * Evtgen with AMBER
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_tgeant_amber.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_tgeant_amber.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_tgeant_amber.sh 
+
+  * Cluster:
+    * Change: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_tgeant_amber.conf
+    * qsub submit_tgeant.sh
+    * check run: qstat
   
-* Warm-up Cache: /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_warmup_cache.sh 
+* Warm-up Cache: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_warmup_cache.sh 
 
 * Analyze TGEANT output:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_tgeant_amber.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_tgeant_amber.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_tgeant_amber.sh 
 
 * Compare McMule & AMBER TGEANT:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_compare_mcmule_amber.conf 
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_compare_mcmule_amber.sh 
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_compare_mcmule_amber.sh 
 
 ## Generate 4-Vectors with McMule
 * If you want to Generate Events afterwards, only do 1 seed, but 2 xi cuts
@@ -55,18 +60,21 @@
 * mcmule = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule"
 * correct xi cut in .menu file for NLO0
 * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_mcmule_gen4vecs.conf
-* /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_mcmule_gen4vecs.sh
+* time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_mcmule_gen4vecs.sh
   
 ## Generate Events wth McMule
 * copy all .mcmule from /out folder to /input folder
 * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_evtgen_mcmule.conf
-* /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/eventgen/rungen.sh
+* time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/eventgen/rungen.sh
 
 * output anschauen:
   * head -n 200 yyy.lhe 
   * tail -n 200 yyy.lhe 
 
-  
+## Q2 Exact vs. Ultrarel. Limit
+* Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_Q2approx_test.conf
+* time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_Q2approx_test.sh
+    
 ## Good To Know
 * vim:
   * Nur speichern: :w
@@ -102,9 +110,14 @@ git pull --rebase
 * ctrl + / (mehrere Zeilen kommentiern)
 * SERVER:
   * ssh -XY ge93juy@login.e18.ph.tum.de -p 22222
-  * ssh -XY hercules
+  * ssh themis.e18.ph.tum.de -o "VerifyHostKeyDNS=yes"
   * screen -r
   * ctr A+D
+* Rename: F2
+* Suche: F3
+* Tastatur wechseln: Windows+spacebar
+
+
 
 
 ## Links:

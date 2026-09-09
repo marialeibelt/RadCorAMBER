@@ -1,0 +1,20 @@
+
+==============================================
+Before / after TGEANT comparison
+==============================================
+ROOT events available:                 8021437
+ROOT muon events analyzed:             8021437
+ROOT photon events total:              0
+TGEANT events read:                    3365
+Events compared ROOT/TGEANT:           3365
+No TGEANT particle block:              0
+No scattered muon in ROOT subset:      0
+No scattered muon in TGEANT:           0
+ROOT photons in compared subset:       0
+Photon events compared:                0
+Photon missing in TGEANT block:        0
+Non-positive Q2 before:                0
+Non-positive Q2 after:                 0
+Event-number mismatches:               0
+Histograms written to:                 /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/Figures/compare_mcmule_amber/LO_evtgen_31_08_xi1_07_09/before_after_histograms.root
+==============================================

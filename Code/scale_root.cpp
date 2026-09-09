@@ -83,8 +83,8 @@ int main(int argc, char* argv[])
 
     if (argc != 5 && argc != 6) {
         cerr << "Usage:\n"
-            << "  " << argv[0]
-            << " LO.root NLO.root cross_sections.txt output_folder [suffix]\n";
+             << "  " << argv[0]
+             << " LO.root NLO.root cross_sections.txt output_folder [suffix]\n";
         return 1;
     }
 
@@ -101,6 +101,7 @@ int main(int argc, char* argv[])
     }
 
     std::filesystem::create_directories(outputDir);
+
 
     // --------------------------------------------------------
     // Read cross sections
@@ -144,7 +145,7 @@ int main(int argc, char* argv[])
 
         cerr << "WARNING: LO and NLO fractions do not add up to 1." << endl;
         cerr << "Check the meaning of sigma_LO, sigma_NLO and sigma_full."
-            << endl;
+             << endl;
     }
 
 
@@ -227,6 +228,7 @@ int main(int argc, char* argv[])
 
     Long64_t Ntotal =
         static_cast<Long64_t>(floor(maxNtotal));
+
 
     // --------------------------------------------------------
     // Determine required number of events
@@ -323,6 +325,18 @@ int main(int argc, char* argv[])
 
 
     // --------------------------------------------------------
+    // Sort selected events for efficient ROOT access
+    //
+    // The random selection stays unchanged.
+    // Only the order in which the selected events are read
+    // from the ROOT files is changed.
+    // --------------------------------------------------------
+
+    sort(loIndices.begin(), loIndices.end());
+    sort(nloIndices.begin(), nloIndices.end());
+
+
+    // --------------------------------------------------------
     // Output files
     // --------------------------------------------------------
 
@@ -347,13 +361,13 @@ int main(int argc, char* argv[])
 
     if (!loOut || loOut->IsZombie()) {
         cerr << "ERROR: Could not create "
-            << loOutputName << endl;
+             << loOutputName << endl;
         return 1;
     }
 
     if (!nloOut || nloOut->IsZombie()) {
         cerr << "ERROR: Could not create "
-            << nloOutputName << endl;
+             << nloOutputName << endl;
         return 1;
     }
 
@@ -377,11 +391,30 @@ int main(int argc, char* argv[])
 
     cout << "Writing LO events..." << endl;
 
+    Long64_t counter = 0;
+
     for (Long64_t index : loIndices) {
 
         loTree->GetEntry(index);
         loOutTree->Fill();
+
+        ++counter;
+
+        if (counter % 100000 == 0) {
+
+            cout << "  LO: "
+                 << counter << " / "
+                 << loIndices.size()
+                 << " events written"
+                 << endl;
+        }
     }
+
+    cout << "  LO: "
+         << counter << " / "
+         << loIndices.size()
+         << " events written"
+         << endl;
 
 
     // --------------------------------------------------------
@@ -390,11 +423,30 @@ int main(int argc, char* argv[])
 
     cout << "Writing NLO events..." << endl;
 
+    counter = 0;
+
     for (Long64_t index : nloIndices) {
 
         nloTree->GetEntry(index);
         nloOutTree->Fill();
+
+        ++counter;
+
+        if (counter % 100000 == 0) {
+
+            cout << "  NLO: "
+                 << counter << " / "
+                 << nloIndices.size()
+                 << " events written"
+                 << endl;
+        }
     }
+
+    cout << "  NLO: "
+         << counter << " / "
+         << nloIndices.size()
+         << " events written"
+         << endl;
 
 
     // --------------------------------------------------------

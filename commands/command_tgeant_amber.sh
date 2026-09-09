@@ -22,30 +22,44 @@ source "$CONFIG"
 # Check configuration
 # ============================================================
 
-if [ -z "$TGEANTrunsfolder" ]; then
-    echo "ERROR: TGEANTrunsfolder is not defined in input_tgeant_amber.conf"
-    exit 1
-fi
+: "${TGEANTrunsfolder:?TGEANTrunsfolder is not defined}"
+: "${Eventnumber:?Eventnumber is not defined}"
+: "${inputfile:?inputfile is not defined}"
+: "${outputfolder:?outputfolder is not defined}"
+: "${outputname:?outputname is not defined}"
 
-if [ -z "$Eventnumber" ]; then
-    echo "ERROR: Eventnumber is not defined in input_tgeant_amber.conf"
-    exit 1
-fi
 
-if [ -z "$inputfile" ]; then
-    echo "ERROR: inputfile is not defined in input_tgeant_amber.conf"
-    exit 1
-fi
+# ============================================================
+# Run-specific names
+# ============================================================
 
-if [ -z "$outputfolder" ]; then
-    echo "ERROR: outputfolder is not defined in input_tgeant_amber.conf"
-    exit 1
-fi
+# Remove .root from output name
+RUNNAME="${outputname%.root}"
 
-if [ -z "$outputname" ]; then
-    echo "ERROR: outputname is not defined in input_tgeant_amber.conf"
-    exit 1
-fi
+# Log folder
+LOGFOLDER="${TGEANTrunsfolder}/log"
+mkdir -p "$LOGFOLDER"
+
+# Run-specific log
+LOGFILE="${LOGFOLDER}/${RUNNAME}.log"
+
+# Temporary settings folder
+TEMPFOLDER="${TGEANTrunsfolder}/tmp"
+mkdir -p "$TEMPFOLDER"
+
+# Unique settings file for this job
+RUNID="${JOB_ID:-$$}"
+TEMP_SETTINGS="${TEMPFOLDER}/settings_${RUNNAME}_${RUNID}.xml"
+
+# Remove temporary settings file when job ends
+trap 'rm -f "$TEMP_SETTINGS"' EXIT
+
+
+# ============================================================
+# Redirect output to run-specific log
+# ============================================================
+
+exec > "$LOGFILE" 2>&1
 
 
 # ============================================================
@@ -53,7 +67,6 @@ fi
 # ============================================================
 
 TEMPLATE="${TGEANTrunsfolder}/settings_Mary_root.xml"
-TEMP_SETTINGS="${TGEANTrunsfolder}/settings_Mary_root_tmp.xml"
 
 
 # ============================================================
@@ -72,13 +85,7 @@ if [ ! -f "$inputfile" ]; then
     exit 1
 fi
 
-if [ ! -d "$outputfolder" ]; then
-    echo "Output folder does not exist."
-    echo "Creating:"
-    echo "  $outputfolder"
-
-    mkdir -p "$outputfolder"
-fi
+mkdir -p "$outputfolder"
 
 
 # ============================================================
@@ -87,26 +94,18 @@ fi
 
 cp "$TEMPLATE" "$TEMP_SETTINGS"
 
-
-# Replace number of events
 sed -i \
     "s|<numParticles>.*</numParticles>|<numParticles>${Eventnumber}</numParticles>|" \
     "$TEMP_SETTINGS"
 
-
-# Replace ROOT input file
 sed -i \
     "s|<path>.*</path>|<path>${inputfile}</path>|" \
     "$TEMP_SETTINGS"
 
-
-# Replace output folder
 sed -i \
     "s|<outputPath>.*</outputPath>|<outputPath>${outputfolder}</outputPath>|" \
     "$TEMP_SETTINGS"
 
-
-# Replace output name
 sed -i \
     "s|<runName>.*</runName>|<runName>${outputname}</runName>|" \
     "$TEMP_SETTINGS"
@@ -123,8 +122,10 @@ echo "=============================================="
 echo "Number of events:  $Eventnumber"
 echo "Input ROOT file:   $inputfile"
 echo "Output folder:     $outputfolder"
-echo "Output name:       ${outputname}_runXXX.tgeant.gz"
+echo "Output name:       ${RUNNAME}_runXXX.tgeant.gz"
+echo "Log file:          $LOGFILE"
 echo "Settings file:     $TEMP_SETTINGS"
+echo "SGE Job ID:        ${JOB_ID:-local}"
 echo "=============================================="
 echo
 
@@ -152,4 +153,4 @@ source "$TGEANT/thisgeant.sh"
 # Run TGEANT
 # ============================================================
 
-"$TGEANT/bin/TGEANT" "$TEMP_SETTINGS"
+/usr/bin/time -v "$TGEANT/bin/TGEANT" "$TEMP_SETTINGS"
