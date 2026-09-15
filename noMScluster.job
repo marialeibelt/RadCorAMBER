@@ -1,0 +1,201 @@
+#!/bin/bash
+
+#$ -l short=TRUE,h_pmem=2000M
+#$ -o /nfs/mds/tmp/ga42pes/PRM/noMSC/logs
+#$ -j y
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -t 1-10000
+
+#
+# JOB SCRIPT TO RUN TGEANT CORAL AND PHAST
+#
+
+# inhibit creation of core dumps
+ulimit -c 0
+
+echo -n "now starting job on ${HOSTNAME} at "
+date
+
+# set up environment
+. prepare_root 6.18.04
+# -------------------------------------------------------------------------------------------------------
+
+# Environment Variables
+SIMULATIONDIR=${PWD}
+OPTIONPATH=/nfs/freenas/tuph/e18/project/compass/analysis/keichhorn/PRM/MC/mcChain/mcsimulation/gash2
+SETTINGSFILE=${SIMULATIONDIR}/geometry/settings.alignment.new.xml
+ALIGNMENTFILE=${SIMULATIONDIR}/geometry/alignment_prm.full.xml
+
+CORALDIR=/nfs/freenas/tuph/e18/project/compass/analysis/keichhorn/PRM/MC/mcChain/coral
+PHASTDIR=/nfs/freenas/tuph/e18/project/compass/analysis/keichhorn/PRM/MC/mcChain/phast.8.011                                                                                                                                                           
+TGEANT=/nfs/freenas/tuph/e18/project/compass/analysis/keichhorn/PRM/MC/mcChain/tgeant/install
+
+OUTPUTDIR=/nfs/mds/tmp/ga42pes/PRM/noMSC
+#OUTPUTDIR=${PWD}
+
+USEREVENT=310
+DETECTORSDAT=${SIMULATIONDIR}/geometry/detectors.dat
+DICOFIT=${SIMULATIONDIR}/geometry/dicofit.opt
+DETECTORSROOT=${SIMULATIONDIR}/geometry/alignment.root
+CORALOPTORIGINAL=${CORALDIR}/src/user/trafdic.tg.p2022.opt
+TARGETPOSITION=-1300
+
+MDSTDIR=${OUTPUTDIR}/mdst/
+TRAFDICDIR=${OUTPUTDIR}/trafdic/
+HISTDIR=${OUTPUTDIR}/hists
+TGEANTDIR=${OUTPUTDIR}/tgeant
+
+SEED=$(echo "${JOB_ID} * 100000 + ${SGE_TASK_ID}" | bc)
+if [ -z "${SEED}" ] ; then
+    echo "Warning: Using fallback seed!"
+    SEED=1
+fi
+echo "Using Seed ${SEED}"
+
+
+if [ -z "${TMPDIR}" ] ; then
+    echo "undefined environment variable TMPDIR, use '/tmp'"
+    TMPDIR=/tmp
+fi
+
+# filenames for CORAL output files
+MDSTFILE=mDST.${SGE_TASK_ID}.root
+TRAFDICFILE=trafdic.${SGE_TASK_ID}.root
+
+# filename for PHAST output file
+HISTFILE=hist.${SGE_TASK_ID}.root
+
+# Do not overwrite
+if [ -f ${HISTDIR}/${HISTFILE} ]; then
+  echo "${HISTDIR}/${HISTFILE} exist"
+  exit 0
+fi
+
+# create a temporary directory which contains all stuff which we do need for the job
+WORKDIR=`mktemp -d ${TMPDIR}/XXXXXXXX 2> /dev/null`
+echo "Workdir is: " $WORKDIR
+cd ${WORKDIR}
+
+# print some information on this job
+if [ ! -z "${MDSTDIR}" ] ; then
+    echo "mDSTs will be stored in ${MDSTDIR}"
+else
+    echo "mDSTs will not be stored"
+fi
+if [ ! -z "${TRAFDICDIR}" ] ; then
+    echo "CORAL hists will be stored in ${TRAFDICDIR}"
+else
+    echo "CORAL hists will not be stored"
+fi
+if [ ! -z "${HISTDIR}" ] ; then
+    echo "hists will be stored in ${HISTDIR}"
+else
+    echo "hists will not be stored"
+fi
+if [ ! -z "${TGEANTDIR}" ] ; then
+    echo "TGeant output will be stored in ${TGEANTDIR}"
+else
+    echo "TGeant output will not be stored"
+fi
+
+echo -n "now starting geometry creation"
+date
+
+# Set Seed in setings file
+python ${OPTIONPATH}/xmlhelper/setSeed.py --seed ${SEED} --settingsxml ${SETTINGSFILE} --outputxml ${WORKDIR}/settings.${SGE_TASK_ID}.xml
+SETTINGSFILE=${WORKDIR}/settings.${SGE_TASK_ID}.xml
+
+# TGEANT
+echo -n "now starting TGEANT "
+date
+${TGEANT}/bin/TGEANT ${SETTINGSFILE}
+TGEANTFILE=${WORKDIR}/PRM_run000.tgeant
+
+# CORAL
+echo -n "now starting CORAL "
+date
+
+# CORAL: Environment
+echo cd CORALDIR: ${CORALDIR}
+cd ${CORALDIR}
+echo Sourcing coral setup.sh
+source build/setup.sh
+echo Done
+cd ${WORKDIR}
+
+# create job-specific option file
+CORALOPT=`mktemp ${WORKDIR}/coralopt.XXXXXX 2> /dev/null`
+
+# remove informations on files to process or to save to
+grep -v "Monte Carlo file" ${CORALOPTORIGINAL} | \
+    grep -v "CsTGEANTFile file" | \
+    grep -v "mDST file" | \
+    grep -v "events to" | \
+    grep -v "histograms home" >| ${CORALOPT}
+
+TARGETZONESTART=$(echo "${TARGETPOSITION} - 2350/2" | bc )
+# add job specifics to options file
+
+#echo mDST hits   FI SI AF FT GM GP SP                         >> ${CORALOPT}
+#echo mDST MChits FI SI AF FT GM GP SP                         >> ${CORALOPT}
+echo mDST hits	 ALL                                          >> ${CORALOPT}
+echo mDST MChits ALL                                          >> ${CORALOPT}
+
+echo TraF Det2Ignore AT                                       >> ${CORALOPT}
+echo detector table ${DETECTORSDAT}                           >> ${CORALOPT}
+echo TraF Dicofit ${DICOFIT}                                  >> ${CORALOPT}
+echo CsGDMLGeometry file ${DETECTORSROOT}                     >> ${CORALOPT}
+echo TraF    iCut    [15]    -1                               >> ${CORALOPT}
+echo CsTGEANTFile file ${WORKDIR}/PRM_run000.tgeant           >> ${CORALOPT}
+echo mDST file ${MDSTFILE}                                    >> ${CORALOPT}
+echo histograms home ${TRAFDICFILE}                           >> ${CORALOPT}
+echo random number   seed    ${SEED}                          >> ${CORALOPT}
+echo TraF  Graph   [0]     0                                  >> ${CORALOPT}
+
+# run CORAL
+SIMULATIONDIR=${SIMULATIONDIR} ${CORALDIR}/build/bin/coral.exe ${CORALOPT}
+
+echo -n "now starting PHAST "
+date
+
+# run PHAST
+
+ ${PHASTDIR}/phast -u${USEREVENT} -h${HISTFILE} ${MDSTFILE}
+
+echo -n "now start copying the results and cleaning "
+date
+
+if [ ! -z "${TGEANTDIR}" ] ; then
+    mkdir -p ${TGEANTDIR}
+   # cp ${TGEANTFILE}    ${TGEANTDIR}/data.${SGE_TASK_ID}.tgeant
+    cp ${ALIGNMENTFILE} ${TGEANTDIR}/alignment.${SGE_TASK_ID}.xml
+    cp ${SETTINGSFILE}  ${TGEANTDIR}/settings.${SGE_TASK_ID}.xml
+fi
+if [ ! -z "${MDSTDIR}" ] ; then
+    mkdir -p ${MDSTDIR}
+    cp ${MDSTFILE} ${MDSTDIR}/mDST.${SGE_TASK_ID}.root
+fi
+if [ ! -z "${TRAFDICDIR}" ] ; then
+    mkdir -p ${TRAFDICDIR}
+    cp ${TRAFDICFILE}  ${TRAFDICDIR}/trafdic.${SGE_TASK_ID}.root
+    cp ${DETECTORSDAT} ${TRAFDICDIR}/detectors.${SGE_TASK_ID}.dat
+    cp ${CORALOPT}     ${TRAFDICDIR}/coral.${SGE_TASK_ID}.opt
+fi
+if [ ! -z "${HISTDIR}" ] ; then
+    mkdir -p ${HISTDIR}
+    cp ${HISTFILE} ${HISTDIR}/hist.${SGE_TASK_ID}.root
+fi
+
+# clean up
+cd /
+if [ ! -z "${SGE_TASK_ID}" ] ; then
+    rm -rf ${WORKDIR}
+fi
+
+echo $WORKDIR
+echo -n "now finishing job "
+date
+
+exit 0

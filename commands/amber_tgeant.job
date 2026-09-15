@@ -1,0 +1,230 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N amber_tgeant
+
+set -eo pipefail
+
+# Do not create core dumps
+ulimit -c 0
+
+
+# ============================================================
+# READ THE CONFIG SNAPSHOT PASSED BY submit_tgeant.sh
+# ============================================================
+
+if [ -z "${CONFIG_SNAPSHOT:-}" ]; then
+    echo "ERROR: CONFIG_SNAPSHOT was not passed to this job."
+    echo "Submit this file via submit_tgeant.sh."
+    exit 1
+fi
+
+if [ ! -f "$CONFIG_SNAPSHOT" ]; then
+    echo "ERROR: Config snapshot does not exist:"
+    echo "  $CONFIG_SNAPSHOT"
+    exit 1
+fi
+
+source "$CONFIG_SNAPSHOT"
+
+: "${INPUTDIR:?INPUTDIR not defined}"
+: "${FILE_GLOB:?FILE_GLOB not defined}"
+: "${TGEANTrunsfolder:?TGEANTrunsfolder not defined}"
+: "${OUTPUTDIR:?OUTPUTDIR not defined}"
+: "${SETTINGS_TEMPLATE:?SETTINGS_TEMPLATE not defined}"
+: "${QUEUE:?QUEUE not defined}"
+: "${MEMORY:?MEMORY not defined}"
+
+
+# ============================================================
+# JOB / TASK INFORMATION
+# ============================================================
+
+TASK_ID="${SGE_TASK_ID:-1}"
+JOB_NUMBER="${JOB_ID:-$$}"
+
+SETTINGS_DIR="${TGEANTrunsfolder}/settings_jobs"
+LOGDIR="${TGEANTrunsfolder}/log"
+
+mkdir -p "$OUTPUTDIR" "$SETTINGS_DIR" "$LOGDIR"
+
+JOBLOG="${LOGDIR}/amber_tgeant_job${JOB_NUMBER}_task${TASK_ID}.log"
+
+# From here on, stdout and stderr go into the task-specific log.
+exec > "$JOBLOG" 2>&1
+
+echo "============================================================"
+echo "AMBER TGEANT array task"
+echo "============================================================"
+echo "Host:             ${HOSTNAME:-unknown}"
+echo "Start:            $(date)"
+echo "SGE Job ID:       $JOB_NUMBER"
+echo "SGE Task ID:      $TASK_ID"
+echo "Config snapshot:  $CONFIG_SNAPSHOT"
+echo "Log:              $JOBLOG"
+echo "============================================================"
+
+
+# ============================================================
+# FIND AND SELECT INPUT FILE
+# ============================================================
+
+mapfile -t INPUTFILES < <(
+    find "$INPUTDIR" -maxdepth 1 -type f -name "$FILE_GLOB" -print | sort -V
+)
+
+NFILES="${#INPUTFILES[@]}"
+FILE_INDEX=$((TASK_ID - 1))
+
+# Safety check:
+# submit_tgeant.sh normally creates exactly NFILES tasks.
+# If files disappear after submission, an out-of-range task exits cleanly.
+if [ "$FILE_INDEX" -lt 0 ] || [ "$FILE_INDEX" -ge "$NFILES" ]; then
+    echo "No input ROOT file exists for task $TASK_ID."
+    echo "Currently found files: $NFILES"
+    echo "Task exits normally."
+    exit 0
+fi
+
+inputfile="${INPUTFILES[$FILE_INDEX]}"
+BASENAME="$(basename "$inputfile")"
+RUNNAME="${BASENAME%.root}"
+
+
+# ============================================================
+# NUMBER OF EVENTS
+# ============================================================
+#
+# Expected split-file naming, e.g.
+#   ..._batch0_50000.root
+#   ..._batch1_8537.root
+#
+# The number immediately before .root is used as numParticles.
+
+if [[ "$BASENAME" =~ _([0-9]+)\.root$ ]]; then
+    Eventnumber="${BASH_REMATCH[1]}"
+else
+    echo "ERROR: Could not determine event number from filename:"
+    echo "  $BASENAME"
+    echo
+    echo "Expected the filename to end e.g. in:"
+    echo "  _50000.root"
+    echo "  _8537.root"
+    exit 1
+fi
+
+
+# ============================================================
+# SEED
+# ============================================================
+#
+# Same formula as in the colleague's reference job:
+#
+#   seed = JOB_ID * 100000 + SGE_TASK_ID
+#
+# Every array task therefore gets a separate seed.
+
+SEED=$((JOB_NUMBER * 100000 + TASK_ID))
+
+
+# ============================================================
+# CREATE JOB-SPECIFIC SETTINGS FILE
+# ============================================================
+#
+# These settings files are intentionally KEPT after the job.
+
+if [ ! -f "$SETTINGS_TEMPLATE" ]; then
+    echo "ERROR: Settings template does not exist:"
+    echo "  $SETTINGS_TEMPLATE"
+    exit 1
+fi
+
+SETTINGSFILE="${SETTINGS_DIR}/settings_${RUNNAME}_job${JOB_NUMBER}_task${TASK_ID}_seed${SEED}.xml"
+
+cp "$SETTINGS_TEMPLATE" "$SETTINGSFILE"
+
+sed -i \
+    "s|<numParticles>.*</numParticles>|<numParticles>${Eventnumber}</numParticles>|" \
+    "$SETTINGSFILE"
+
+sed -i \
+    "s|<path>.*</path>|<path>${inputfile}</path>|" \
+    "$SETTINGSFILE"
+
+sed -i \
+    "s|<outputPath>.*</outputPath>|<outputPath>${OUTPUTDIR}</outputPath>|" \
+    "$SETTINGSFILE"
+
+sed -i \
+    "s|<runName>.*</runName>|<runName>${RUNNAME}</runName>|" \
+    "$SETTINGSFILE"
+
+sed -i \
+    "s|<useSeed>.*</useSeed>|<useSeed>true</useSeed>|" \
+    "$SETTINGSFILE"
+
+sed -i \
+    "s|<seed>.*</seed>|<seed>${SEED}</seed>|" \
+    "$SETTINGSFILE"
+
+
+# ============================================================
+# SHOW SETTINGS USED BY THIS TASK
+# ============================================================
+
+echo
+echo "============================================================"
+echo "TGEANT run"
+echo "============================================================"
+echo "Input ROOT file:   $inputfile"
+echo "File number:       $TASK_ID / $NFILES"
+echo "Number of events:  $Eventnumber"
+echo "Seed:              $SEED"
+echo "Run name:          $RUNNAME"
+echo "Output folder:     $OUTPUTDIR"
+echo "Settings file:     $SETTINGSFILE"
+echo "Requested memory:  $MEMORY h_pmem"
+echo "Queue/class:       $QUEUE"
+echo "============================================================"
+echo
+
+
+# ============================================================
+# TGEANT ENVIRONMENT
+# ============================================================
+
+if type module >/dev/null 2>&1; then
+    module unload gcc/13.2.0 2>/dev/null || true
+fi
+
+source /cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/setup.sh
+
+export GEANT4_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64/cmake/Geant4
+export CLHEP_DIR=/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib/CLHEP-2.4.6.4
+
+export TGEANT=/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/TGEANT/build
+
+export LD_LIBRARY_PATH="$TGEANT/lib:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib64:/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/lib:${LD_LIBRARY_PATH:-}"
+
+source "$TGEANT/thisgeant.sh"
+
+
+# ============================================================
+# RUN TGEANT ONLY
+# ============================================================
+
+echo "Starting TGEANT at $(date)"
+
+if /usr/bin/time -v "$TGEANT/bin/TGEANT" "$SETTINGSFILE"; then
+    STATUS=0
+else
+    STATUS=$?
+fi
+
+echo "TGEANT finished at $(date) with exit code $STATUS"
+
+# No CORAL.
+# No PHAST.
+# The generated settings file is NOT deleted.
+
+exit "$STATUS"

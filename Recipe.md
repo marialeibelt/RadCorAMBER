@@ -31,15 +31,15 @@
 * Analyze:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root.conf
   * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
-  
-* Evtgen with AMBER
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_tgeant_amber.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_tgeant_amber.sh 
 
-  * Cluster:
-    * Change: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_tgeant_amber.conf
-    * qsub submit_tgeant.sh
-    * check run: qstat
+* Split in batches
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_split_root.conf
+  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_split_root.sh 
+
+* Evtgen with AMBER
+  * Change: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_tgeant_amber.conf
+  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/submit_tgeant.sh
+  * check run: qstat
   
 * Warm-up Cache: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_warmup_cache.sh 
 
