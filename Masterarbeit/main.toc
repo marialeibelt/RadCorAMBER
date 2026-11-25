@@ -17,16 +17,26 @@
 \contentsline {section}{\numberline {3.4}Born Approximation}{11}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Ultrarelativistic Limit}{17}{subsection.3.4.1}%
 \contentsline {section}{\numberline {3.5}Radiative Corrections}{19}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}One-Loop Virtual Processes}{19}{subsection.3.5.1}%
-\contentsline {paragraph}{\nonumberline Virtual Corrections}{20}{paragraph*.20}%
-\contentsline {paragraph}{\nonumberline Real Photon Emission}{20}{paragraph*.22}%
-\contentsline {subsection}{\numberline {3.5.2}Structure of the NLO Cross Section}{20}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Virtual Corrections}{20}{subsection.3.5.3}%
-\contentsline {subsection}{\numberline {3.5.4}Real Photon Emission}{20}{subsection.3.5.4}%
-\contentsline {subsection}{\numberline {3.5.5}Infrared Cancellation}{20}{subsection.3.5.5}%
-\contentsline {chapter}{\numberline {4}Simulation with McMule}{21}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Results}{22}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Discussion}{23}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Conclusion and Outlook}{24}{chapter.7}%
-\contentsline {chapter}{\nonumberline Bibliography}{25}{chapter*.23}%
+\contentsline {subsection}{\numberline {3.5.1}Perturbative Expansion}{19}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Virtual One-Loop correction}{20}{subsection.3.5.2}%
+\contentsline {subsubsection}{\nonumberline Muon Vertex Correction}{20}{subsubsection*.20}%
+\contentsline {subsubsection}{\nonumberline Self Energies}{23}{subsubsection*.22}%
+\contentsline {subsubsection}{\nonumberline Vacuum Polarization}{23}{subsubsection*.24}%
+\contentsline {subsubsection}{\nonumberline Two-Photon Exchange}{23}{subsubsection*.26}%
+\contentsline {subsection}{\numberline {3.5.3}Real-Photon Emission}{23}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}Radiative Corrections to Elastic Muon--Proton Scattering}{23}{section.3.6}%
+\contentsline {subsubsection}{\nonumberline Self-energies, ultraviolet divergences and renormalization}{23}{subsubsection*.28}%
+\contentsline {subsubsection}{\nonumberline Vacuum polarization}{24}{subsubsection*.30}%
+\contentsline {subsubsection}{\nonumberline Corrections associated with the proton and two-photon exchange}{25}{subsubsection*.32}%
+\contentsline {subsection}{\numberline {3.6.1}Real-Photon Emission}{25}{subsection.3.6.1}%
+\contentsline {subsubsection}{\nonumberline Emission from the muon line}{25}{subsubsection*.34}%
+\contentsline {subsubsection}{\nonumberline Spin sums for the radiative matrix element}{26}{subsubsection*.36}%
+\contentsline {subsubsection}{\nonumberline Soft-photon approximation}{27}{subsubsection*.38}%
+\contentsline {subsubsection}{\nonumberline Origin of the infrared logarithm}{28}{subsubsection*.40}%
+\contentsline {subsubsection}{\nonumberline Hard bremsstrahlung and three-body phase space}{28}{subsubsection*.42}%
+\contentsline {chapter}{\numberline {4}Simulation with McMule}{30}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Results}{31}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Discussion}{32}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Conclusion and Outlook}{33}{chapter.7}%
+\contentsline {chapter}{\nonumberline Bibliography}{34}{chapter*.43}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -6,7 +6,7 @@ module user
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    0.031e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	! costh3[]
     1._prec, &                                                  	! Qsq in MeV^2
     -0.2_prec,-0.2_prec /)! , &    !                             		! x5[m], y5[m]
@@ -14,9 +14,9 @@ module user
     !-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec,-0.2_prec /) 	! y5_B1..y5_B10[m]
 
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    8.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    4.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                  	! costh3[]
-    10.e4_prec, &	                                             	! Qsq in MeV^2
+    18.e4_prec, &	                                             	! Qsq in MeV^2
     0.2_prec,0.2_prec /)! , &  !/)!                                  	      	! x5[m], y5[m]
     !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec, &  		! x5_B1..x5_B10[m]
     !0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec,0.2_prec /)  		! y5_B1..y5_B10[m]
@@ -37,12 +37,13 @@ module user
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
     !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
-    print*, "Q2 released"
+    !print*, "Q2 released"
     !print*, "No bands but cuts on x5 and y5"
     !print*, "bands and cuts on x5 and y5"
-    print*, " * 0.316 < th_mu < 2.mrad"
+    print*, " * 0.0316 < th_mu < 4.mrad"
     print*, " * no photon angle cut"
     print*, " * no photon energy cut"
+    print*, " * Muon energy fixed to 100Gev/c"
     ! print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     ! print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     ! print*, " * Emu > 70 GeV"
@@ -82,7 +83,7 @@ module user
     Qsq_window = 'REL'  
     !Qsq_window = 'BIG'  	![1.e-3;4.e-2] GeV²
     !Qsq_window = 'SMA'  
-    thmu_window = 'NOR'	!0.3 < th_mu < 2.mrad
+    thmu_window = 'NOR'	!0.0316 < th_mu < 4.mrad
     !thmu_window = 'BIG'	!1.2 < th_mu < 8.0 mrad
     !thmu_window = 'SMA'		!0.075 < th_mu < 0.5 mrad
     Emu_low    = 70.e3_prec

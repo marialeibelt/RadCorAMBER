@@ -28,7 +28,12 @@ fi
 source "$CONFIG_SNAPSHOT"
 
 : "${INPUTDIR:?INPUTDIR not defined}"
-: "${FILE_GLOB:?FILE_GLOB not defined}"
+: "${INPUT_FILELIST:?INPUT_FILELIST not defined}"
+
+if [[ ! -s "$INPUT_FILELIST" ]]; then
+    echo "ERROR: Input file list missing or empty: $INPUT_FILELIST"
+    exit 1
+fi
 : "${TGEANTrunsfolder:?TGEANTrunsfolder not defined}"
 : "${OUTPUTDIR:?OUTPUTDIR not defined}"
 : "${SETTINGS_TEMPLATE:?SETTINGS_TEMPLATE not defined}"
@@ -69,27 +74,30 @@ echo "============================================================"
 # FIND AND SELECT INPUT FILE
 # ============================================================
 
-mapfile -t INPUTFILES < <(
-    find "$INPUTDIR" -maxdepth 1 -type f -name "$FILE_GLOB" -print | sort -V
-)
+# Read frozen file list created by submit_tgeant.sh
+mapfile -t INPUTFILES < "$INPUT_FILELIST"
 
 NFILES="${#INPUTFILES[@]}"
 FILE_INDEX=$((TASK_ID - 1))
 
-# Safety check:
-# submit_tgeant.sh normally creates exactly NFILES tasks.
-# If files disappear after submission, an out-of-range task exits cleanly.
-if [ "$FILE_INDEX" -lt 0 ] || [ "$FILE_INDEX" -ge "$NFILES" ]; then
-    echo "No input ROOT file exists for task $TASK_ID."
-    echo "Currently found files: $NFILES"
-    echo "Task exits normally."
-    exit 0
+# Check task index
+if (( FILE_INDEX < 0 || FILE_INDEX >= NFILES )); then
+    echo "ERROR: Invalid task index $TASK_ID"
+    echo "Number of input files: $NFILES"
+    exit 1
 fi
 
+# Select input file
 inputfile="${INPUTFILES[$FILE_INDEX]}"
+
+# Verify file exists
+if [[ ! -f "$inputfile" ]]; then
+    echo "ERROR: Input file missing: $inputfile"
+    exit 1
+fi
+
 BASENAME="$(basename "$inputfile")"
 RUNNAME="${BASENAME%.root}"
-
 
 # ============================================================
 # NUMBER OF EVENTS
@@ -120,11 +128,12 @@ fi
 #
 # Same formula as in the colleague's reference job:
 #
-#   seed = JOB_ID * 100000 + SGE_TASK_ID
+#   seed = (JOB_ID * 100000 + SGE_TASK_ID) mod 2147483646 + 1
 #
-# Every array task therefore gets a separate seed.
+# Keeps seed positive and within signed 32-bit range.
+# Each array task gets a separate seed.
 
-SEED=$((JOB_NUMBER * 100000 + TASK_ID))
+SEED=$(( (JOB_NUMBER * 100000 + TASK_ID) % 2147483646 + 1 ))
 
 
 # ============================================================

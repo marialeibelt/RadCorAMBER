@@ -1,0 +1,62 @@
+# ============================================================
+# CORAL + embedded PHAST - production input
+# ============================================================
+# Edit this file before each new submission, then run:
+#   ./submit_coral_phast.sh
+
+# ------------------------------------------------------------
+# INPUT TGEANT FILES
+# ------------------------------------------------------------
+
+INPUTDIR="/nfs/momos/user/mleibelt/TGEANT_runs/output/LO_07_09_xi1_15_09"
+FILE_GLOB="*.tgeant.gz"
+OUTPUTNAME="LO_07_09_xi1_15_09"
+
+# ------------------------------------------------------------
+# OUTPUT
+# ------------------------------------------------------------
+
+CORALPHAST_RUNS="/nfs/momos/user/mleibelt/CORAL_PHAST_runs"
+OUTPUTDIR="${CORALPHAST_RUNS}/output/${OUTPUTNAME}"
+MDSTDIR="${OUTPUTDIR}/mdst"
+HISTDIR="${OUTPUTDIR}/hists"
+OPTDIR="${OUTPUTDIR}/opts"
+LOGDIR="${CORALPHAST_RUNS}/log/${OUTPUTNAME}"
+
+# ------------------------------------------------------------
+# SOFTWARE / ENVIRONMENT
+# ------------------------------------------------------------
+
+REPOROOT="/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo"
+CORALDIR="${REPOROOT}/coral"
+PHASTDIR="${REPOROOT}/phast"
+TGEANTDIR="${REPOROOT}/TGEANT"
+
+# This is the executable that was tested successfully: CORAL reconstruction
+# with PHAST embedded in the event loop. No second standalone PHAST run here.
+PHASTCORAL_EXE="${PHASTDIR}/coral/coral.exe"
+
+LCG_VIEW="/cvmfs/sft.cern.ch/lcg/views/LCG_104a/x86_64-el9-gcc12-opt/setup.sh"
+TGEANT_SETUP="${TGEANTDIR}/build/thisgeant.sh"
+COMPASS_FILES="/cvmfs/compass-condb.cern.ch/detector"
+
+# ------------------------------------------------------------
+# TESTED PRM OPTIONS / GEOMETRY
+# ------------------------------------------------------------
+
+PRM_PRODUCTION_DIR="${PHASTDIR}/coral/PRM_production"
+CORALOPTORIGINAL="${PRM_PRODUCTION_DIR}/PRM_MC.opt"
+TRAFDICOPT="${PRM_PRODUCTION_DIR}/trafdic.mc.PRM.p2022.opt"
+DETECTORSDAT="${PRM_PRODUCTION_DIR}/detectors.PRM001.dat"
+DETECTORSROOT="${PRM_PRODUCTION_DIR}/detectors.PRM001.root"
+
+# ------------------------------------------------------------
+# CLUSTER SETTINGS
+# ------------------------------------------------------------
+
+# 0 = submit all matching input files. Set e.g. 5 for a small pilot submission.
+MAX_FILES=0
+
+MAX_JOBS=700
+QUEUE="medium"
+MEMORY="2G"

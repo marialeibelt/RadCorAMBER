@@ -1,4 +1,15 @@
-from pymule import *
+"""Extract physically normalised cross sections from the McMule event-generator branch.
+
+The Fortran integration already uses physical alpha. The mp2mpNLO0 piece
+contains Born + virtual + integrated FKS terms; mp2mpR is the FKS-subtracted
+real contribution. Only their combination is an infrared-safe NLO prediction.
+
+Do NOT interpret Delta NLO or mp2mpR as a positive event fraction.
+Do NOT feed the new output into the existing event-scaling script without
+reviewing the script's semantics, especially for unweighted/signed LHE events.
+"""
+
+from pymule import setup, sigma, mergefks, conv
 import numpy as np
 import argparse
 import os
@@ -6,11 +17,11 @@ import sys
 
 
 class Tee:
-    """Writes output to both terminal and a file."""
+    """Write output to the terminal and to a file."""
 
     def __init__(self, filename):
         self.terminal = sys.stdout
-        self.file = open(filename, "w")
+        self.file = open(filename, "w", encoding="utf-8")
 
     def write(self, message):
         self.terminal.write(message)
@@ -24,160 +35,131 @@ class Tee:
         self.file.close()
 
 
+def mb_value_and_error(result):
+    """McMule record.value = [central value, statistical 1-sigma error] in microbarn."""
+    value, error = result.value[:2]
+    return float(value) / 1000.0, abs(float(error)) / 1000.0
+
+
 def get_cross_sections(homedir, outfolder, savename):
-
-    # ==========================================
-    # Paths
-    # ==========================================
-
     outdir = os.path.join(homedir, outfolder)
     mcmule_outdir = os.path.join(outdir, "out")
 
     if not os.path.isdir(mcmule_outdir):
-        raise FileNotFoundError(
-            f"McMule output directory does not exist:\n{mcmule_outdir}"
-        )
+        raise FileNotFoundError(f"McMule output directory does not exist: {mcmule_outdir}")
 
-    # Only use folder name for output file names
     outfolder_name = os.path.basename(os.path.normpath(outfolder))
-
     savename_base = f"{savename}_{outfolder_name}"
-
-    # ==========================================
-    # Redirect stdout
-    # ==========================================
-
-    log_file = os.path.join(
-        outdir,
-        f"{savename_base}_output.txt"
-    )
+    log_file = os.path.join(outdir, f"{savename_base}_output.txt")
 
     old_stdout = sys.stdout
     tee = Tee(log_file)
     sys.stdout = tee
 
     try:
-
-        print("=======================================================================")
-        print("Analysed file:", savename_base)
-        print("=======================================================================")
-        print("McMule output directory:", mcmule_outdir)
-        print()
-
-        # ==========================================
-        # Read McMule results
-        # ==========================================
-
+        print("=" * 74)
+        print("McMule cross sections:", savename_base)
+        print("Input:", mcmule_outdir)
+        print("=" * 74)
         setup(folder=mcmule_outdir)
 
-        lo = (
-            mergefks(
-                sigma("mp2mp0")
-            )
-            * alpha**2
-            * conv
+        # Fortran's run_mcmule/generator sets physical alpha before integration.
+        # Do NOT multiply these results by additional powers of alpha.
+        lo = mergefks(sigma("mp2mp0")) * conv
+        nlo0 = mergefks(sigma("mp2mpNLO0")) * conv
+        real_fks = mergefks(sigma("mp2mpR")) * conv
+        full = mergefks(sigma("mp2mpNLO0"), sigma("mp2mpR")) * conv
+
+        s_lo, e_lo = mb_value_and_error(lo)
+        s_nlo0, e_nlo0 = mb_value_and_error(nlo0)
+        s_r, e_r = mb_value_and_error(real_fks)
+        s_full, _ = mb_value_and_error(full)
+
+        # The three pieces were integrated with independent seeds.
+        # Compute uncertainty explicitly; NEVER subtract the statistical errors.
+        # This formula is for independent integrations (no shared random numbers).
+        e_full = np.hypot(e_nlo0, e_r)
+        s_delta = s_full - s_lo
+        e_delta = np.hypot(e_full, e_lo)
+
+        delta_percent = 100.0 * s_delta / s_lo
+        # delta/LO = full/LO - 1, with shared LO in numerator and denominator.
+        delta_percent_error = 100.0 * np.hypot(
+            e_full / s_lo, s_full * e_lo / s_lo**2
         )
+        k_factor = s_full / s_lo
+        k_error = delta_percent_error / 100.0
 
-        nlo = (
-            mergefks(
-                sigma("mp2mpR"),
-                sigma("mp2mpNLO0")
-            )
-            * alpha**3
-            * conv
+        print("All values in mb; errors are statistical (1 sigma).")
+        for label, val, err in [
+            ("LO", s_lo, e_lo),
+            ("NLO0 (Born + virtual + integrated FKS)", s_nlo0, e_nlo0),
+            ("R (FKS-subtracted; xi-dependent)", s_r, e_r),
+            ("Full NLO = NLO0 + R", s_full, e_full),
+            ("Delta NLO = Full - LO", s_delta, e_delta),
+        ]:
+            print(f"{label:43s}: {val:.12g} +/- {err:.3g} mb")
+
+        print(f"Relative correction Delta/LO: {delta_percent:.9g} +/- "
+              f"{delta_percent_error:.3g} %")
+        print(f"Standard total K-factor Full/LO: {k_factor:.12g} +/- {k_error:.3g}")
+        print("NOTE: R is FKS-subtracted and generally depends on xi; it is NOT")
+        print("      a standalone physical hard-photon cross section.")
+        print("NOTE: Delta NLO is signed. It is NOT an event mixing fraction.")
+
+        # Diagnostic: should agree for a single xi value; if many xi values,
+        # a fit/merge can produce small deviations.
+        print("Check Full - (NLO0 + R) [mb]:", s_full - (s_nlo0 + s_r))
+
+        # Keep a four-value array for convenient comparison, but use a NEW name.
+        # We deliberately do NOT overwrite the old cross_sections.txt consumed
+        # by any existing event-scaling script (whose semantics need rechecking).
+        corrected_file = os.path.join(
+            outdir, f"{savename_base}_cross_sections_corrected.txt"
         )
-
-        onlyR = (
-            mergefks(
-                sigma("mp2mpR")
-            )
-            * alpha**3
-            * conv
-        )
-
-        full = lo + nlo
-
-        # ==========================================
-        # Convert to mb
-        # ==========================================
-
-        cs_lo = lo.value[0] / 1000
-        cs_onlyR = onlyR.value[0] / 1000
-        cs_nlo = nlo.value[0] / 1000
-        cs_full = full.value[0] / 1000
-
-        # ==========================================
-        # Output
-        # ==========================================
-
-        print("LO cross section:     ", cs_lo, "mb")
-        print("NLO cross section:    ", cs_nlo, "mb")
-        print("Full cross section:   ", cs_full, "mb")
-        print("Only R cross section: ", cs_onlyR, "mb")
-
-        cs_array = np.array([
-            cs_lo,
-            cs_onlyR,
-            cs_nlo,
-            cs_full
-        ])
-
-        print()
-        print(
-            "Cross section array "
-            "(LO, onlyR, NLO, full):",
-            cs_array
-        )
-
-        # ==========================================
-        # Save array
-        # ==========================================
-
-        array_file = os.path.join(
-            outdir,
-            f"{savename_base}_cross_sections.txt"
-        )
-
+        cross_sections = np.array([s_lo, s_r, s_delta, s_full])
         np.savetxt(
-            array_file,
-            cs_array,
-            header="1. LO  2. onlyR  3. NLO  4. full"
+            corrected_file,
+            cross_sections,
+            fmt="%.16e",
+            header=(
+                "Corrected McMule event-generator cross sections [mb].\n"
+                "Row 1: LO (mp2mp0)\n"
+                "Row 2: R (mp2mpR, FKS-subtracted; xi-dependent; diagnostic only)\n"
+                "Row 3: Delta NLO = Full - LO (signed correction, NOT event fraction)\n"
+                "Row 4: Full NLO = mp2mpNLO0 + mp2mpR (includes Born)\n"
+                "Do not feed this file to legacy scale scripts before reviewing them."
+            ),
         )
+        print("Corrected cross-section array saved to:", corrected_file)
 
-        print()
-        print("Cross section array saved to:")
-        print(array_file)
-
+        # Save separate, labeled values and errors for slide preparation.
+        error_file = os.path.join(
+            outdir, f"{savename_base}_cross_sections_with_errors_corrected.txt"
+        )
+        np.savetxt(
+            error_file,
+            np.array([
+                [s_lo, e_lo], [s_nlo0, e_nlo0], [s_r, e_r],
+                [s_full, e_full], [s_delta, e_delta]
+            ]),
+            fmt="%.16e",
+            header=(
+                "Columns: cross_section_mb statistical_1sigma_error_mb\n"
+                "Rows: LO; NLO0 (Born inclusive); R (FKS/xi-dependent); "
+                "Full NLO; Delta NLO"
+            )
+        )
+        print("Cross sections and errors saved to:", error_file)
     finally:
         sys.stdout = old_stdout
         tee.close()
 
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(
-        description="Calculate McMule cross sections"
-    )
-
-    parser.add_argument(
-        "--homedir",
-        required=True
-    )
-
-    parser.add_argument(
-        "--outfolder",
-        required=True
-    )
-
-    parser.add_argument(
-        "--savename",
-        required=True
-    )
-
+    parser = argparse.ArgumentParser(description="Calculate corrected McMule cross sections")
+    parser.add_argument("--homedir", required=True)
+    parser.add_argument("--outfolder", required=True)
+    parser.add_argument("--savename", required=True)
     args = parser.parse_args()
-
-    get_cross_sections(
-        homedir=args.homedir,
-        outfolder=args.outfolder,
-        savename=args.savename
-    )
+    get_cross_sections(args.homedir, args.outfolder, args.savename)

@@ -6,7 +6,7 @@ module user
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    0.02e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    		! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	! costh3[]
     1._prec, &                                                  	! Qsq in MeV^2
     -0.2_prec,-0.2_prec /)! , &    !                             		! x5[m], y5[m]
@@ -44,7 +44,7 @@ module user
     !print*, "Big Q2 range [1.e-3;4.e-2] GeV²"
     print*, " * Q2 released"
     !print*, "no thmu cut"
-    print*, " * 0.316 < th_mu < 2.000 mrad"!normal
+    print*, " * 0.0316 < th_mu < 4.000 mrad"!normal
     !print*, " * 1.2 < th_mu < 8.0 mrad"   !4xBigger
     !print*, " * 0.075 < th_mu < 0.5 mrad" !4xSmaller
     !print*, "No bands but cuts on x5 and y5"

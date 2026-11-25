@@ -1,0 +1,7 @@
+Reading /mnt/data/LO_scaled_07_09_batch2956_1000_run000.tgeant.gz
+  processed 1000 events
+Events: 1000
+First outgoing muon energies [GeV]: [99.9999924, 99.9999712, 99.9999945, 99.9999914, 99.9999588]
+First nominal-beam Q2 [GeV2]: [1.630381809593004e-05, 5.63014342093264e-05, 1.63040545645525e-05, 1.6303708956565827e-05, 7.630003672022198e-05]
+First event eDep section sums [MeV]: {'#TRACKING': 21.115011151070004, '#TRIGGER': 7.30874428, '#CALORIMETER': 46.4467115, '#TPCIonization': 0.00760084383}
+Total number of detector hits: {'#TRACKING': 69552, '#TRIGGER': 4110, '#CALORIMETER': 2280, '#TPCIonization': 2424, '#TPCPadHit': 127165}

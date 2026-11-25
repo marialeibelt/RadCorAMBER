@@ -6,14 +6,14 @@ module user
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
-    0.07e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    	      	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    0.031e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    	      	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	  ! costh3[]
     1._prec, &                                                  	  ! Qsq in MeV^2
     -0.2_prec,-0.2_prec /)! , &    !                             		! x5[m], y5[m]
   real(kind=prec), parameter :: max_val(nrq) = (/ &
-    8.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
+    4.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                    	! costh3[]
-    10.e4_prec, &	                                                 	! Qsq in MeV^2
+    18.e4_prec, &	                                                 	! Qsq in MeV^2
     0.2_prec,0.2_prec /)                                  	      	! x5[m], y5[m]
     
   integer :: userdim = 0
@@ -31,11 +31,11 @@ module user
 
   subroutine INITUSER
     print*, "Welcome to Mary's McMule userfile <3"
-    print*, " * 0.316 < th_mu < 4.mrad"
+    print*, " * 0.0316 < th_mu < 4.mrad"
     print*, " * no photon cut"
     print*, " * d_detec = 30m"
-    print*, " * Ethresh = 5._prec"
-    print*, " * Ththresh = 15._prec"
+    print*, " * Ethresh = 5._prec MeV"
+    print*, " * Ththresh = 15._prec murad"
   
     call initflavour("mu-p", Mmu**2+Mproton**2+2*Mproton*100.e3)
   end subroutine INITUSER

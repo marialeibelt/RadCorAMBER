@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -j y
+# One SGE worker: run McMule NLO with flag N, wait, then flag CU.
+# Reproduces the stage ordering in the original rungen.sh.
+set -euo pipefail
+
+for key in RUN_DIR MODE NENTER ITMX SEED N_SEED OUT_REL_N OUT_REL_CU LOG_FILE_N LOG_FILE_CU GENERATOR INPUT_NLO0 INPUT_R xi; do
+    [[ -n "${!key:-}" ]] || { echo "ERROR: Missing job parameter $key" >&2; exit 1; }
+done
+[[ "$MODE" == "CU" || "$MODE" == "N" ]] || { echo "ERROR: Bad MODE" >&2; exit 1; }
+[[ -d "$RUN_DIR" && -x "$GENERATOR" && -f "$RUN_DIR/user.so" ]] || {
+    echo "ERROR: Missing generator, working directory or user.so" >&2; exit 1;
+}
+for f in "$INPUT_NLO0" "$INPUT_R"; do
+    [[ -r "$RUN_DIR/input/$f" ]] || { echo "ERROR: Missing input/$f" >&2; exit 1; }
+done
+
+mkdir -p "$RUN_DIR/log" "$RUN_DIR/out"
+cd "$RUN_DIR"
+export MCMULE_JOBS="${NSLOTS:-1}"
+export OMP_NUM_THREADS=1
+
+echo "START $(date -Is) host=$(hostname) job=${JOB_ID:-unknown} NSLOTS=${NSLOTS:-1}"
+echo "Directory: $RUN_DIR"
+echo "Mode=$MODE nenter=$NENTER itmx=$ITMX xi=$xi MCMULE_JOBS=$MCMULE_JOBS"
+echo "N seed=$N_SEED CU seed=$SEED"
+
+run_stage() {
+    local stage="$1" stage_seed="$2" stage_out="$3" stage_log="$4"
+    local features status
+    local -a runcard
+
+    [[ ! -e "$RUN_DIR/$stage_out" ]] || {
+        echo "ERROR: Output exists, refusing to overwrite: $RUN_DIR/$stage_out" >&2
+        return 1
+    }
+
+    echo "BEGIN ${stage} $(date -Is): seed=$stage_seed output=$stage_out"
+    runcard=("$NENTER" "$ITMX" "$stage_seed" "2" "$stage_out")
+    if [[ "$stage" == "N" ]]; then
+        runcard+=("V")
+    elif [[ "$stage" == "CU" ]]; then
+        # Mirrors the original gen.sh: VCU, dmax=1., tgteff=-1
+        runcard+=("VCU" "1." "-1")
+    else
+        echo "ERROR: unknown stage $stage" >&2
+        return 1
+    fi
+    runcard+=("$RUN_DIR/input/$INPUT_NLO0" "$RUN_DIR/input/$INPUT_R")
+
+    # Keep pipeline status even when tee succeeds and generator fails.
+    set +e
+    printf '%s\n' "${runcard[@]}" | /usr/bin/time -v "$GENERATOR" --gen "$RUN_DIR/user.so" 2>&1 | tee "$stage_log"
+    local -a statuses=("${PIPESTATUS[@]}")
+    set -e
+    status="${statuses[1]}"
+    if [[ "$status" -ne 0 || ! -f "$RUN_DIR/$stage_out" ]]; then
+        echo "ERROR: Stage $stage failed (code=$status), or output LHE is missing" >&2
+        return 1
+    fi
+    echo "END ${stage} $(date -Is) code=0"
+    ls -lh "$RUN_DIR/$stage_out"
+}
+
+# Explicit wait: do not run CU until N has finished *successfully*.
+run_stage N "$N_SEED" "$OUT_REL_N" "$LOG_FILE_N" &
+n_pid=$!
+wait "$n_pid"
+echo "N finished successfully. Now starting CU."
+
+if [[ "$MODE" == "CU" ]]; then
+    run_stage CU "$SEED" "$OUT_REL_CU" "$LOG_FILE_CU" &
+    cu_pid=$!
+    wait "$cu_pid"
+fi
+
+echo "SUCCESS $(date -Is) N${MODE/CU/+CU} job finished"
+touch "$RUN_DIR/log/COMPLETE_${MODE}_${SEED}.ok"

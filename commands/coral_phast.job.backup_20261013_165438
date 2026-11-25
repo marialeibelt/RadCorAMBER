@@ -1,0 +1,216 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N coral_phast
+
+set -euo pipefail
+ulimit -c 0
+
+: "${CONFIG_SNAPSHOT:?CONFIG_SNAPSHOT was not passed to the job}"
+: "${INPUT_MANIFEST:?INPUT_MANIFEST was not passed to the job}"
+
+if [ ! -f "$CONFIG_SNAPSHOT" ]; then
+    echo "ERROR: Config snapshot does not exist: $CONFIG_SNAPSHOT"
+    exit 1
+fi
+if [ ! -f "$INPUT_MANIFEST" ]; then
+    echo "ERROR: Input manifest does not exist: $INPUT_MANIFEST"
+    exit 1
+fi
+
+source "$CONFIG_SNAPSHOT"
+
+for v in OUTPUTDIR MDSTDIR HISTDIR OPTDIR LOGDIR CORALDIR PHASTDIR TGEANTDIR \
+         PHASTCORAL_EXE LCG_VIEW TGEANT_SETUP COMPASS_FILES CORALOPTORIGINAL \
+         TRAFDICOPT DETECTORSDAT DETECTORSROOT QUEUE MEMORY; do
+    if [ -z "${!v:-}" ]; then
+        echo "ERROR: $v not defined in config snapshot"
+        exit 1
+    fi
+done
+
+TASK_ID="${SGE_TASK_ID:-1}"
+JOB_NUMBER="${JOB_ID:-$$}"
+
+mkdir -p "$MDSTDIR" "$HISTDIR" "$OPTDIR" "$LOGDIR"
+JOBLOG="${LOGDIR}/coral_phast_job${JOB_NUMBER}_task${TASK_ID}.log"
+exec > "$JOBLOG" 2>&1
+
+INPUTFILE="$(sed -n "${TASK_ID}p" "$INPUT_MANIFEST")"
+if [ -z "$INPUTFILE" ]; then
+    echo "ERROR: No manifest entry for SGE task $TASK_ID"
+    exit 1
+fi
+if [ ! -f "$INPUTFILE" ]; then
+    echo "ERROR: Input file from manifest does not exist: $INPUTFILE"
+    exit 1
+fi
+
+BASENAME="$(basename "$INPUTFILE")"
+RUNNAME="${BASENAME%.gz}"
+RUNNAME="${RUNNAME%.tgeant}"
+
+MDSTFILE="mDST.${RUNNAME}.root"
+HISTFILE="hist.${RUNNAME}.root"
+OPTFILE="coral.${RUNNAME}.opt"
+
+MDSTOUT="${MDSTDIR}/${MDSTFILE}"
+HISTOUT="${HISTDIR}/${HISTFILE}"
+OPTOUT="${OPTDIR}/${OPTFILE}"
+
+# Both files are required for a task to count as complete.
+if [ -s "$MDSTOUT" ] && [ -s "$HISTOUT" ]; then
+    echo "Task already complete:"
+    echo "  $MDSTOUT"
+    echo "  $HISTOUT"
+    exit 0
+fi
+
+SEED=$((JOB_NUMBER * 100000 + TASK_ID))
+
+TMPBASE="${TMPDIR:-/tmp}"
+WORKDIR="$(mktemp -d "${TMPBASE}/coral_phast_${JOB_NUMBER}_${TASK_ID}_XXXXXXXX")"
+cleanup() {
+    cd / 2>/dev/null || true
+    rm -rf "$WORKDIR"
+}
+trap cleanup EXIT
+
+TGEANTFILE="${WORKDIR}/input.tgeant"
+LOCAL_MDST="${WORKDIR}/${MDSTFILE}"
+LOCAL_HIST="${WORKDIR}/${HISTFILE}"
+CORALOPT="${WORKDIR}/${OPTFILE}"
+
+cat <<INFO
+============================================================
+CORAL + embedded PHAST array task
+============================================================
+Host:              ${HOSTNAME:-unknown}
+Start:             $(date)
+SGE Job ID:        $JOB_NUMBER
+SGE Task ID:       $TASK_ID
+Input:             $INPUTFILE
+Run name:          $RUNNAME
+Seed:              $SEED
+Work directory:    $WORKDIR
+mDST output:       $MDSTOUT
+Hist output:       $HISTOUT
+Options output:    $OPTOUT
+Requested memory:  $MEMORY h_pmem
+Queue/class:       $QUEUE
+============================================================
+INFO
+
+echo "Scratch filesystem before unpacking:"
+df -h "$TMPBASE" || true
+
+case "$INPUTFILE" in
+    *.tgeant.gz)
+        echo "Unpacking TGEANT input at $(date)"
+        gzip -cd "$INPUTFILE" > "$TGEANTFILE"
+        ;;
+    *.tgeant)
+        echo "Copying uncompressed TGEANT input at $(date)"
+        cp "$INPUTFILE" "$TGEANTFILE"
+        ;;
+    *)
+        echo "ERROR: Unsupported input type: $INPUTFILE"
+        exit 1
+        ;;
+esac
+
+if [ ! -s "$TGEANTFILE" ]; then
+    echo "ERROR: Local TGEANT file is empty: $TGEANTFILE"
+    exit 1
+fi
+
+for f in "$CORALOPTORIGINAL" "$TRAFDICOPT" "$DETECTORSDAT" "$DETECTORSROOT" \
+         "$LCG_VIEW" "$TGEANT_SETUP"; do
+    if [ ! -f "$f" ]; then
+        echo "ERROR: Required file missing: $f"
+        exit 1
+    fi
+done
+if [ ! -x "$PHASTCORAL_EXE" ]; then
+    echo "ERROR: Executable missing/not executable: $PHASTCORAL_EXE"
+    exit 1
+fi
+
+# Exact environment used for the successful interactive PRM tests.
+source "$LCG_VIEW"
+source "$TGEANT_SETUP"
+export CORAL="$CORALDIR"
+export PHAST="$PHASTDIR"
+export COMPASS_FILES
+export LD_LIBRARY_PATH="$CORAL/lib/Linux:${LD_LIBRARY_PATH:-}"
+
+# Create a task-specific option file from the tested PRM base file.
+# Only genuinely per-task settings are replaced here. In particular, we do NOT
+# append any TraF Det2Ignore line, so AT and FT stay enabled as tested.
+awk '
+/^[[:space:]]*CsTGEANTFile[[:space:]]+file[[:space:]]/ {next}
+/^[[:space:]]*mDST[[:space:]]+file[[:space:]]/ {next}
+/^[[:space:]]*histograms[[:space:]]+home[[:space:]]/ {next}
+/^[[:space:]]*events[[:space:]]+to[[:space:]]+read([[:space:]]|$)/ {next}
+/^[[:space:]]*random[[:space:]]+number[[:space:]]+seed([[:space:]]|$)/ {next}
+{print}
+' "$CORALOPTORIGINAL" > "$CORALOPT"
+
+cat >> "$CORALOPT" <<EOF_OPT
+
+# ---- task-specific production overrides ----
+CsTGEANTFile file $TGEANTFILE
+mDST file $LOCAL_MDST
+histograms home $LOCAL_HIST
+events to read 0
+random number seed $SEED
+EOF_OPT
+
+echo "Effective runtime overrides:"
+tail -n 8 "$CORALOPT"
+
+echo "Starting integrated CORAL/PHAST at $(date)"
+cd "$WORKDIR"
+
+set +e
+/usr/bin/time -v "$PHASTCORAL_EXE" "$CORALOPT" <<< "0"
+STATUS=$?
+set -e
+
+echo "Integrated CORAL/PHAST finished at $(date) with exit code $STATUS"
+if [ "$STATUS" -ne 0 ]; then
+    exit "$STATUS"
+fi
+
+if [ ! -s "$LOCAL_MDST" ]; then
+    echo "ERROR: No non-empty mDST was produced: $LOCAL_MDST"
+    exit 1
+fi
+if [ ! -s "$LOCAL_HIST" ]; then
+    echo "ERROR: No non-empty histogram file was produced: $LOCAL_HIST"
+    exit 1
+fi
+
+copy_atomic() {
+    local src="$1"
+    local dst="$2"
+    local tmp="${dst}.tmp.${JOB_NUMBER}.${TASK_ID}"
+    cp "$src" "$tmp"
+    mv -f "$tmp" "$dst"
+}
+
+copy_atomic "$LOCAL_MDST" "$MDSTOUT"
+copy_atomic "$LOCAL_HIST" "$HISTOUT"
+copy_atomic "$CORALOPT" "$OPTOUT"
+
+echo "Final output sizes:"
+du -h "$MDSTOUT" "$HISTOUT" "$OPTOUT" || true
+
+echo "============================================================"
+echo "CORAL + embedded PHAST finished successfully"
+echo "End:   $(date)"
+echo "mDST:  $MDSTOUT"
+echo "Hist:  $HISTOUT"
+echo "Opt:   $OPTOUT"
+echo "Log:   $JOBLOG"
+echo "============================================================"

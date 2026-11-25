@@ -1,0 +1,19 @@
+This is the output of the prolog script!
+
+Sat Nov 14 11:07:37 PM CET 2026:
+Executing Job "McMule_Gen4vecs.4874203.1" on "epyc02.cluster" in queue "medium_epyc"!
+
+Current core dump setting (ulimit -c)
+unlimited
+Disabling core dumps (ulimit -S -c 0)
+New core dump setting (ulimit -c)
+0
+Setting working directory to /tmp
+The Job starts here
+-----------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------
+
+Job McMule_Gen4vecs.4874203.1 finished at Sun Nov 15 01:08:03 AM CET 2026
+

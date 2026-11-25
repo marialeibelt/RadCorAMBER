@@ -994,10 +994,7 @@ G_M(Q^2)
 
 
 \section{Radiative Corrections}
-The Born approximation provides the leading contribution to elastic muon--proton scattering, but a precision determination of the proton charge radius requires higher-order QED effects to be included. In this thesis, radiative corrections are considered through next-to-leading order (NLO).
-
-The Born amplitude is of order \(e^2\), corresponding to a cross section of order \(\alpha^2\). At NLO, the cross section receives corrections of order \(\alpha^3\) from two different types of contributions: virtual one-loop corrections and real-photon emission. \autoref{fig:processes} illustrates these processes. 
-
+The Born approximation developed in the preceding sections describes elastic muon--proton scattering by the exchange of a single virtual photon. For a measurement of the proton charge radius, however, the measured distributions must also account for higher-order electromagnetic effects. In particular, photons can occur as virtual particles inside loop diagrams or be emitted as real particles in the final state. The contribution processes are pictured in Figure \ref{fig:processes}. These processes modify both the probability of a scattering event and the relation between the measured muon kinematics and the momentum transfer to the proton. The discussion in this section follows primarily the treatment of QED radiative corrections by Vanderhaeghen et al. \cite{XXX}, especially their Appendix A on elastic lepton--nucleon scattering and their discussion of the radiative tail in Section IV. The expressions are adapted to muon--proton scattering, retaining the finite muon mass. Unlike the principal reaction considered in that work, namely $ep \rightarrow ep\gamma$ with an observed photon at lowest order, the Born process considered here is $\mu p \rightarrow \mu p$. Consequently, the perturbative order and the set of diagrams to be included must be defined relative to the elastic two-body reaction.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.\textwidth]{figures/Processes_Mehran.pdf}
@@ -1005,35 +1002,165 @@ The Born amplitude is of order \(e^2\), corresponding to a cross section of orde
     \label{fig:processes}
 \end{figure}
 
-The complete NLO correczred spin-averaged amplitude is given by
-\(
-\overline{\mathcal{M}^2}=\mathcal{\chi}_{Born}+\mathcal{\chi}_{virtual}+\mathcal{\chi}_{Bremsstrahlung},
-\)
-where the LO Born contribution is just \(\mathcal{\chi}_{Born}=\mathcal{M}_{Born}\) (\autoref{eq:born_matrix_element_massive}) and the NLO correction contributions will be detailed in the following two subsections.
+\subsection{Perturbative Expansion}
+At next-to-leading order (NLO), the elastic amplitude receives one-loop contributions, $\mathcal{M}_{\mathrm{virt}}=\mathcal{O}(e^4)$. In addition, a real photon can be emitted with a tree-level amplitude $\mathcal{M}_{\gamma}=\mathcal{O}(e^3)$. Therefore the two contributions enter the cross section at the same order:
+\begin{align}
+    \bigl|\mathcal{M}_{\mathrm B}+\mathcal{M}_{\mathrm{virt}}\bigr|^2
+       &=|\mathcal{M}_{\mathrm B}|^2
+         +2\operatorname{Re}\!\left(\mathcal{M}_{\mathrm B}^{*}
+         \mathcal{M}_{\mathrm{virt}}\right)+\mathcal{O}(\alpha^4),
+         \label{eq:nlo_interference}\\
+    |\mathcal{M}_{\gamma}|^2&=\mathcal{O}(\alpha^3).
+\end{align}
+The term $|\mathcal{M}_{\mathrm{virt}}|^2$ is beyond NLO and is not included. After averaging over initial spins and summing over final spins and photon polarizations, the NLO contribution is schematically
+\begin{equation}
+  \mathrm d\sigma_{\mathrm{NLO}}
+     =\mathrm d\sigma_{\mathrm B}
+      +\mathrm d\sigma_{\mathrm{virt}}
+      +\mathrm d\sigma_{\mathrm{real}}.
+  \label{eq:nlo_symbolic}
+\end{equation}
+The final two terms must not, in general, be interpreted as separately finite physical observables. Both virtual corrections and real-photon emission give rise to so-called infrared divergences. These divergences arise from the behavior of propagator denominators when the photon four-momentum approaches zero, causing the corresponding integrals to diverge. These Photons with very low energies are referred to as "soft photons". Although the virtual and real-emission contributions are individually infrared divergent, each contains a finite and a divergent part. The divergent terms have opposite signs and cancel when both contributions are combined, leaving an overall finite result.
 
-\subsection{One-Loop Virtual Processes}
-Virtual corrections arise from one-loop diagrams. They include self-energy, vertex, vacuum-polarization, and box contributions such as two-photon exchange. 
+\subsection{Virtual One-Loop correction}
+At one-loop order they comprise corrections to the muon and proton electromagnetic vertices, charged-particle self-energies, photon vacuum polarization, and direct and crossed two-photon-exchange diagrams. It is useful to distinguish between corrections that can be calculated within QED without introducing additional assumptions about the internal proton structure and those that require further hadronic input. The former include the leptonic vertex corrections, lepton self-energy corrections, and photon vacuum polarization. In contrast, corrections involving the proton, such as proton vertex corrections, proton self-energy contributions, and two-photon exchange (TPE), generally require additional information about the proton's internal structure, particularly when intermediate proton states are off-shell.
 
-Since the virtual diagrams lead to the same external final state as the Born process, their contribution to the NLO cross section enters through the interference between the Born and one-loop amplitudes,
+\subsubsection{Muon Vertex Correction}
+The muon vertex corretion is a one-loop diagram in which a virtual photon is emitted and reabsorbed by the muon, thereby modifying the muon--photon vertex. The electromagnetic muon current now contains a corrected vertex $\Lambda^\nu_\mu(p_4,p_2)$,
+\begin{equation}
+  Q_\mu\,\overline{u}(p_4)(-ie)\Lambda^\nu_\mu(p_4,p_2)u(p_2),
+  \label{eq:nlo_corrected_muon_current}
+\end{equation}
+where the Born approximation corresponds to $\Lambda^\nu_\mu=\gamma^\nu$. The superscript $\nu$ is the Lorentz index contracted with the exchanged-photon propagator. The subscript $\mu$ on $\Lambda$ identifies the muon, rather than a Lorentz index.
 
-\[
-2\,\mathrm{Re}
-\left(
-\mathcal{M}_{\mathrm{Born}}^*
-\mathcal{M}_{\mathrm{virtual}}
-\right).
-\]
+The on-shell vertex of \autoref{eq:nlo_corrected_muon_current} can be expressed as
+\begin{equation}
+  \overline{u}(p_4)\Lambda^\nu_\mu(p_4,p_2)u(p_2)
+  =\overline{u}(p_4)\left[(1+F(Q^2))\gamma^\nu-G(Q^2)i\sigma^{\nu\rho}\frac{q_\rho}{2m_\mu}\right]u(p_2).
+\end{equation}
+Here, \(F(Q^2)\) and \(G(Q^2)\) are the one-loop correction functions describing the electromagnetic interaction of the muon. The function \(F(Q^2)\) modifies the Dirac contribution proportional to \(\gamma^\nu\), while \(G(Q^2)\) introduces an additional Pauli-type contribution. These functions should not be confused with the proton form factors \(F_1(Q^2)\) and \(F_2(Q^2)\) introduced in \autoref{eq:proton_vertex}. At Born level, both correction functions vanish, and the original muon vertex is recovered. The minus sign in front of $G(Q^2)$ follows from the convention $q=p_2-p_4$ used throughout this chapter.
 
-Ultraviolet divergences appearing in the loop integrals are removed through renormalization. Infrared divergences, however, cancel only when the virtual contribution is combined consistently with the corresponding real-emission contribution for an infrared-safe observable.
+The corrected vertex accounts for the additional photon carrying momentum that is not fixed by the external kinematics. All possible momenta are taking care of in the loop integral. Using the QED Feynman rules in Feynman gauge, the unrenormalized vertex through one-loop order is
+\begin{equation}
+\begin{split}
+  \Lambda^\nu_\mu(p_4,p_2)
+  ={}&\gamma^\nu-ie^2\mu_{\mathrm{DR}}^{4-D}
+  \int\frac{\mathrm{d}^{D}\ell}{(2\pi)^D}\\
+  &\times\frac{\gamma^\rho(\slashed p_4+\slashed\ell+m_\mu)
+  \gamma^\nu(\slashed p_2+\slashed\ell+m_\mu)\gamma_\rho}
+  {\bigl[\ell^2\bigr]
+   \bigl[(p_4+\ell)^2-m_\mu^2\bigr]
+   \bigl[(p_2+\ell)^2-m_\mu^2\bigr]}
+  +\mathcal O(e^4).
+\end{split}
+\label{eq:nlo_muon_vertex_integral}
+\end{equation}
+The loop integral is evaluated using dimensional regularization (DR), in which the number of spacetime dimensions is extended from four to \( D=4-2\varepsilon\). Here, \(\varepsilon\) is a regularization parameter describing the deviation from four dimensions, while \(\mu_{\mathrm{DR}}\) is an auxiliary mass scale introduced to preserve the correct mass dimension of the electromagnetic coupling. It should not be confused with the muon mass \(m_\mu\). By evaluating the integral in \(D\) dimensions, divergences can be isolated as terms proportional to \(1/\varepsilon\), which become singular in the limit \(\varepsilon\rightarrow 0\).
+
+To obtain finite physical predictions, the ultraviolet (UV) divergences arising from large loop momenta must be removed through a procedure called "renormalization". This is achieved by redefining the parameters and fields of the theory and introducing additional terms, known as "counterterms", which cancel the UV-divergent contributions from the loop integrals. In the on-shell renormalization scheme, the counterterms are chosen such that the masses and electric charges appearing in the renormalized theory correspond to their experimentally measured values, with the effects of loop corrections consistently taken into account. The remaining infrared (IR) divergences are not removed by renormalization but cancel when the virtual corrections are combined with the corresponding real soft-photon emission contributions.
+
+The expression can be simplified using the on-shell conditions already employed in the Born calculation, $p_2^2=p_4^2=m_\mu^2$. Consequently, the two internal muon propagator denominators become
+\begin{align}
+ (p_2+\ell)^2-m_\mu^2&=\ell^2+2\ell\cdot p_2,\\
+ (p_4+\ell)^2-m_\mu^2&=\ell^2+2\ell\cdot p_4.
+ \label{eq:nlo_vertex_onshell_denominators}
+\end{align}
+
+Solving the integral in \autoref{eq:nlo_muon_vertex_integral} and identifying the coefficients of the two structures in the on-shell vertex gives the functions $F(Q^2)$ and $G(Q^2)$. To write the results compactly, we introduce
+\begin{equation}
+  v=\sqrt{1+\frac{4m_\mu^2}{Q^2}},
+  \qquad L_v=\ln\!\left(\frac{v+1}{v-1}\right).
+  \label{eq:nlo_vertex_v}
+\end{equation}
+The ultraviolet and infrared poles are collected in the terms
+\begin{equation}
+  R_{\mathrm{UV,IR}}=
+  \frac{1}{\varepsilon_{\mathrm{UV,IR}}}-\gamma_E
+  +\ln\!\left(\frac{4\pi\mu_{\mathrm{DR}}^2}{m_\mu^2}\right),
+  \label{eq:nlo_vertex_regulator_terms}
+\end{equation}
+where $\gamma_E$ is the Euler--Mascheroni constant. In the dimensional-regularization convention used in the paper, $\varepsilon_{\mathrm{UV}}>0$ corresponds to $D<4$, whereas $\varepsilon_{\mathrm{IR}}<0$ corresponds to $D>4$.
+
+With the notation introduced above, the one-loop correction function $F(Q^2)$ is
+\begin{equation}
+\begin{split}
+  F(Q^2)=\frac{\alpha}{4\pi}\Bigg\{&R_{\mathrm{UV}}
+  +R_{\mathrm{IR}}\frac{v^2+1}{v}L_v\\
+  &+\frac{v^2+1}{2v}L_v
+    \ln\!\left(\frac{v^2-1}{4v^2}\right)
+  +\frac{2v^2+1}{v}L_v\\
+  &+\frac{v^2+1}{v}\left[
+  \operatorname{Sp}\!\left(\frac{v+1}{2v}\right)
+  -\operatorname{Sp}\!\left(\frac{v-1}{2v}\right)
+  \right]\Bigg\},
+\end{split}
+\label{eq:nlo_muon_F_unrenormalized}
+\end{equation}
+where
+\begin{equation}
+  \operatorname{Sp}(z)
+  =-\int_0^z\mathrm{d}t\,\frac{\ln(1-t)}{t}.
+\end{equation}
+is the so-called Spence function.
+
+The Pauli-type correction function \(G(Q^2)\) is given by
+\begin{equation}
+  G(Q^2)=\frac{\alpha}{4\pi}
+  \frac{v^2-1}{v}L_v.
+  \label{eq:nlo_muon_G}
+\end{equation}
+The expression for $F(Q^2)$ contains both UV and IR divergent terms, while $G(Q^2)$ is finite. These expressions retain the full muon-mass dependence and do not assume $Q^2\gg m_\mu^2$.
+
+As described above, the UV divergence is removed by on-shell renormalization, which introduces a counterterm that cancels the $R_{\mathrm{UV}}$ term in \autoref{eq:nlo_muon_F_unrenormalized}, leading to the expression for the renormalized vertex correction function 
+\begin{equation}
+\begin{split}
+  F_{\mathrm R}(Q^2)=\frac{\alpha}{2\pi}\Bigg\{&
+    R_{\mathrm{IR}}\left[
+    \frac{v^2+1}{2v}L_v-1\right]\\
+  &+\frac{v^2+1}{4v}L_v
+    \ln\!\left(\frac{v^2-1}{4v^2}\right)
+    +\frac{2v^2+1}{2v}L_v-2\\
+  &+\frac{v^2+1}{2v}\left[
+    \operatorname{Sp}\!\left(\frac{v+1}{2v}\right)
+    -\operatorname{Sp}\!\left(\frac{v-1}{2v}\right)
+    \right]\Bigg\}.
+\end{split}
+\label{eq:nlo_muon_F_renormalized_explicit}
+\end{equation}
+
+The remaining IR divergence is canceled by the corresponding contribution from real soft-photon emission.
+
+The on-shell vertex introduced above therefore becomes
+\begin{equation}
+\begin{split}
+  \overline{u}(p_4)\widetilde{\Lambda}^\nu_\mu u(p_2)
+  =\overline{u}(p_4)\Bigg[
+    &\bigl(1+F_{\mathrm R}(Q^2)\bigr)\gamma^\nu\\
+    &-G(Q^2)\frac{i\sigma^{\nu\rho}q_\rho}{2m_\mu}
+  \Bigg]u(p_2).
+\end{split}
+\label{eq:nlo_muon_vertex_renormalized}
+\end{equation}
+This results in the equation for the NLO vertex amplitude
+\begin{equation}
+\begin{split}
+  \mathcal{M}_{\mathrm{vertex}}={}&
+  Q_\mu\frac{e^2}{q^2}
+  \overline{u}(p_4)\left[
+  F_{\mathrm R}(Q^2)\gamma^\nu
+  -G(Q^2)\frac{i\sigma^{\nu\rho}q_\rho}{2m_\mu}
+  \right]u(p_2)\\
+  &\times\overline{u}(p_3)\Gamma_\nu(Q^2)u(p_1).
+\end{split}
+\label{eq:nlo_muon_vertex_amplitude}
+\end{equation}
 
 
-This part is still under construction.
-\paragraph{Virtual Corrections}
 
-
-
-\paragraph{Real Photon Emission}
-
+\subsubsection{Self Energies}
+\subsubsection{Vacuum Polarization}
+\subsubsection{Two-Photon Exchange}
+\subsection{Real-Photon Emission}
 The real NLO contribution is the bremsstrahlung process
 
 \begin{equation}
@@ -1047,7 +1174,6 @@ in which an additional photon is emitted from one of the charged external partic
 
 The virtual and real contributions must be combined using the same definition of the measured observable. Their sum is infrared finite, while the resulting numerical correction depends on the experimental phase-space definition, acceptance requirements, and photon-energy cuts. This makes a fully differential treatment of radiative corrections particularly important for the AMBER proton-radius measurement.
 
-\subsection{Structure of the NLO Cross Section}
-\subsection{Virtual Corrections}
-\subsection{Real Photon Emission}
-\subsection{Infrared Cancellation}
+If the photon is emitted by the muon, it is referred to as a Bethe-Heitler process. In both cases, the photon can be emitted from either the incoming or outgoing charged particle. In the following this will be referred to as initial-state radiation (ISR) and final-state radiation (FSR), respectively. 
+
+

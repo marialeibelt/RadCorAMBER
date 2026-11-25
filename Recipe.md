@@ -1,81 +1,120 @@
 # Recipe
 
 ## short workflow
-* Generate 4-Vectors with McMule
+* Generate 4-Vectors with McMule: (19 h)
   
 * Check if seed is good (chi^2)
-  
-* Analyze 4vecs:
+
+* Analyze 4vecs: (10 s)
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_mcmule4vecs.conf
   * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_mcmule4vecs.sh 
-  
-* Generate Events with McMule
-  
-* Get Cross Sections: 
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_getcs.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_getcs.sh 
-  
-* Parse .lhe to .root: 
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_lhe_to_root.conf
-    * LO: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_LO.sh
-    * NLO: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_lhe_to_root_MCMULE_unweighted_NLO.sh
-  
-* Analyze raw Output:
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
-  
-* Scale with CS: 
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_scale.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_scale.sh
-  
-* Analyze:
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_root.sh 
+---
+* Generate Events with McMule: (1h 15min ~14 M events)
+  * copy all .mcmule from /out folder to /input folder
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_evtgen_mcmule.conf
 
-* Split in batches
+  !!!! immer neue seeds !!!!
+
+  * bash submit_nlo_jobs.sh CU 5000 20 10000 10 (Dieser Fall dauert: 45 min + 30 min; 50 GB)
+
+  * output anschauen:
+    * head -n 200 yyy.lhe 
+    * tail -n 200 yyy.lhe 
+  
+* Parse .lhe to .root: (< 5 min)
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_mcmule_lhe_to_root.conf
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/mcmule_eventgen/command_mcmule_lhe_to_root.sh
+  
+* Analyze: (2 min)
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_root_NLO_batch.conf
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/mcmule_eventgen/command_analyze_mcmule_evtgen.sh
+
+* Split in batches: (3.5 min)
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_split_root.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_split_root.sh 
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_split_root.sh
 
-* Evtgen with AMBER
+* Find first Photon Energy bin:
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_find_first_mcmule_photon_bin.conf
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_find_first_mcmule_photon_bin.sh
+---
+* Evtgen with AMBER: ( 6h pro 700,000 events; 30min pro batch)
   * Change: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_tgeant_amber.conf
-  * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/submit_tgeant.sh
+  * bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/submit_tgeant.sh
   * check run: qstat
-  
+
 * Warm-up Cache: time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_warmup_cache.sh 
 
-* Analyze TGEANT output:
-  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_tgeant_amber.conf
-  * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_tgeant_amber.sh 
+* Analyze TGEANT output: (7.5 h)
+    * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_tgeant_amber_batches.conf
+    * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_tgeant_amber_batches.sh
+
+..................... To Do .....................
 
 * Compare McMule & AMBER TGEANT:
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_compare_mcmule_amber.conf 
   * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_compare_mcmule_amber.sh 
 
+.................................................
+
+* Coral+Phast: (7000 batches in 45 min)
+  * Histogram definitions: /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/phast/user/u300_PRM_mu_p.cc
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_coral_phast.conf 
+  * bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/submit_coral_phast.sh
+  * monitor: https://mon.e18.ph.tum.de/cmk/check_mk/dashboard.py?name=cluster
+
+* Merge output: (12 min)
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_merge_coralphast.conf
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_merge_coralphast_autocount.sh
+
+* Merge specific files:
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_merge_coralphast_files.conf 
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_merge_coralphast_files.sh 
+
+* Analyze Coral+Phast:
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_analyze_coralphast.conf 
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_analyze_coralphast.sh 
+
+---
+
+* Compare AMBER Before & After Reconstruction:
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_compare_amber_rec.conf 
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_compare_amber_rec.sh 
+
+* Compare McMule & AMBER after Reconstruction:
+  * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_compare_amber_rec.conf 
+  * time bash /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_compare_amber_rec.sh 
+
+
 ## Generate 4-Vectors with McMule
 * If you want to Generate Events afterwards, only do 1 seed, but 2 xi cuts
 * Change inputstrings: nano /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputstrings
 * /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_create.sh
-* !!! Go into the newly created folder
-* nano mp2mp.toml
-* mcmule = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule"
-* correct xi cut in .menu file for NLO0
+* !!! Go into the newly created folder: nano mp2mp.toml
+  * Fuer NLO0 und R, use:
+    * mcmule = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-event-generator/build/src/mcmule"
+  * Fuer other pieces use:
+    * mcmule = "/nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/mcmule-devel/build/src/mcmule"
+* correct xi cut in .menu file for NLO0 (automatically set to 1.0)
 * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_mcmule_gen4vecs.conf
-* time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_mcmule_gen4vecs.sh
-  
-## Generate Events wth McMule
-* copy all .mcmule from /out folder to /input folder
-* Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_evtgen_mcmule.conf
-* time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/eventgen/rungen.sh
-
-* output anschauen:
-  * head -n 200 yyy.lhe 
-  * tail -n 200 yyy.lhe 
+* qsub /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/submit_mcmule_gen4vecs.sh
 
 ## Q2 Exact vs. Ultrarel. Limit
 * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_Q2approx_test.conf
 * time /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/command_Q2approx_test.sh
     
+## Coral step
+* Delete old output: grep -a -nE 'Number of Processed Events|events had been written|TTrackAppend|FATAL|double free' \
+/tmp/ge93juy/coral_test/coral.log
+* run: printf '0\n' | ./coral.exe /tmp/ge93juy/coral_test/test.opt \
+  > /tmp/ge93juy/coral_test/coral.log 2>&1
+* Check: grep -a -nE 'Number of Processed Events|events had been written|TTrackAppend|FATAL|double free' \
+/tmp/ge93juy/coral_test/coral.log
+* set number of events directly with:  sed -i 's/^events to read 100/events to read 0/' \
+/tmp/ge93juy/coral_test/test.opt
+
 ## Good To Know
+* Connect to Windows: xfreerdp /v:TUPHE18-Pool36.e18.ph.tum.de /u:ge93juy /d:ads /dynamic-resolution
+* shift + prnt for scrrenshot of an area saving to Pictures
 * vim:
   * Nur speichern: :w
   * Speichern und schließen: :wq
@@ -84,7 +123,8 @@
   * Alles Markieren und loeschen: ggVGd
   * Alles Markieren und kopieren: ggVGy
 * check storage: df -h
-  * specific  loc: df -h /nfs/freenas/tuph/e18/project/prm/mleibelt/
+  * specific  loc: v /nfs/freenas/tuph/e18/project/prm/mleibelt/
+  * df -h /nfs/momos/user/mleibelt/
 * Git:
   * Rebase: git add <datei>
 git rebase --continue
@@ -109,7 +149,7 @@ git pull --rebase
   * head worker* (analogous to above but beginning)
 * ctrl + / (mehrere Zeilen kommentiern)
 * SERVER:
-  * ssh -XY ge93juy@login.e18.ph.tum.de -p 22222
+  * ssh -p 22222 ge93juy@login.e18.ph.tum.de
   * ssh themis.e18.ph.tum.de -o "VerifyHostKeyDNS=yes"
   * screen -r
   * ctr A+D

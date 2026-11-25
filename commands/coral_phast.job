@@ -1,0 +1,485 @@
+#!/bin/bash
+
+#$ -S /bin/bash
+#$ -N coral_phast
+
+set -euo pipefail
+ulimit -c 0
+
+: "${CONFIG_SNAPSHOT:?CONFIG_SNAPSHOT was not passed to the job}"
+: "${INPUT_MANIFEST:?INPUT_MANIFEST was not passed to the job}"
+
+if [ ! -f "$CONFIG_SNAPSHOT" ]; then
+    echo "ERROR: Config snapshot does not exist: $CONFIG_SNAPSHOT"
+    exit 1
+fi
+if [ ! -f "$INPUT_MANIFEST" ]; then
+    echo "ERROR: Input manifest does not exist: $INPUT_MANIFEST"
+    exit 1
+fi
+
+source "$CONFIG_SNAPSHOT"
+
+for v in OUTPUTDIR MDSTDIR HISTDIR OPTDIR FINALDIR LOGDIR CORALDIR PHASTDIR TGEANTDIR \
+         PHASTCORAL_EXE PHAST_EXE PHAST_USER LCG_VIEW TGEANT_SETUP COMPASS_FILES \
+         CORALOPTORIGINAL TRAFDICOPT DETECTORSDAT DETECTORSROOT \
+         KEEP_MDST SAVE_MDST_ON_PHAST_FAILURE QUEUE MEMORY; do
+    if [ -z "${!v:-}" ]; then
+        echo "ERROR: $v not defined in config snapshot"
+        exit 1
+    fi
+done
+
+TASK_ID="${SGE_TASK_ID:-1}"
+JOB_NUMBER="${JOB_ID:-$$}"
+
+mkdir -p "$MDSTDIR" "$HISTDIR" "$OPTDIR" "$FINALDIR" "$LOGDIR"
+JOBLOG="${LOGDIR}/coral_phast_job${JOB_NUMBER}_task${TASK_ID}.log"
+exec > "$JOBLOG" 2>&1
+
+INPUTFILE="$(sed -n "${TASK_ID}p" "$INPUT_MANIFEST")"
+if [ -z "$INPUTFILE" ]; then
+    echo "ERROR: No manifest entry for SGE task $TASK_ID"
+    exit 1
+fi
+if [ ! -f "$INPUTFILE" ]; then
+    echo "ERROR: Input file from manifest does not exist: $INPUTFILE"
+    exit 1
+fi
+
+BASENAME="$(basename "$INPUTFILE")"
+RUNNAME="${BASENAME%.gz}"
+RUNNAME="${RUNNAME%.tgeant}"
+
+MDSTFILE="mDST.${RUNNAME}.root"
+HISTFILE="hist.${RUNNAME}.root"
+OPTFILE="coral.${RUNNAME}.opt"
+PHASTFILE="PHAST.${RUNNAME}.root"
+
+MDSTOUT="${MDSTDIR}/${MDSTFILE}"
+HISTOUT="${HISTDIR}/${HISTFILE}"
+OPTOUT="${OPTDIR}/${OPTFILE}"
+PHASTOUT="${FINALDIR}/${PHASTFILE}"
+
+# A task counts as complete once the compact PHAST analysis and CORAL
+# monitoring histogram exist. If an old mDST is still present and the storage
+# policy says not to keep it, remove it only after those final products exist.
+if [ -s "$PHASTOUT" ] && [ -s "$HISTOUT" ]; then
+    echo "Task already complete:"
+    echo "  PHAST: $PHASTOUT"
+    echo "  Hist:  $HISTOUT"
+
+    if [ "$KEEP_MDST" -eq 0 ] && [ -f "$MDSTOUT" ]; then
+        echo "Removing stale successful mDST according to KEEP_MDST=0:"
+        echo "  $MDSTOUT"
+        rm -f "$MDSTOUT"
+    fi
+
+    exit 0
+fi
+
+SEED=$((JOB_NUMBER * 100000 + TASK_ID))
+
+TMPBASE="${TMPDIR:-/tmp}"
+WORKDIR="$(mktemp -d "${TMPBASE}/coral_phast_${JOB_NUMBER}_${TASK_ID}_XXXXXXXX")"
+cleanup() {
+    cd / 2>/dev/null || true
+    rm -rf "$WORKDIR"
+}
+trap cleanup EXIT
+
+TGEANTFILE="${WORKDIR}/input.tgeant"
+LOCAL_MDST="${WORKDIR}/${MDSTFILE}"
+LOCAL_HIST="${WORKDIR}/${HISTFILE}"
+LOCAL_PHAST="${WORKDIR}/${PHASTFILE}"
+CORALOPT="${WORKDIR}/${OPTFILE}"
+
+copy_atomic() {
+    local src="$1"
+    local dst="$2"
+    local tmp="${dst}.tmp.${JOB_NUMBER}.${TASK_ID}"
+
+    rm -f "$tmp"
+    if ! cp "$src" "$tmp"; then
+        rm -f "$tmp"
+        return 1
+    fi
+    mv -f "$tmp" "$dst"
+}
+
+save_new_mdst_after_phast_failure() {
+    if [ "${CORAL_RAN:-0}" -eq 1 ] && [ "$SAVE_MDST_ON_PHAST_FAILURE" -eq 1 ] \
+       && [ -s "$LOCAL_MDST" ]; then
+        echo "Preserving newly generated mDST because standalone PHAST failed:"
+        echo "  $MDSTOUT"
+        copy_atomic "$LOCAL_MDST" "$MDSTOUT"
+    fi
+}
+
+cat <<INFO
+============================================================
+CORAL -> standalone PHAST array task
+============================================================
+Host:                 ${HOSTNAME:-unknown}
+Start:                $(date)
+SGE Job ID:           $JOB_NUMBER
+SGE Task ID:          $TASK_ID
+Input:                $INPUTFILE
+Run name:             $RUNNAME
+Seed:                 $SEED
+Work directory:       $WORKDIR
+mDST working/recovery:$MDSTOUT
+CORAL hist output:    $HISTOUT
+Options output:       $OPTOUT
+Final PHAST output:   $PHASTOUT
+PHAST user routine:   UserEvent${PHAST_USER}
+Keep successful mDST: $KEEP_MDST
+Requested memory:     $MEMORY h_pmem
+Queue/class:          $QUEUE
+============================================================
+INFO
+
+for f in "$CORALOPTORIGINAL" "$TRAFDICOPT" "$DETECTORSDAT" "$DETECTORSROOT" \
+         "$LCG_VIEW" "$TGEANT_SETUP"; do
+    if [ ! -f "$f" ]; then
+        echo "ERROR: Required file missing: $f"
+        exit 1
+    fi
+done
+
+if [ ! -x "$PHASTCORAL_EXE" ]; then
+    echo "ERROR: CORAL executable missing/not executable: $PHASTCORAL_EXE"
+    exit 1
+fi
+if [ ! -x "$PHAST_EXE" ]; then
+    echo "ERROR: Standalone PHAST executable missing/not executable: $PHAST_EXE"
+    exit 1
+fi
+
+# Exact environment used for the successful interactive PRM tests.
+set +u
+source "$LCG_VIEW"
+source "$TGEANT_SETUP"
+set -u
+
+export CORAL="$CORALDIR"
+export PHAST="$PHASTDIR"
+export COMPASS_FILES
+export LD_LIBRARY_PATH="$PHASTDIR/lib:$CORAL/lib/Linux:${LD_LIBRARY_PATH:-}"
+
+CORAL_RAN=0
+PHAST_INPUT=""
+
+# Reuse an already existing successful CORAL mDST if one is present. This lets
+# us process old CORAL output with UserEvent300 without rerunning CORAL.
+if [ -s "$MDSTOUT" ] && [ -s "$HISTOUT" ]; then
+    echo "Existing CORAL mDST + histogram found."
+    echo "Skipping CORAL and running standalone PHAST directly on:"
+    echo "  $MDSTOUT"
+    PHAST_INPUT="$MDSTOUT"
+else
+    CORAL_RAN=1
+
+    echo "Scratch filesystem before unpacking:"
+    df -h "$TMPBASE" || true
+
+    # ------------------------------------------------------------
+    # Scratch-space safety check
+    # ------------------------------------------------------------
+    FREE_KB=$(df -Pk "$TMPBASE" | awk 'NR==2 {print $4}')
+    MIN_FREE_KB=$((3 * 1024 * 1024))   # 3 GiB
+
+    echo "Scratch available: $((FREE_KB / 1024)) MiB"
+    echo "Scratch required:  at least $((MIN_FREE_KB / 1024)) MiB"
+
+    if [ "$FREE_KB" -lt "$MIN_FREE_KB" ]; then
+        echo "ERROR: Not enough free scratch space on ${HOSTNAME:-unknown}."
+        echo "Available: $((FREE_KB / 1024)) MiB"
+        echo "Required:  $((MIN_FREE_KB / 1024)) MiB"
+        exit 1
+    fi
+
+    case "$INPUTFILE" in
+        *.tgeant.gz)
+            echo "Unpacking TGEANT input at $(date)"
+            gzip -cd "$INPUTFILE" > "$TGEANTFILE"
+            ;;
+        *.tgeant)
+            echo "Copying uncompressed TGEANT input at $(date)"
+            cp "$INPUTFILE" "$TGEANTFILE"
+            ;;
+        *)
+            echo "ERROR: Unsupported input type: $INPUTFILE"
+            exit 1
+            ;;
+    esac
+
+    if [ ! -s "$TGEANTFILE" ]; then
+        echo "ERROR: Local TGEANT file is empty: $TGEANTFILE"
+        exit 1
+    fi
+
+    # Create a task-specific option file from the tested PRM base file.
+    # Only genuinely per-task settings are replaced here. In particular, we do
+    # NOT append any TraF Det2Ignore line, so AT and FT stay enabled as tested.
+    awk '
+/^[[:space:]]*CsTGEANTFile[[:space:]]+file[[:space:]]/ {next}
+/^[[:space:]]*mDST[[:space:]]+file[[:space:]]/ {next}
+/^[[:space:]]*histograms[[:space:]]+home[[:space:]]/ {next}
+/^[[:space:]]*events[[:space:]]+to[[:space:]]+read([[:space:]]|$)/ {next}
+/^[[:space:]]*random[[:space:]]+number[[:space:]]+seed([[:space:]]|$)/ {next}
+{print}
+' "$CORALOPTORIGINAL" > "$CORALOPT"
+
+    cat >> "$CORALOPT" <<EOF_OPT
+
+# ---- task-specific production overrides ----
+CsTGEANTFile file $TGEANTFILE
+mDST file $LOCAL_MDST
+histograms home $LOCAL_HIST
+events to read 0
+random number seed $SEED
+EOF_OPT
+
+    echo "Effective runtime overrides:"
+    tail -n 8 "$CORALOPT"
+
+echo "Starting integrated CORAL/PHAST at $(date)"
+cd "$WORKDIR"
+
+set +e
+
+/usr/bin/time -v "$PHASTCORAL_EXE" "$CORALOPT" <<< "0" 2>&1 | awk '
+function clean(s, t) {
+    t=s
+    gsub(/\033\[[0-9;]*m/, "", t)
+    return t
+}
+
+function flush_error(    key,i) {
+    key=clean(buf[nbuf])
+
+    if (key ~ /CsMCDigit has empty list<CsMCHit\*>/ ||
+        key ~ /No CsCluster association to CsMCTrack/ ||
+        key ~ /CsCluster has no reference to CsMCHit/) {
+
+        count[key]++
+
+        if (count[key] == 1) {
+            for (i=1; i<=nbuf; i++)
+                print clean(buf[i])
+
+            print "[Further occurrences of this message will be suppressed.]"
+        }
+    }
+    else {
+        for (i=1; i<=nbuf; i++)
+            print clean(buf[i])
+    }
+
+    nbuf=0
+    in_error=0
+}
+
+{
+    line=clean($0)
+
+    # ROOT spams a huge list of PCM candidates.
+    # These lines contain no useful additional information.
+    if (line ~ /^Info in <TCling::LoadPCM>: In-memory ROOT PCM candidate /) {
+        pcm_info++
+        next
+    }
+
+    # Keep each missing PCM error only once.
+    if (line ~ /^Error in <TCling::LoadPCM>: ROOT PCM .* file does not exist$/) {
+        pcm[line]++
+        if (pcm[line] == 1)
+            print line
+        next
+    }
+
+    # Buffer CORAL ERROR blocks so that known repetitive errors
+    # can be collapsed.
+    if (!in_error && line ~ /^ERROR, on /) {
+        in_error=1
+        nbuf=1
+        buf[1]=$0
+        next
+    }
+
+    if (in_error) {
+        buf[++nbuf]=$0
+
+        if (line ~ /^`.*'\''$/) {
+            flush_error()
+        }
+        else if (nbuf > 12) {
+            # Safety: never suppress an unknown malformed error block.
+            for (i=1; i<=nbuf; i++)
+                print clean(buf[i])
+
+            nbuf=0
+            in_error=0
+        }
+
+        next
+    }
+
+    print line
+}
+
+END {
+    if (in_error)
+        for (i=1; i<=nbuf; i++)
+            print clean(buf[i])
+
+    print ""
+    print "========== suppressed repetitive messages =========="
+
+    for (msg in count)
+        if (count[msg] > 1)
+            printf "%d occurrences: %s\n", count[msg], msg
+
+    if (pcm_info > 0)
+        printf "%d ROOT PCM candidate-info lines suppressed\n", pcm_info
+
+    print "====================================================="
+}
+' | awk '
+NF {
+    blank=0
+    print
+    next
+}
+!blank {
+    print
+    blank=1
+}
+'
+STATUS=${PIPESTATUS[0]}
+set -e
+
+echo "Integrated CORAL/PHAST finished at $(date) with exit code $STATUS"
+if [ "$STATUS" -ne 0 ]; then
+    exit "$STATUS"
+fi
+
+if [ ! -s "$LOCAL_MDST" ]; then
+    echo "ERROR: No non-empty mDST was produced: $LOCAL_MDST"
+    exit 1
+fi
+if [ ! -s "$LOCAL_HIST" ]; then
+    echo "ERROR: No non-empty histogram file was produced: $LOCAL_HIST"
+    exit 1
+fi
+
+    # Save the small CORAL monitoring/reproducibility products immediately.
+    copy_atomic "$LOCAL_HIST" "$HISTOUT"
+    copy_atomic "$CORALOPT" "$OPTOUT"
+
+    PHAST_INPUT="$LOCAL_MDST"
+fi
+
+if [ ! -s "$PHAST_INPUT" ]; then
+    echo "ERROR: No non-empty mDST available for standalone PHAST: $PHAST_INPUT"
+    exit 1
+fi
+
+echo "Starting standalone PHAST UserEvent${PHAST_USER} at $(date)"
+echo "Input mDST:  $PHAST_INPUT"
+echo "Output ROOT: $LOCAL_PHAST"
+
+set +e
+(
+    cd "$PHASTDIR"
+    /usr/bin/time -v "$PHAST_EXE" \
+        -u"$PHAST_USER" \
+        -h"$LOCAL_PHAST" \
+        "$PHAST_INPUT"
+)
+PHAST_STATUS=$?
+set -e
+
+echo "Standalone PHAST finished at $(date) with exit code $PHAST_STATUS"
+
+if [ "$PHAST_STATUS" -ne 0 ]; then
+    echo "ERROR: standalone PHAST failed."
+    save_new_mdst_after_phast_failure
+    exit "$PHAST_STATUS"
+fi
+
+if [ ! -s "$LOCAL_PHAST" ]; then
+    echo "ERROR: standalone PHAST produced no non-empty ROOT output:"
+    echo "  $LOCAL_PHAST"
+    save_new_mdst_after_phast_failure
+    exit 1
+fi
+
+# Validate that our compact event tree is really present before the mDST can be
+# deleted. This prevents an empty/wrong PHAST file from being marked complete.
+ROOTCHECK_PATH="UserEvent${PHAST_USER}/PRM"
+
+echo "Validating PHAST output: $ROOTCHECK_PATH"
+set +e
+root -l -b -q -e \
+    "TFile f(\"${LOCAL_PHAST}\"); if (f.IsZombie() || !f.Get(\"${ROOTCHECK_PATH}\")) gSystem->Exit(2); gSystem->Exit(0);" \
+    >/dev/null 2>&1
+ROOTCHECK_STATUS=$?
+set -e
+
+if [ "$ROOTCHECK_STATUS" -ne 0 ]; then
+    echo "ERROR: PHAST ROOT validation failed; expected object missing:"
+    echo "  $ROOTCHECK_PATH"
+    save_new_mdst_after_phast_failure
+    exit "$ROOTCHECK_STATUS"
+fi
+
+# Only after PHAST succeeded and the ROOT file was validated do we publish the
+# compact final output.
+copy_atomic "$LOCAL_PHAST" "$PHASTOUT"
+
+# If CORAL was reused from an earlier run, HISTOUT already exists. If CORAL ran
+# now, HISTOUT and OPTOUT were saved above.
+if [ ! -s "$HISTOUT" ]; then
+    echo "ERROR: CORAL histogram output is missing after PHAST success: $HISTOUT"
+    exit 1
+fi
+
+# Storage policy for the large mDST.
+if [ "$KEEP_MDST" -eq 1 ]; then
+    if [ "$CORAL_RAN" -eq 1 ]; then
+        copy_atomic "$LOCAL_MDST" "$MDSTOUT"
+    fi
+    echo "Keeping mDST: $MDSTOUT"
+else
+    # For a newly produced mDST there is no permanent copy to remove. For an
+    # older reused mDST, remove it now that PHAST output is safely published.
+    if [ -f "$MDSTOUT" ]; then
+        echo "Removing successful mDST after validated PHAST output:"
+        echo "  $MDSTOUT"
+        rm -f "$MDSTOUT"
+    fi
+fi
+
+echo "Final output sizes:"
+du -h "$PHASTOUT" "$HISTOUT" "$OPTOUT" 2>/dev/null || \
+du -h "$PHASTOUT" "$HISTOUT" || true
+
+if [ "$KEEP_MDST" -eq 1 ] && [ -s "$MDSTOUT" ]; then
+    du -h "$MDSTOUT" || true
+fi
+
+echo "============================================================"
+echo "CORAL -> standalone PHAST finished successfully"
+echo "End:         $(date)"
+echo "PHAST final: $PHASTOUT"
+echo "Hist:        $HISTOUT"
+echo "Opt:         $OPTOUT"
+if [ "$KEEP_MDST" -eq 1 ]; then
+    echo "mDST:        $MDSTOUT"
+else
+    echo "mDST:        deleted/not persisted after PHAST success"
+fi
+echo "Log:         $JOBLOG"
+echo "============================================================"
