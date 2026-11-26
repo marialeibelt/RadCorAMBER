@@ -13,9 +13,12 @@
   * copy all .mcmule from /out folder to /input folder
   * Change input: vim /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/inputs/input_evtgen_mcmule.conf
 
-  !!!! immer neue seeds !!!!
+  * Seeds: automatisch ueber inputs/used_seeds_evtgen.txt ("auto" = naechster freier Seed; benutzte Seeds werden abgelehnt)
+  * Output landet in: $basefolder/$anafolder/evtgen_<MODE>_<N>x<nenter>_seed<seed>/part_*
 
-  * bash submit_nlo_jobs.sh CU 5000 20 10000 10 (Dieser Fall dauert: 45 min + 30 min; 50 GB)
+  * cd /nfs/freenas/tuph/e18/project/prm/mleibelt/AMBER_Repo/AMBER_RadCor/commands/mcmule_eventgen
+  * bash submit_nlo_jobs.sh CU 5000 20 auto 10   (nur CU; N wird fuer CU NICHT gebraucht)
+    * alter Ablauf N + CU: bash submit_nlo_jobs.sh NCU 5000 20 auto 10 (Dieser Fall dauert: 45 min + 30 min; 50 GB)
 
   * output anschauen:
     * head -n 200 yyy.lhe 
@@ -113,6 +116,15 @@
 /tmp/ge93juy/coral_test/test.opt
 
 ## Good To Know
+* AMBER PRM Geometrie (TGEANT: $TGEANT/share/prm_2022/alignment_prm.xml, alle Werte in mm):
+  * Target / Vertex:  z = -3200
+  * ECAL1:  x = -0.126, y = -3.207, z = 11074
+  * ECAL2:  x = 450,    y = -3.968, z = 33252   <- relevant fuer Photonen
+  * Abstand Vertex -> ECAL2: 33252 - (-3200) = 36452 mm = 36.452 m
+  * Photon-Hit auf ECAL2 (gerade Linie, kein Feld): x = d*tan(th)*cos(phi), y = d*tan(th)*sin(phi), d = 36.452 m
+    relativ zur ECAL2-Mitte: x - 450 mm, y + 3.968 mm
+  * Userfile d_detec: bis 25.11.2026 = 30 m, danach 36.452 m.
+    Alte 4vec-Laeufe umrechnen: x5, y5 * 36.452/30 = * 1.21507 (Dichte dsigma/dx entsprechend / 1.21507)
 * Connect to Windows: xfreerdp /v:TUPHE18-Pool36.e18.ph.tum.de /u:ge93juy /d:ads /dynamic-resolution
 * shift + prnt for scrrenshot of an area saving to Pictures
 * vim:

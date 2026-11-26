@@ -574,6 +574,118 @@ int main(int argc, char **argv) {
 
 
         // ==================================================
+        // Derived radiative-correction observables (lab frame)
+        //
+        // All quantities follow uniquely from the McMule
+        // four-vectors. Photon quantities refer to the hardest
+        // photon; they are set to NO_VALUE if there is none.
+        // ECAL2 hit = straight-line projection of the photon from
+        // the vertex to the ECAL2 plane (no magnetic field acts on
+        // photons). Units: GeV, GeV^2, mrad, mm.
+        // ==================================================
+
+        const double NO_VALUE = -9999.0;
+
+        // ECAL2 position from TGEANT share/prm_2022/alignment_prm.xml (mm)
+        const double ecal2X = 450.0;
+        const double ecal2Y = -3.968;
+        const double ecal2Z = 33252.0;
+
+        Long64_t eventID = 0;
+
+        int nPhotons = 0;
+        int hasPhoton = 0;
+
+        double photonEnergy = NO_VALUE;
+        double photonTheta = NO_VALUE;        // mrad, w.r.t. z axis
+        double photonPhi = NO_VALUE;          // rad
+        double photonAngleToBeam = NO_VALUE;  // mrad, to incoming muon  (ISR-like if small)
+        double photonAngleToMuon = NO_VALUE;  // mrad, to outgoing muon  (FSR-like if small)
+        double photonECAL2X = NO_VALUE;       // mm, lab
+        double photonECAL2Y = NO_VALUE;       // mm, lab
+        double photonECAL2XRel = NO_VALUE;    // mm, relative to ECAL2 centre
+        double photonECAL2YRel = NO_VALUE;    // mm, relative to ECAL2 centre
+
+        double muonTheta = NO_VALUE;          // mrad
+        double Q2mu = NO_VALUE;               // -(k - k')^2
+        double Q2p = NO_VALUE;                // -(P - P')^2 = 2 m_p T_p
+        double protonKineticEnergy = NO_VALUE;
+        double protonTheta = NO_VALUE;        // mrad
+        double energyBalance = NO_VALUE;      // E_beam - E_mu' - T_p (= E_gamma)
+
+        tree.Branch("eventID", &eventID);
+        tree.Branch("nPhotons", &nPhotons);
+        tree.Branch("hasPhoton", &hasPhoton);
+        tree.Branch("photonEnergy", &photonEnergy);
+        tree.Branch("photonTheta", &photonTheta);
+        tree.Branch("photonPhi", &photonPhi);
+        tree.Branch("photonAngleToBeam", &photonAngleToBeam);
+        tree.Branch("photonAngleToMuon", &photonAngleToMuon);
+        tree.Branch("photonECAL2X", &photonECAL2X);
+        tree.Branch("photonECAL2Y", &photonECAL2Y);
+        tree.Branch("photonECAL2XRel", &photonECAL2XRel);
+        tree.Branch("photonECAL2YRel", &photonECAL2YRel);
+        tree.Branch("muonTheta", &muonTheta);
+        tree.Branch("Q2mu", &Q2mu);
+        tree.Branch("Q2p", &Q2p);
+        tree.Branch("protonKineticEnergy", &protonKineticEnergy);
+        tree.Branch("protonTheta", &protonTheta);
+        tree.Branch("energyBalance", &energyBalance);
+
+
+        // Separate small tree: one entry per photon.
+        // Link back to "Output" via eventID
+        // (e.g. Output->BuildIndex("eventID")).
+        TTree photonTree(
+            "Photons",
+            "McMule photons (one entry per photon)"
+        );
+
+        photonTree.Branch("eventID", &eventID);
+        photonTree.Branch("weight", &weight);
+        photonTree.Branch("photonEnergy", &photonEnergy);
+        photonTree.Branch("photonTheta", &photonTheta);
+        photonTree.Branch("photonPhi", &photonPhi);
+        photonTree.Branch("photonAngleToBeam", &photonAngleToBeam);
+        photonTree.Branch("photonAngleToMuon", &photonAngleToMuon);
+        photonTree.Branch("photonECAL2X", &photonECAL2X);
+        photonTree.Branch("photonECAL2Y", &photonECAL2Y);
+        photonTree.Branch("photonECAL2XRel", &photonECAL2XRel);
+        photonTree.Branch("photonECAL2YRel", &photonECAL2YRel);
+        photonTree.Branch("muonTheta", &muonTheta);
+        photonTree.Branch("Q2mu", &Q2mu);
+        photonTree.Branch("Q2p", &Q2p);
+        photonTree.Branch("protonKineticEnergy", &protonKineticEnergy);
+        photonTree.Branch("energyBalance", &energyBalance);
+
+
+        // Photon quantities for one photon four-vector
+        auto fillPhoton = [&](const TLorentzVector &g,
+                              const TLorentzVector &k,
+                              const TLorentzVector &kp,
+                              bool haveMuon) {
+
+            photonEnergy = g.E();
+            photonTheta = 1000.0 * g.Theta();
+            photonPhi = g.Phi();
+            photonAngleToBeam = 1000.0 * g.Angle(k.Vect());
+            photonAngleToMuon =
+                haveMuon ? 1000.0 * g.Angle(kp.Vect()) : NO_VALUE;
+
+            if (g.Pz() > 0.0) {
+                const double dz = ecal2Z - vertexZ;
+                photonECAL2X = vertexX + g.Px() / g.Pz() * dz;
+                photonECAL2Y = vertexY + g.Py() / g.Pz() * dz;
+                photonECAL2XRel = photonECAL2X - ecal2X;
+                photonECAL2YRel = photonECAL2Y - ecal2Y;
+            } else {
+                photonECAL2X = photonECAL2Y = NO_VALUE;
+                photonECAL2XRel = photonECAL2YRel = NO_VALUE;
+            }
+        };
+
+
+        // ==================================================
         // Event loop
         // ==================================================
 
@@ -698,6 +810,87 @@ int main(int argc, char **argv) {
             }
 
 
+            // ------------------------------------------------
+            // Derived observables (lab frame)
+            // ------------------------------------------------
+
+            eventID = acceptedEvents;
+
+            nPhotons = 0;
+            hasPhoton = 0;
+            photonEnergy = photonTheta = photonPhi = NO_VALUE;
+            photonAngleToBeam = photonAngleToMuon = NO_VALUE;
+            photonECAL2X = photonECAL2Y = NO_VALUE;
+            photonECAL2XRel = photonECAL2YRel = NO_VALUE;
+            muonTheta = Q2mu = Q2p = NO_VALUE;
+            protonKineticEnergy = protonTheta = energyBalance = NO_VALUE;
+
+            const TLorentzVector k(
+                beamMomentumX, beamMomentumY, beamMomentumZ, beamEnergy
+            );
+            const TLorentzVector P(0.0, 0.0, 0.0, mp);  // proton at rest in lab
+
+            TLorentzVector kp, Pp;
+            bool haveMuon = false;
+            bool haveProton = false;
+            std::vector<TLorentzVector> photons;
+
+            for (size_t i = 0; i < scatteredPID.size(); ++i) {
+
+                const TLorentzVector v(
+                    scatteredMomentumX[i],
+                    scatteredMomentumY[i],
+                    scatteredMomentumZ[i],
+                    scatteredEnergy[i]
+                );
+
+                if (std::abs(scatteredPID[i]) == 13 && !haveMuon) {
+                    kp = v;
+                    haveMuon = true;
+                } else if (scatteredPID[i] == 2212 && !haveProton) {
+                    Pp = v;
+                    haveProton = true;
+                } else if (scatteredPID[i] == 22) {
+                    photons.push_back(v);
+                }
+            }
+
+            if (haveMuon) {
+                muonTheta = 1000.0 * kp.Theta();
+                Q2mu = -(k - kp).M2();
+            }
+
+            if (haveProton) {
+                Q2p = -(P - Pp).M2();
+                protonKineticEnergy = Pp.E() - mp;
+                protonTheta = 1000.0 * Pp.Theta();
+            }
+
+            if (haveMuon && haveProton) {
+                energyBalance = k.E() - kp.E() - protonKineticEnergy;
+            }
+
+            nPhotons = static_cast<int>(photons.size());
+            hasPhoton = nPhotons > 0 ? 1 : 0;
+
+            // One Photons-tree entry per photon
+            for (const auto &g : photons) {
+                fillPhoton(g, k, kp, haveMuon);
+                photonTree.Fill();
+            }
+
+            // Output tree keeps the hardest photon
+            if (hasPhoton) {
+                const auto hardest = std::max_element(
+                    photons.begin(), photons.end(),
+                    [](const TLorentzVector &a, const TLorentzVector &b) {
+                        return a.E() < b.E();
+                    }
+                );
+                fillPhoton(*hardest, k, kp, haveMuon);
+            }
+
+
             ++acceptedEvents;
 
             tree.Fill();
@@ -711,6 +904,8 @@ int main(int argc, char **argv) {
         outfile.cd();
 
         tree.Write();
+
+        photonTree.Write();
 
         outfile.Close();
 

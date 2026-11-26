@@ -2,14 +2,16 @@
 #$ -S /bin/bash
 #$ -cwd
 #$ -j y
-# One SGE worker: run McMule NLO with flag N, wait, then flag CU.
-# Reproduces the stage ordering in the original rungen.sh.
+# One SGE worker: run McMule NLO generation.
+#   RUN_N=1  -> weighted N stage (features V)
+#   RUN_CU=1 -> CU stage (VCU, dmax=1., tgteff=-1)
+# If both are set, N runs first and CU only starts after N succeeded.
+# CU does NOT need the N output: both only read the .mcmule integration files.
 set -euo pipefail
 
-for key in RUN_DIR MODE NENTER ITMX SEED N_SEED OUT_REL_N OUT_REL_CU LOG_FILE_N LOG_FILE_CU GENERATOR INPUT_NLO0 INPUT_R xi; do
+for key in RUN_DIR MODE RUN_N RUN_CU NENTER ITMX SEED N_SEED OUT_REL_N OUT_REL_CU LOG_FILE_N LOG_FILE_CU GENERATOR INPUT_NLO0 INPUT_R xi; do
     [[ -n "${!key:-}" ]] || { echo "ERROR: Missing job parameter $key" >&2; exit 1; }
 done
-[[ "$MODE" == "CU" || "$MODE" == "N" ]] || { echo "ERROR: Bad MODE" >&2; exit 1; }
 [[ -d "$RUN_DIR" && -x "$GENERATOR" && -f "$RUN_DIR/user.so" ]] || {
     echo "ERROR: Missing generator, working directory or user.so" >&2; exit 1;
 }
@@ -25,11 +27,12 @@ export OMP_NUM_THREADS=1
 echo "START $(date -Is) host=$(hostname) job=${JOB_ID:-unknown} NSLOTS=${NSLOTS:-1}"
 echo "Directory: $RUN_DIR"
 echo "Mode=$MODE nenter=$NENTER itmx=$ITMX xi=$xi MCMULE_JOBS=$MCMULE_JOBS"
-echo "N seed=$N_SEED CU seed=$SEED"
+[[ "$RUN_N" -eq 1 ]] && echo "N seed=$N_SEED"
+[[ "$RUN_CU" -eq 1 ]] && echo "CU seed=$SEED"
 
 run_stage() {
     local stage="$1" stage_seed="$2" stage_out="$3" stage_log="$4"
-    local features status
+    local status
     local -a runcard
 
     [[ ! -e "$RUN_DIR/$stage_out" ]] || {
@@ -42,7 +45,7 @@ run_stage() {
     if [[ "$stage" == "N" ]]; then
         runcard+=("V")
     elif [[ "$stage" == "CU" ]]; then
-        # Mirrors the original gen.sh: VCU, dmax=1., tgteff=-1
+        # VCU, dmax=1., tgteff=-1
         runcard+=("VCU" "1." "-1")
     else
         echo "ERROR: unknown stage $stage" >&2
@@ -64,17 +67,14 @@ run_stage() {
     ls -lh "$RUN_DIR/$stage_out"
 }
 
-# Explicit wait: do not run CU until N has finished *successfully*.
-run_stage N "$N_SEED" "$OUT_REL_N" "$LOG_FILE_N" &
-n_pid=$!
-wait "$n_pid"
-echo "N finished successfully. Now starting CU."
-
-if [[ "$MODE" == "CU" ]]; then
-    run_stage CU "$SEED" "$OUT_REL_CU" "$LOG_FILE_CU" &
-    cu_pid=$!
-    wait "$cu_pid"
+if [[ "$RUN_N" -eq 1 ]]; then
+    run_stage N "$N_SEED" "$OUT_REL_N" "$LOG_FILE_N"
+    echo "N finished successfully."
 fi
 
-echo "SUCCESS $(date -Is) N${MODE/CU/+CU} job finished"
+if [[ "$RUN_CU" -eq 1 ]]; then
+    run_stage CU "$SEED" "$OUT_REL_CU" "$LOG_FILE_CU"
+fi
+
+echo "SUCCESS $(date -Is) $MODE job finished"
 touch "$RUN_DIR/log/COMPLETE_${MODE}_${SEED}.ok"

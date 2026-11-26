@@ -49,7 +49,7 @@ REQUIRED = (
 
 
 def observables():
-    """Uniform-bin raw-count histograms; no rebinning or log-spaced X bins.
+    """Raw-count histograms; uniform bins on linear X axes, log-spaced bins on log X axes.
 
     The plotting ranges are NOT analysis cuts. The text report includes aggregate event totals and outside-range counts.
     """
@@ -59,7 +59,7 @@ def observables():
          '', np.linspace(0, 4.5, 121), 'linear', 'auto'),
         ('muon_energy', 'Scattered Muon Energy',
          r'$E_\mu^{\mathrm{lab}}\ (\mathrm{GeV})$',
-         '', np.linspace(0, 101, 405), 'log', 'auto'),   # 405 is the bin here for example
+         '', np.linspace(0, 101, 405), 'linear', 'auto'),   # linear X axis (energies cluster near 100 GeV)
         ('muon_energy_endpoint', 'Scattered Muon Energy (endpoint)',
          r'$E_\mu^{\mathrm{lab}}\ (\mathrm{GeV})$',
          '', np.linspace(99.0, 100.10, 111), 'linear', 'auto'),
@@ -76,10 +76,10 @@ def observables():
          r'$E_\gamma^{\mathrm{lab}}\ (\mathrm{GeV})$',
          '', np.linspace(0, 100, 401), 'linear', 'auto'),
         # Additional plot: logarithmic X axis requires strictly positive X edges.
-        # Keep uniformly spaced bins, as in the other raw-count plots.
+        # Log-spaced bins, so every bin has the same width on the log axis.
         ('photon_energy_logx', 'Real Photon Energy (log X)',
          r'$E_\gamma^{\mathrm{lab}}\ (\mathrm{GeV})$',
-         '', np.linspace(0.01, 100, 401), 'log', 'auto'),
+         '', np.geomspace(0.001, 100, 401), 'log', 'auto'),  # 1 MeV - 100 GeV
         ('photon_theta', 'Real Photon Polar Angle',
          r'$\theta_\gamma^{\mathrm{lab}}\ (\mathrm{mrad})$',
          '', np.linspace(0, 1000*math.pi, 361), 'linear', 'auto'),
@@ -301,8 +301,12 @@ def extract_hist(ROOT, rdf, hist_defs, frame, beam_energy_lab, photon_output=Non
             'protonPy': '__pr_Py_GeV', 'protonPz': '__pr_p_lab_parallel_GeV',
             'Q2_proton': f'protonPx*protonPx + protonPy*protonPy + protonPz*protonPz - (protonE-{PROTON_MASS_GEV:.17g})*(protonE-{PROTON_MASS_GEV:.17g})',
         }
+        # Newer lhe_to_root.cpp trees already contain some of these names
+        # (eventID, photonTheta, photonPhi, muonTheta). Redefine them so the
+        # snapshot keeps exactly this script's definitions (eventID = chain entry).
+        existing = set(str(c) for c in ph.GetColumnNames())
         for name, expr in aliases.items():
-            ph = ph.Define(name, expr)
+            ph = ph.Redefine(name, expr) if name in existing else ph.Define(name, expr)
         # Preserve raw vectors in addition to derived LAB quantities.
         columns = ROOT.std.vector('string')()
         for name in [*REQUIRED, *aliases]:
@@ -406,7 +410,7 @@ def _choose_y_scale(requested, histograms):
 
 
 def make_plot(key, title, xlabel, unit, requested_xscale, requested_yscale,
-              data_by_sample, outdir):
+              data_by_sample, outdir, ylabel='Sum of event weights / bin'):
     fig, ax = plt.subplots(figsize=(7.6, 4.7), constrained_layout=True)
     available = [(tag, data_by_sample[tag][key]) for tag in ('LO', 'NLO')
                  if tag in data_by_sample and (not key.startswith('photon_') or tag == 'NLO')]
@@ -426,7 +430,7 @@ def make_plot(key, title, xlabel, unit, requested_xscale, requested_yscale,
     # Only linear X binning is used. No variable-width or adaptive bins.
     ax.set_title(title, pad=11)
     ax.set_xlabel(xlabel)
-    ax.set_ylabel('Sum of event weights / bin')
+    ax.set_ylabel(ylabel)
     ax.set_xscale(requested_xscale)
     if requested_xscale == 'log' and available[0][1]['edges'][0] > 0:
         # Keep a strictly positive x range for logarithmic plots.
@@ -634,8 +638,12 @@ def main(argv=None):
         stats[tag], data[tag], filelist[tag] = counts, plots, files
         frame_info[tag] = (frame, energy, pz)
 
+    # If every event has weight +1 (unweighted CU sample), bins are plain event counts.
+    unit_weights = all(st['negative_entries'] == 0 and st['weight_sum'] == st['entries']
+                       and st['weight_sq_sum'] == st['entries'] for st in stats.values())
+    ylabel = 'Events / bin' if unit_weights else 'Sum of event weights / bin'
     for key, title, xlabel, unit, edges, xscale, yscale in hist_defs:
-        make_plot(key, title, xlabel, unit, xscale, yscale, data, args.outdir)
+        make_plot(key, title, xlabel, unit, xscale, yscale, data, args.outdir, ylabel)
     # Store histograms and photon event tree together in ONE analysis ROOT file.
     partial = args.outdir/'mcmule_evtgen.partial.root'
     f = ROOT.TFile.Open(str(partial), 'UPDATE')

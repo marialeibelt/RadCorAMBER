@@ -2,19 +2,25 @@ module user
   use mcmule
   implicit none
 
-  integer, parameter :: nrq = 9
+  integer, parameter :: nrq = 13
   integer, parameter :: nrbins = 500
   
   real(kind=prec), parameter :: min_val(nrq) = (/ &
     0.031e-3_prec, 0._prec, -13e-3_prec, 0._prec, -pi, &    	      	! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     -1._prec, &                                                	 	  ! costh3[]
     1._prec, &                                                  	  ! Qsq in MeV^2
-    -0.2_prec,-0.2_prec /)! , &    !                             		! x5[m], y5[m]
+    -0.5_prec,-0.5_prec, &                                        ! x5[m], y5[m]  (|th5| <~ 13.7 mrad at d = 36.452 m)
+    -0.95_prec,-0.5_prec, &                                       ! x5rel[m], y5rel[m] (relative to ECAL2 centre)
+    1._prec, &                                                    ! Qsqp in MeV^2 (from proton)
+    0._prec /)                                                    ! th35[rad] (photon - outgoing muon)
   real(kind=prec), parameter :: max_val(nrq) = (/ &
     4.005e-3_prec, 101.e3_prec,  13.e-3_prec, 101.e3_prec,  pi, &   ! th3[rad], Emu[MeV], th5[rad], Eph[MeV], phi5[rad]
     1._prec, &                                                    	! costh3[]
     18.e4_prec, &	                                                 	! Qsq in MeV^2
-    0.2_prec,0.2_prec /)                                  	      	! x5[m], y5[m]
+    0.5_prec,0.5_prec, &                                          ! x5[m], y5[m]
+    0.05_prec,0.5_prec, &                                         ! x5rel[m], y5rel[m]
+    18.e4_prec, &                                                 ! Qsqp in MeV^2
+    20.e-3_prec /)                                                ! th35[rad]
     
   integer :: userdim = 0
   integer :: namesLen = 12
@@ -33,7 +39,7 @@ module user
     print*, "Welcome to Mary's McMule userfile <3"
     print*, " * 0.0316 < th_mu < 4.mrad"
     print*, " * no photon cut"
-    print*, " * d_detec = 30m"
+    print*, " * d_detec = 36.452m"
     print*, " * Ethresh = 5._prec MeV"
     print*, " * Ththresh = 15._prec murad"
   
@@ -47,7 +53,8 @@ module user
     real(kind=prec) :: th3,costh3,q3perp,Emu
     real(kind=prec) :: q5perp,th5,phi5,Eph
     real(kind=prec) :: Qsq
-    real(kind=prec) :: d_detec,x5,y5
+    real(kind=prec) :: d_detec,x5,y5,x5rel,y5rel
+    real(kind=prec) :: Qsqp,th35,cross35(3)
     real(kind=prec) :: quant(nr_q)
     
     integer :: n_bands,i,offset_x,offset_y,last_hist_nr
@@ -65,7 +72,7 @@ module user
     ql4 = boost_rf(q2,q4) ! proton out (ungenutzt)
     ql5 = boost_rf(q2,q5) ! photon
  
-    d_detec = 30._prec
+    d_detec = 36.452_prec  ! Target (z = -3.2 m) -> ECAL2 (z = 33.252 m) along beam axis
   
     ! Kinematische Variablen berechnen
     q3perp = sqrt(ql3(1)**2 + ql3(2)**2)
@@ -81,6 +88,19 @@ module user
     
     x5 = d_detec*tan(th5)*cos(phi5)
     y5 = d_detec*tan(th5)*sin(phi5) !>0 if phi5>0 and <0 if phi5<0
+
+    ! Hit relative to ECAL2 centre (x = 450 mm, y = -3.968 mm)
+    x5rel = x5 - 0.450_prec
+    y5rel = y5 + 0.003968_prec
+
+    ! Momentum transfer from the recoil proton
+    Qsqp = -sq(ql2-ql4)
+
+    ! Angle photon - outgoing muon (atan2 form: = 0 without photon, no NaN)
+    cross35(1) = ql5(2)*ql3(3) - ql5(3)*ql3(2)
+    cross35(2) = ql5(3)*ql3(1) - ql5(1)*ql3(3)
+    cross35(3) = ql5(1)*ql3(2) - ql5(2)*ql3(1)
+    th35 = atan2(sqrt(sum(cross35**2)), sum(ql5(1:3)*ql3(1:3)))
   
     ! --- CUTS AUSWERTEN ---
     pass_cut = .true.
@@ -111,6 +131,14 @@ module user
     quant(8) = x5
     names(9) = 'y5'
     quant(9) = y5
+    names(10) = 'x5rel'
+    quant(10) = x5rel
+    names(11) = 'y5rel'
+    quant(11) = y5rel
+    names(12) = 'Qsqp'
+    quant(12) = Qsqp
+    names(13) = 'th35'
+    quant(13) = th35
     
 
   end function QUANT

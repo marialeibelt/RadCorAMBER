@@ -1,0 +1,46 @@
+# Seeds already used for McMule EVENT GENERATION (not integration seeds).
+# Checked and appended automatically by commands/mcmule_eventgen/submit_nlo_sge.sh.
+# Never delete lines from this file.
+# seed	stage	date	run_dir
+10000	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10001	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10002	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10003	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10004	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10005	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10006	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10007	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10008	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+10009	CU	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010000	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010001	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010002	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010003	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010004	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010005	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010006	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010007	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010008	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+1010009	N	2026-11-08	/nfs/momos/user/mleibelt/evtgen_08_11/evtgen_nlo_CU_NthenCU_10x5000_seed10000
+37387	CU	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+67697	C	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+29335	N	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+29437	N	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+75246	N	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+75447	N	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+29235	LO-conf	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+71246	N-conf	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+35387	CU-conf	before-2026-11-25	(older run / input_evtgen_mcmule.conf)
+75448	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_1
+75449	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_2
+75450	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_3
+75451	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_4
+75452	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_5
+75453	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_6
+75454	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_7
+75455	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_8
+75456	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_9
+75457	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_10
+75458	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_11
+75459	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_12
+75460	CU	2026-11-25T21:21:32+01:00	/nfs/momos/user/mleibelt/evtgen_24_11_NLO0corrected/evtgen_CU_13x5000_seed75448/part_13
