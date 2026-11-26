@@ -22,9 +22,11 @@ after every step before anything is deleted.
 - Never delete lines from `inputs/used_seeds_evtgen.txt`.
 - Never delete large outputs before Maria confirmed the important information is
   stored in the reduced trees.
-- Never push to a remote without being asked.
+- Push to `origin` (GitHub) at most 1-2x per day (end of the working day / before meetings); otherwise only when asked.
 
 ## Fine without asking
+- After editing files Maria may have open in VS Code (ToDo lists, Erkenntnisse, Recipe), end the reply with a short note:
+  which files changed + "In VS Code: Strg+Shift+P -> 'File: Revert File' eingeben -> Enter".
 - Committing the AMBER_RadCor repo locally at regular points (after a finished step / batch of edits),
   with a clear message. Never commit large data, binaries or secrets. (Maria, 2026-11-26)
 - Reading files, logs, `qstat`, `df -h`, `du`, `head`/`tail` of outputs.

@@ -162,9 +162,11 @@ Gemessen an den bisherigen Läufen (Batches à 1000 Events):
 **Was dauerhaft bleibt, wenn `.tgeant.gz` (und LHE) gelöscht werden:**
 
 - Ohne mDST (nur McMule-ROOT, Coral-Hists, PHAST): ~0.5 kB pro Event → **~0.35 TB für 700 M**, **~3.5 TB für 7000 M**.
-- Mit mDST (auch eine `.root`-Datei!): ~155 kB pro Event → ~108 TB für 700 M, ~1.1 PB für 7000 M. Die mDST sind der eigentliche Speicherfresser nach TGEANT; dauerhaft behalten ist nur realistisch, wenn daraus vorher reduzierte PHAST-Trees geschrieben werden.
+- Mit mDST (auch eine `.root`-Datei!): ~155 kB pro Event → ~108 TB für 700 M, ~1.1 PB für 7000 M. Standardmäßig landen die mDST aber gar nicht auf momos: Coral schreibt sie auf die lokale `/tmp`-Platte des Rechenknotens, Phast liest sie dort, und nur PHAST-Output + Coral-Hists werden kopiert (`KEEP_MDST=0` in `inputs/input_coral_phast.conf`). Die mDST belasten momos also nur, wenn man sie ausdrücklich behalten will.
 
-**Arbeitsspeicher für Chunks in Bearbeitung:** TGEANT + mDST gleichzeitig ≈ 0.28 MB pro Event, also ~280 GB pro 1 M Events. Mit 1.1 TB frei auf momos: Chunks ≤ ~3 M Events, oder Streaming (jede `.tgeant.gz` direkt nach ihrem Coral-Job löschen, jede mDST direkt nach Phast).
+**Zwischenspeicher für Chunks in Bearbeitung:** Auf momos liegen zwischenzeitlich vor allem die `.tgeant.gz`-Dateien, bis Coral sie verarbeitet hat: ~127 GB pro 1 M Events (ohne Pile-up gemessen). Bei Chunks von 3 M Events sind das ~0.4 TB; beim Streaming (jede `.tgeant.gz` direkt nach ihrem Coral-Job löschen) nur so viel, wie gerade Jobs laufen.
+
+**Achtung Pile-up:** Alle Größen und Zeiten für TGEANT sind ohne Pile-up gemessen. Mit Pile-up (seit 26.11. an) simuliert TGEANT zusätzliche Strahlmyonen im Zeitfenster; Dateigröße und Rechenzeit pro Event werden dadurch größer. Vor der großen Produktion einen Test-Batch mit Pile-up messen.
 
 **Nur TGEANT, ohne Rekonstruktion:**
 
@@ -173,11 +175,39 @@ Gemessen an den bisherigen Läufen (Batches à 1000 Events):
 | 18.3 M (vorhanden) | ~17 GB (schon belegt) | ~2.3 TB | ~2.3 TB neu |
 | 36.6 M (doppelt) | ~34 GB | ~4.7 TB | ~4.7 TB neu |
 
+**Aktuell verfügbarer Speicher (26.11.):** momos `/nfs/momos/user/mleibelt` 3.0 TB gesamt, 2.0 TB belegt, 1.1 TB frei. Repo-Platte `/nfs/freenas/.../prm/mleibelt` nur 20 GB (6.2 GB frei) – dort keine Daten ablegen. Home 4 GB.
+
+**Empfehlung, wie viel Speicher anfragen:**
+
+| Szenario | Bedarf auf momos | Empfehlung gesamt |
+| --- | --- | --- |
+| Nur Produktion 700 M mit Streaming, TGEANT-Dateien sofort gelöscht | heutige 2.0 TB + ~0.4 TB Ergebnisse + ~0.5–1 TB Zwischenspeicher | **~5 TB** (+2 TB) |
+| Zusätzlich 36.6 M Events TGEANT dauerhaft für Studien behalten | + ~4.7 TB (mit Pile-up evtl. mehr) | **~10 TB** (+7 TB) |
+
+Die zweite Variante hat genug Puffer für Pile-up-bedingt größere TGEANT-Dateien und für Wiederholungen nach Fehlern.
+
+**Begriffe:** Die McMule-`.root`-Dateien entstehen **nach** der McMule-Eventgenerierung (aus den LHE-Dateien geparst) und sind die **Eingabe** für die AMBER-Eventgenerierung (TGEANT).
+
 **McMule-Output aufräumen?** Die LHE-Dateien (13 GB für 18.3 M) kann man nach dem Parsing löschen, weil die ROOT-Trees alle Vierervektoren und Gewichte enthalten. Vorher sollte man den LHE-Header (Wirkungsquerschnitt, Generator-Einstellungen) sichern. Die 1K-Batches (1.9 GB) können nach TGEANT weg, weil sie nur eine Kopie der Part-Dateien sind. Verglichen mit TGEANT ist das aber wenig: Der McMule-Output ist nicht das Speicherproblem.
 
-Rechenzeit: TGEANT braucht ~30 min pro 1000er-Batch, also ~350,000 CPU-Stunden für 700 M Events – vermutlich der eigentliche Engpass neben dem Speicher.
-
 Auf momos liegen noch ~1.8 TB alte TGEANT-Ausgaben (`TGEANT_runs/output/LO_07_09_xi1` 602 GB, `LO_07_09_xi1_1` 350 GB, …). Werden vorerst noch gebraucht (Maria, 26.11.).
+
+## Rechenzeit für die Produktion
+
+TGEANT (AMBER-Eventgenerierung) ist mit Abstand der rechenintensivste Schritt: rund 95 % der gesamten CPU-Zeit für 700 M Events.
+
+| Schritt | gemessen | pro 1 M Events | 700 M Events |
+| --- | --- | --- | --- |
+| McMule-Integration (pro Piece, einmalig) | ~12–25 h | – | ~1 Tag, unabhängig von der Eventzahl |
+| McMule-Eventgenerierung CU | 13 Jobs à ~55 min für 18.3 M | ~0.7 CPU-h | ~460 CPU-h |
+| LHE → ROOT | ~1 min pro 1.4 M | ~0.01 CPU-h | ~10 CPU-h |
+| **TGEANT** (ohne Pile-up) | 27 min pro 1000er-Batch, ~1.5 GB RAM | **~450 CPU-h** | **~315,000 CPU-h** |
+| Coral | 59 s pro 1000er-Batch, ~0.5 GB RAM | ~16 CPU-h | ~11,500 CPU-h |
+| Phast | 8.6 s pro 1000er-Batch | ~2.4 CPU-h | ~1,700 CPU-h |
+
+Gesamt ~330,000 CPU-Stunden ohne Pile-up. Mit 500 gleichzeitig laufenden Jobs wären das ~4 Wochen reine Rechenzeit; mit 200 Jobs ~10 Wochen. Mit Pile-up wird TGEANT langsamer – vor der Planung einen Test-Batch mit Pile-up messen.
+
+Quellen: `TGEANT_runs/log/amber_tgeant_job4865060_*.log` (50 Jobs, `/usr/bin/time -v`), `CORAL_PHAST_runs/log/*/coral_phast_job*.log` (1912 Jobs).
 
 ## Stolperfallen und Einheiten
 

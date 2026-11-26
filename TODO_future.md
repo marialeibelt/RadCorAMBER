@@ -18,6 +18,8 @@ Langfristige Liste. Stand: 2026-11-26. Claude behaelt diese Liste im Blick und m
 - [ ] Optional: eigenen Branch `eventID` in `lhe_to_root.cpp` umbenennen (z.B. `entryInFile`), um die doppelte
       Bedeutung mit `eventID` (Chain-Eintrag) in `analyze_mcmule_evtgen.py` zu vermeiden.
 
+- [ ] **Arbeit:** kurzes Nebenkapitel (Sidetrack) zum Beamspread.
+
 ## Erledigt (25./26.11.)
 - [x] NLO0-Integration `evtgen_24_11_NLO0corrected` (NLO0 chi2 0.68, R chi2 0.91), Eventgenerierung 13 x CU
       -> 18.3 M Events, Parsing, Analyze, Split, First photon bin. Siehe `meetings/2026-11-26_ToDo.md`.
